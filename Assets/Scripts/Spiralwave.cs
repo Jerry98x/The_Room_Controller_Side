@@ -42,14 +42,20 @@ public class Spiralwave : MonoBehaviour
         
         for (int currentPoint = 0; currentPoint < numPoints; currentPoint++)
         {
-            // Calcoliamo la posizione lungo il vettore direzione
+            // Calculate position along the direction vector
             float distanceAlongDirection = currentPoint * deltaDistance;
             Vector3 position = startPoint.position + direction * distanceAlongDirection;
 
-            // Calcoliamo l'angolo attuale intorno al vettore direzione
+            // Calculate the current angle around the direction vector
             float currentTheta = currentPoint * deltaTheta;
+            
+            // Calculate the distance from the midpoint
+            float distanceFromMidpoint = Mathf.Abs((float)currentPoint / numPoints - 0.5f) * 2; // Scaled to [0, 1]
+            // Scale radius based on distance from midpoint
+            float scaledRadius = radius * Mathf.Cos(distanceFromMidpoint * Mathf.PI / 2); // Cosine function for smooth scaling
 
-            // Applichiamo una rotazione attorno al vettore direzione
+            
+            // Apply a rotation around the direction vector
             if (!isClockwise)
             {
                 rotation = Quaternion.AngleAxis(rotationSpeed * Time.timeSinceLevelLoad + currentTheta, direction);
@@ -59,10 +65,9 @@ public class Spiralwave : MonoBehaviour
                 rotation = Quaternion.AngleAxis(-rotationSpeed * Time.timeSinceLevelLoad + currentTheta, direction);
             }
 
-            // Calcoliamo l'offset dalla posizione calcolata lungo il vettore direzione
-            Vector3 offset = rotation * Vector3.up * radius; // Ruotiamo attorno all'asse "up"
-
-            // Aggiorniamo la posizione con l'offset
+            // Calculate the offset from the calculated position along the direction vecto
+            Vector3 offset = rotation * Vector3.up * scaledRadius; // Rotate around the "up" axis
+            
             position += offset;
 
             lineRenderer.SetPosition(currentPoint, position);

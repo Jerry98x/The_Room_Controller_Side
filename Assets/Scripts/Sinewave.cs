@@ -29,20 +29,27 @@ public class Sinewave : MonoBehaviour
 
         // Set the number of points to draw
         lineRenderer.positionCount = numPoints;
+
         for (int currentPoint = 0; currentPoint < numPoints; currentPoint++)
         {
             float progress = (float)currentPoint / (numPoints - 1);
             Vector3 position = Vector3.Lerp(startPoint.position, endPoint.position, progress);
             float angle = progress * 2 * Mathf.PI * frequency - movementSpeed * Time.timeSinceLevelLoad;
 
+            // Calculate the distance from the midpoint
+            float distanceFromMidpoint = Mathf.Abs(progress - 0.5f) * 2; // Scaled to [0, 1]
+            // Scale amplitude based on distance from midpoint
+            float scaledAmplitude = amplitude * Mathf.Cos(distanceFromMidpoint * Mathf.PI / 2); // Cosine function for smooth scaling
+
+            
             if (!isHorizontal)
             {
-                float y = amplitude * Mathf.Sin(angle);
+                float y = scaledAmplitude * Mathf.Sin(angle);
                 lineRenderer.SetPosition(currentPoint, position + new Vector3(0, y, 0));
             }
             else
             {
-                float x = amplitude * Mathf.Sin(angle);
+                float x = scaledAmplitude * Mathf.Sin(angle);
                 lineRenderer.SetPosition(currentPoint, position + new Vector3(x, 0, 0));
             }
             
