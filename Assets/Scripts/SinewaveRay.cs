@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Sinewave : MonoBehaviour
+public class SinewaveRay : BaseRay
 {
-
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private int numPoints;
+    
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
     [SerializeField] private float movementSpeed = 1f;
@@ -25,7 +23,7 @@ public class Sinewave : MonoBehaviour
     }
 
     // Function representing the sine for a full cycle
-    private void DrawLine()
+    protected override void DrawLine()
     {
 
         // Set the number of points to draw

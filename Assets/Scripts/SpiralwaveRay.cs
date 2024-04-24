@@ -5,11 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Spiralwave : MonoBehaviour
+public class SpiralwaveRay : BaseRay
 {
-
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private int numPoints;
+    
     [SerializeField] private int numberOfLoops = 1;
     [SerializeField] private float rotationSpeed = 1f;
     [SerializeField] private float radius = 1f;
@@ -26,7 +24,7 @@ public class Spiralwave : MonoBehaviour
     }
 
     // Function representing the spiral for a full cycle
-    private void DrawLine()
+    protected override void DrawLine()
     {
         
         Vector3 direction = (endPoint.position - startPoint.position).normalized;
