@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Spiralwave : MonoBehaviour
 {
@@ -11,7 +13,8 @@ public class Spiralwave : MonoBehaviour
     [SerializeField] private int numberOfLoops = 1;
     [SerializeField] private float rotationSpeed = 1f;
     [SerializeField] private float radius = 1f;
-    [SerializeField] private bool isClockwise = false;
+    [SerializeField] private bool isInward = false;
+    [SerializeField] private bool isMirrored = false;
     
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
@@ -56,18 +59,26 @@ public class Spiralwave : MonoBehaviour
 
             
             // Apply a rotation around the direction vector
-            if (!isClockwise)
+            if (isInward && isMirrored)
+            {
+                rotation = Quaternion.AngleAxis(-rotationSpeed * Time.timeSinceLevelLoad - currentTheta, direction);
+            }
+            else if (isInward && !isMirrored)
             {
                 rotation = Quaternion.AngleAxis(rotationSpeed * Time.timeSinceLevelLoad + currentTheta, direction);
+            }
+            else if (!isInward && isMirrored)
+            {
+                rotation = Quaternion.AngleAxis(rotationSpeed * Time.timeSinceLevelLoad - currentTheta, direction);
             }
             else
             {
                 rotation = Quaternion.AngleAxis(-rotationSpeed * Time.timeSinceLevelLoad + currentTheta, direction);
             }
-
-            // Calculate the offset from the calculated position along the direction vecto
-            Vector3 offset = rotation * Vector3.up * scaledRadius; // Rotate around the "up" axis
             
+            
+            Vector3 offset = rotation * Vector3.up * scaledRadius; // Rotate around the "up" axis
+
             position += offset;
 
             lineRenderer.SetPosition(currentPoint, position);

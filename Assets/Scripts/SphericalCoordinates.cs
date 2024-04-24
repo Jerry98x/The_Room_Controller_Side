@@ -9,7 +9,7 @@ public class SphericalCoordinates : MonoBehaviour
 
     [Range(0.1f, 10f)]
     [SerializeField] private float radius;
-    [Range(0, 180)]
+    [Range(-90, 90)]
     [SerializeField] private float inclination; // Polar angle (theta)
     [Range(-180, 180)]
     [SerializeField] private float azimuth; // Azimuthal angle (phi)

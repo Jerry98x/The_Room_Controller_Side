@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 199934649025785615}
   - component: {fileID: 1833623610483008787}
   - component: {fileID: 2003717472790511860}
+  - component: {fileID: 1417319939482069459}
   m_Layer: 0
   m_Name: NetoSinusoidLineRenderer
   m_TagString: Untagged
@@ -187,8 +188,22 @@ MonoBehaviour:
   amplitude: 1
   frequency: 1
   movementSpeed: 1
+  isHorizontal: 0
+  isInward: 0
   startPoint: {fileID: 0}
   endPoint: {fileID: 0}
+--- !u!114 &1417319939482069459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4297830955857863418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44fd6bdc66ec3e94582a6c8f8eef4604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5419140129055775955
 GameObject:
   m_ObjectHideFlags: 0
