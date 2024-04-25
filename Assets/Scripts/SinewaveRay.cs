@@ -15,15 +15,10 @@ public class SinewaveRay : BaseRay
 
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
-    
-    // Offset the phase of the sinewave to grant a smoother transition
-    private float phaseOffset = 0f;
-    private bool lastIsInward;
 
     private void Start()
     {
         lineRenderer.GetComponent<LineRenderer>();
-        lastIsInward = isInward;
         DrawLine();
     }
 
@@ -36,23 +31,23 @@ public class SinewaveRay : BaseRay
 
         for (int currentPoint = 0; currentPoint < numPoints; currentPoint++)
         {
-            float lineProgress = (float)currentPoint / (numPoints - 1);
-            Vector3 position = Vector3.Lerp(startPoint.position, endPoint.position, lineProgress);
+            float progress = (float)currentPoint / (numPoints - 1);
+            Vector3 position = Vector3.Lerp(startPoint.position, endPoint.position, progress);
 
             // Handle sinewave moving outward or inward
             float angle;
             if (!isInward)
             {
-                angle = lineProgress * 2 * Mathf.PI * frequency - movementSpeed * Time.timeSinceLevelLoad + phaseOffset;
+                angle = progress * 2 * Mathf.PI * frequency - movementSpeed * Time.timeSinceLevelLoad;
             }
             else
             {
-                angle = lineProgress * 2 * Mathf.PI * frequency + movementSpeed * Time.timeSinceLevelLoad + phaseOffset;
+                angle = progress * 2 * Mathf.PI * frequency + movementSpeed * Time.timeSinceLevelLoad;
             }
             
 
             // Calculate the distance from the midpoint
-            float distanceFromMidpoint = Mathf.Abs(lineProgress - 0.5f) * 2; // Scaled to [0, 1]
+            float distanceFromMidpoint = Mathf.Abs(progress - 0.5f) * 2; // Scaled to [0, 1]
             // Scale amplitude based on distance from midpoint
             float scaledAmplitude = amplitude * Mathf.Cos(distanceFromMidpoint * Mathf.PI / 2); // Cosine function for smooth scaling
 
@@ -75,29 +70,6 @@ public class SinewaveRay : BaseRay
 
     private void Update()
     {
-        
-        if (isInward != lastIsInward)
-        {
-            // Calculate the current angle
-            float waveProgress = (float)lineRenderer.positionCount / (numPoints - 1);
-            float currentAngle = waveProgress * 2 * Mathf.PI * frequency - movementSpeed * Time.timeSinceLevelLoad + phaseOffset;
-
-            // Calculate the desired angle at the point of transition
-            float desiredAngle;
-            if (isInward)
-            {
-                desiredAngle = waveProgress * 2 * Mathf.PI * frequency + movementSpeed * Time.timeSinceLevelLoad;
-            }
-            else
-            {
-                desiredAngle = waveProgress * 2 * Mathf.PI * frequency - movementSpeed * Time.timeSinceLevelLoad;
-            }
-
-            // Update the phase offset to ensure a smooth transition
-            phaseOffset = desiredAngle - currentAngle;
-            lastIsInward = isInward;
-        }
-        
         DrawLine();
     }
 }
