@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Obi;
 
 public class SinewaveRay : BaseRay
 {
+    
+    /*private ObiRope rope;
+    private ObiSolver solver;*/
     
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
@@ -16,8 +20,18 @@ public class SinewaveRay : BaseRay
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
 
+    /*private void Awake()
+    {
+        solver = gameObject.GetComponentInParent<ObiSolver>();
+        rope = gameObject.GetComponent<ObiRope>();
+        
+    }*/
     private void Start()
     {
+            
+        /*Debug.Log("Solver: " + solver);
+        Debug.Log("Solver: " + solver.positions);*/
+        
         lineRenderer.GetComponent<LineRenderer>();
         DrawLine();
     }
@@ -66,10 +80,52 @@ public class SinewaveRay : BaseRay
         }
 
     }
-
+    
 
     private void Update()
     {
         DrawLine();
+        
+        // Get all particle positions
+        // Update Obi Rope positions from LineRenderer
+        /*for (int i = 0; i < rope.particleCount; i++)
+        {
+            if (i < lineRenderer.positionCount)
+            {
+                solver.positions[i] = lineRenderer.GetPosition(i);
+                rope.SetParticlePosition(i, lineRenderer.GetPosition(i));
+            }
+            else
+            {
+                // If the number of LineRenderer points is less than the number of particles,
+                // set the remaining particles to the last LineRenderer position
+                rope.SetParticlePosition(i, lineRenderer.GetPosition(lineRenderer.positionCount - 1));
+                Oni.SetParticlePositions(this.solver.Oni);
+            }
+        }*/
+        
+        
+        
+        
+        
+        
+        // Get all particle positions from the LineRenderer
+        /*Vector3[] linePositions = new Vector3[numPoints]; 
+        lineRenderer.GetPositions(linePositions);
+        
+        // Update Obi Rope positions from LineRenderer
+        for (int i = 0; i < linePositions.Length; i++)
+        {
+            // Ensure the particle index is within bounds
+            if (i < rope.particleCount)
+            {
+                // Convert world position to local space of Obi Rope
+                Vector3 localPosition = rope.transform.InverseTransformPoint(linePositions[i]);
+                rope.solver.positions[i] = localPosition;
+            }
+        }*/
+        
+        //Debug.Log(rope.particleCount);
+        
     }
 }
