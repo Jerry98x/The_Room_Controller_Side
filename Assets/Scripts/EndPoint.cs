@@ -6,6 +6,10 @@ public class EndPoint : MonoBehaviour
 {
 
     
+    /*public void Move(Vector3 direction, float distance)
+    {
+        transform.position += direction * distance;
+    }*/
     
     
 }
