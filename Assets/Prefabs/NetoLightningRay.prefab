@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1056275155146459673}
   - component: {fileID: 7558907130738329464}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NetoLightningRay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1439672227898170077}
   - component: {fileID: 929544132812426883}
   - component: {fileID: 8726840885465354496}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NetoEndpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 1833623610483008787}
   - component: {fileID: 2003717472790511860}
   - component: {fileID: 1417319939482069459}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NetoSinusoidLineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 1111146810647040262}
   - component: {fileID: 6722975786307464454}
   - component: {fileID: 5431880625084589613}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 5667234563344577464}
   - component: {fileID: 7012072757531061676}
   - component: {fileID: 392813099767896971}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

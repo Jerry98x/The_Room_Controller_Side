@@ -7,51 +7,75 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class HandControllerRaycast : MonoBehaviour
 {
     private XRRayInteractor rayInteractor;
-    private GameObject activeChild; // Reference to the current active child object
+    private List<GameObject> activeChildren = new List<GameObject>(); // List of current active child objects
+    private GameObject activeChild = null; // Reference to the current active child object
     //public float maxRaycastDistance = 100f;
 
     private void Awake()
     {
         rayInteractor = GetComponent<XRRayInteractor>();
-        rayInteractor.onSelectEntered.AddListener(HandleSelectEnterWrapper);
-        rayInteractor.onSelectExited.AddListener(HandleSelectExitWrapper);
+        rayInteractor.hoverEntered.AddListener(HandleHoverEntered);
+        rayInteractor.hoverExited.AddListener(HandleHoverExited);
     }
     
-    public void HandleSelectEnterWrapper(XRBaseInteractable interactable)
-    {
-        if (interactable is XRSimpleInteractable simpleInteractable)
-        {
-            HandleSelectEnter(simpleInteractable);
-        }
-    }
-
-    public void HandleSelectExitWrapper(XRBaseInteractable interactable)
-    {
-        if (interactable is XRSimpleInteractable simpleInteractable)
-        {
-            HandleSelectExit(simpleInteractable);
-        }
-    }
     
-    private void HandleSelectEnter(XRSimpleInteractable interactable)
+    private void HandleHoverEntered(HoverEnterEventArgs args)
     {
-        EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
+        
+        EndPoint endPoint = args.interactable.gameObject.GetComponentInChildren<EndPoint>();
+        Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
         if (endPoint != null)
         {
             
-            
-            
-            SetActiveChild(interactable.gameObject);
+            //SetActiveChild(interactable.gameObject);
+            AddActiveChild(args.interactable.gameObject);
         }
         
     }
     
-    private void HandleSelectExit(XRSimpleInteractable interactable)
+    private void HandleHoverExited(HoverExitEventArgs args)
     {
-        if (interactable.gameObject == activeChild)
+        if (args.interactable.gameObject == activeChild)
         {
-            SetActiveChild(null);
+            //SetActiveChild(null);
+            RemoveActiveChild(args.interactable.gameObject);
         }
+    }
+    
+    private void AddActiveChild(GameObject newChild)
+    {
+        // Add the new object to the list of active children
+        activeChildren.Add(newChild);
+        newChild.transform.SetParent(transform);
+        Debug.Log("Active child is " + newChild.name);
+    }
+
+    private void RemoveActiveChild(GameObject oldChild)
+    {
+        // If the object is in the list of active children, remove it
+        if (activeChildren.Contains(oldChild))
+        {
+            Debug.Log("Active child is " + oldChild.name);
+            Debug.Log("Active child parent is " + oldChild.transform.parent.name);
+            oldChild.transform.parent = null;
+            activeChildren.Remove(oldChild);
+        }
+    }
+    
+    private void SetActiveChild(GameObject newChild)
+    {
+        // If there is a current active child, remove it from the parent
+        if (activeChild != null)
+        {
+            Debug.Log("Active child is " + activeChild.name);
+            Debug.Log("Active child parent is " + activeChild.transform.parent.name);
+            activeChild.transform.parent = null;
+        }
+
+        // Set the new object as the active child
+        activeChild = newChild;
+        activeChild.transform.SetParent(transform);
+        Debug.Log("Active child is " + activeChild.name);
     }
     
     private void Update()
@@ -109,19 +133,5 @@ public class HandControllerRaycast : MonoBehaviour
     }*/
     
     
-    private void SetActiveChild(GameObject newChild)
-    {
-        // If there is a current active child, remove it from the parent
-        if (activeChild != null)
-        {
-            Debug.Log("Active child is " + activeChild.name);
-            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            activeChild.transform.parent = null;
-        }
 
-        // Set the new object as the active child
-        activeChild = newChild;
-        activeChild.transform.SetParent(transform);
-        Debug.Log("Active child is " + activeChild.name);
-    }
 }

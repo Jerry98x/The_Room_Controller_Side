@@ -383,6 +383,11 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1834020229}
+    - target: {fileID: 5720094068099918642, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_InteractionLayers.m_Bits
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7333257267014245633, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -627,6 +632,11 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1834020229}
+    - target: {fileID: 7558907130738329464, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: m_InteractionLayers.m_Bits
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7954295430979137745, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -914,6 +924,11 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1834020229}
+    - target: {fileID: 7558907130738329464, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: m_InteractionLayers.m_Bits
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7954295430979137745, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3923,7 +3938,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 6
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
@@ -3937,7 +3952,7 @@ MonoBehaviour:
         m_MethodName: HandleSelectEnterWrapper
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1715381307}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.XR.Interaction.Toolkit.XRBaseInteractable,
             Unity.XR.Interaction.Toolkit
           m_IntArgument: 0
@@ -3953,7 +3968,7 @@ MonoBehaviour:
         m_MethodName: HandleSelectExitWrapper
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1715381307}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.XR.Interaction.Toolkit.XRBaseInteractable,
             Unity.XR.Interaction.Toolkit
           m_IntArgument: 0
@@ -5500,7 +5515,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 6
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
@@ -5514,7 +5529,7 @@ MonoBehaviour:
         m_MethodName: HandleSelectEnterWrapper
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1715381307}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.XR.Interaction.Toolkit.XRBaseInteractable,
             Unity.XR.Interaction.Toolkit
           m_IntArgument: 0
@@ -5530,7 +5545,7 @@ MonoBehaviour:
         m_MethodName: HandleSelectExitWrapper
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1715381307}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.XR.Interaction.Toolkit.XRBaseInteractable,
             Unity.XR.Interaction.Toolkit
           m_IntArgument: 0

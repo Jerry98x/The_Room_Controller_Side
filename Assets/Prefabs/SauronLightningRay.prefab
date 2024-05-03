@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1056275155146459673}
   - component: {fileID: 5720094068099918642}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SauronLightningRay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1833623610483008787}
   - component: {fileID: 8492120413351579133}
   - component: {fileID: 1917482526087962390}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SauronSpiralLineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 5278117690784372701}
   - component: {fileID: 2258568328321207045}
   - component: {fileID: 6645931563815964312}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SauronEndpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 5928112865722142882}
   - component: {fileID: 2637721750383182592}
   - component: {fileID: 2216070431318199466}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,7 +479,7 @@ GameObject:
   - component: {fileID: 3733870290188377429}
   - component: {fileID: 2964878202019034911}
   - component: {fileID: 1744358407981459548}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
