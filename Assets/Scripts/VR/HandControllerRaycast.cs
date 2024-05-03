@@ -8,7 +8,7 @@ public class HandControllerRaycast : MonoBehaviour
 {
     private XRRayInteractor rayInteractor;
     private GameObject activeChild; // Reference to the current active child object
-    public float maxRaycastDistance = 100f; // You can adjust this value as needed
+    //public float maxRaycastDistance = 100f;
 
     private void Awake()
     {
@@ -19,35 +19,28 @@ public class HandControllerRaycast : MonoBehaviour
     
     public void HandleSelectEnterWrapper(XRBaseInteractable interactable)
     {
-        Debug.Log("DENTRO IL WRAPPER (ENTER)");
         if (interactable is XRSimpleInteractable simpleInteractable)
         {
-            Debug.Log("DENTRO IL WRAPPER (ENTER) E RICONOSCE L'INTERACTABLE");
-            Debug.Log("Interactable: " + interactable);
-            Debug.Log("Simple Interactable: " + simpleInteractable);
             HandleSelectEnter(simpleInteractable);
         }
     }
 
     public void HandleSelectExitWrapper(XRBaseInteractable interactable)
     {
-        Debug.Log("DENTRO IL WRAPPER (EXIT)");
         if (interactable is XRSimpleInteractable simpleInteractable)
         {
-            Debug.Log("DENTRO IL WRAPPER (EXIT) E RICONOSCE L'INTERACTABLE");
             HandleSelectExit(simpleInteractable);
         }
     }
     
     private void HandleSelectEnter(XRSimpleInteractable interactable)
     {
-        Debug.Log("DENTRO L'EFFETTIVA FUNZIONE (ENTER)");
         EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
         if (endPoint != null)
         {
-            Debug.Log("Interactable: " + interactable.gameObject.name);
-            Debug.Log("EndPoint: " + endPoint.gameObject.name);
-            Debug.Log("DENTRO L'EFFETTIVA FUNZIONE (ENTER) E RICONOSCE L'INTERACTABLE");
+            
+            
+            
             SetActiveChild(interactable.gameObject);
         }
         
@@ -55,19 +48,15 @@ public class HandControllerRaycast : MonoBehaviour
     
     private void HandleSelectExit(XRSimpleInteractable interactable)
     {
-        Debug.Log("DENTRO L'EFFETTIVA FUNZIONE (EXIT)");
-        Debug.Log("Gameobject: " + interactable.gameObject.name);
-        Debug.Log("Active child: " + activeChild.name);
         if (interactable.gameObject == activeChild)
         {
-            Debug.Log("DENTRO L'EFFETTIVA FUNZIONE (EXIT) E RICONOSCE L'INTERACTABLE");
             SetActiveChild(null);
         }
     }
     
     private void Update()
     {
-        HandleRaycasting();
+        //HandleRaycasting();
     }
     
     /*private void OnDrawGizmos()
@@ -76,12 +65,12 @@ public class HandControllerRaycast : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.forward * maxRaycastDistance);
     }*/
     
-    private void HandleRaycasting()
+    /*private void HandleRaycasting()
     {
         /*Debug.Log(gameObject.name + " is handling raycasting");
         Debug.Log("transform.position: " + transform.position);
         Debug.Log("transform.forward: " + transform.forward);
-        Debug.DrawLine(transform.position, transform.forward * maxRaycastDistance, Color.red, 2f);*/
+        Debug.DrawLine(transform.position, transform.forward * maxRaycastDistance, Color.red, 2f);#1#
         
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit raycastHit;
@@ -102,13 +91,13 @@ public class HandControllerRaycast : MonoBehaviour
                         Debug.Log("Active child is " + activeChild.name);
                         Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         activeChild.transform.parent = null;
-                    }*/
+                    }#1#
                     
                     // Set the hit object as the new active child
                     SetActiveChild(raycastHit.transform.parent.gameObject);
                     
-                    /*// Control the endpoint
-                    endPoint.Move(transform.forward, 1f); // Move the endpoint 1 unit along the forward direction*/
+                    /#1#/ Control the endpoint
+                    endPoint.Move(transform.forward, 1f); // Move the endpoint 1 unit along the forward direction#1#
 
                 }
             }
@@ -117,7 +106,7 @@ public class HandControllerRaycast : MonoBehaviour
         {
             //Debug.Log("Raycast did not hit anything");
         }
-    }
+    }*/
     
     
     private void SetActiveChild(GameObject newChild)
