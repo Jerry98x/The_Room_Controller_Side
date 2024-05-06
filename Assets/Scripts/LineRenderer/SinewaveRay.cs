@@ -76,4 +76,25 @@ public class SinewaveRay : BaseRay
     {
         DrawLine();
     }
+    
+    public bool IsHorizontal()
+    {
+        return isHorizontal;
+    }
+    
+    public bool IsVertical()
+    {
+        return !isHorizontal;
+    }
+    
+    public Transform GetEndPoint()
+    {
+        return endPoint;
+    }
+    
+    public EndPoint GetEndPointObject()
+    {
+        return endPoint.GetComponent<EndPoint>();
+    }
+    
 }

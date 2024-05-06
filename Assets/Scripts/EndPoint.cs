@@ -5,11 +5,12 @@ using UnityEngine;
 public class EndPoint : MonoBehaviour
 {
 
+    [SerializeField] private Vector3 initialPosition;
     
-    /*public void Move(Vector3 direction, float distance)
+    public Vector3 GetInitialPosition()
     {
-        transform.position += direction * distance;
-    }*/
-    
-    
+        return initialPosition;
+    }
+
+
 }
