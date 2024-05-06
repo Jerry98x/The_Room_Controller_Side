@@ -27,9 +27,13 @@ public class HandControllerRaycast : MonoBehaviour
     
     private void HandleHoverEntered(HoverEnterEventArgs args)
     {
-        
-        EndPoint endPoint = args.interactable.gameObject.GetComponentInChildren<EndPoint>();
+        LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;
+        EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
         initialEndPointPosition = endPoint.GetInitialPosition();
+        if (lightningRay != null)
+        {
+           initialInteractablePosition = lightningRay.GetInitialPosition(); 
+        }
         Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
         if (endPoint != null)
         {
@@ -87,41 +91,20 @@ public class HandControllerRaycast : MonoBehaviour
         }
     }
     
-    /*private void SetActiveChild(GameObject newChild)
-    {
-        // If there is a current active child, remove it from the parent
-        if (activeChild != null)
-        {
-            Debug.Log("Active child is " + activeChild.name);
-            Debug.Log("Active child parent is " + activeChild.transform.parent.name);
-            activeChild.transform.parent = null;
-        }
-
-
-        // Set the new object as the active child
-        activeChild = newChild;
-        activeChild.transform.SetParent(transform);
-        Debug.Log("Active child is " + activeChild.name);
-    }*/
-    
     private void Update()
     {
-        Debug.Log("Number of active children: " + activeChildren.Count);
-        foreach (GameObject activeChild in activeChildren)
+        foreach (GameObject child in activeChildren)
         {
-            Debug.Log("Active child is " + activeChild.name + " and its position is " + activeChild.transform.position);
             // If movement is constrained, clamp the x or y position of the active child
             if (isConstrained)
             {
-                SinewaveRay sinewaveRay = activeChild.GetComponentInChildren<SinewaveRay>();
+                SinewaveRay sinewaveRay = child.GetComponentInChildren<SinewaveRay>();
                 Transform endPoint = sinewaveRay.GetEndPoint();
                 if (sinewaveRay != null)
                 {
-                    Debug.Log("SinewaveRay is not null");
                     if (sinewaveRay.IsHorizontal())
                     {
-                        Debug.Log("SinewaveRay is horizontal");
-                        HorizontalConstraint horizontalConstraint = activeChild.GetComponentInChildren<HorizontalConstraint>();
+                        HorizontalConstraint horizontalConstraint = child.GetComponentInChildren<HorizontalConstraint>();
                         List<float> limits = horizontalConstraint.GetLimits();
                         // Constrain movement to horizontal
                         Vector3 endPointPosition = endPoint.transform.position;
@@ -131,20 +114,18 @@ public class HandControllerRaycast : MonoBehaviour
                         endPointPosition.y = initialEndPointPosition.y;
                         endPointPosition.z = initialEndPointPosition.z;
                         
-                        Vector3 interactablePosition = activeChild.transform.position;
+                        Vector3 interactablePosition = child.transform.position;
                         interactablePosition.x = Mathf.Clamp(interactablePosition.x, initialInteractablePosition.x + limits[0], initialInteractablePosition.x + limits[1]);
                         interactablePosition.y = initialInteractablePosition.y;
                         interactablePosition.z = initialInteractablePosition.z;
                         
-                        activeChild.transform.position = interactablePosition;
+                        child.transform.position = interactablePosition;
                         endPoint.transform.position = endPointPosition;
                     }
                     else
                     {
-                        Debug.Log("SinewaveRay is vertical");
-                        VerticalConstraint verticalConstraint = activeChild.GetComponentInChildren<VerticalConstraint>();
+                        VerticalConstraint verticalConstraint = child.GetComponentInChildren<VerticalConstraint>();
                         List<float> limits = verticalConstraint.GetLimits();
-                        Debug.Log("Limits: " + limits[0] + " " + limits[1]);
                         // Constrain movement to vertical
                         Vector3 endPointPosition = endPoint.transform.position;
                         endPointPosition.x = initialEndPointPosition.x;
@@ -152,16 +133,14 @@ public class HandControllerRaycast : MonoBehaviour
                         endPointPosition.y = Mathf.Clamp(endPointPosition.y, initialEndPointPosition.y + limits[0], initialEndPointPosition.y + limits[1]);
                         endPointPosition.z = initialEndPointPosition.z;
                         
-                        Vector3 interactablePosition = activeChild.transform.position;
+                        Vector3 interactablePosition = child.transform.position;
                         interactablePosition.x = initialInteractablePosition.x;
                         interactablePosition.y = Mathf.Clamp(interactablePosition.y, initialInteractablePosition.y + limits[0], initialInteractablePosition.y + limits[1]);
                         interactablePosition.z = initialInteractablePosition.z;
                         
-                        Debug.Log("Clamped position: " + endPointPosition);
-                        activeChild.transform.position = interactablePosition;
+                        child.transform.position = interactablePosition;
                         endPoint.transform.position = endPointPosition;
                     }
-                    Debug.Log("New position: " + activeChild.transform.position);
                 }
             }
         }
