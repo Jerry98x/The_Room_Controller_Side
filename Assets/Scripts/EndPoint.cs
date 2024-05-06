@@ -7,6 +7,10 @@ public class EndPoint : MonoBehaviour
 
     [SerializeField] private Vector3 initialPosition;
     
+    void Start()
+    {
+        initialPosition = transform.position;
+    }
     public Vector3 GetInitialPosition()
     {
         return initialPosition;
