@@ -5,7 +5,7 @@ using UnityEngine;
 public class EndPoint : MonoBehaviour
 {
 
-    [SerializeField] private Vector3 initialPosition;
+    private Vector3 initialPosition;
     
     void Start()
     {
