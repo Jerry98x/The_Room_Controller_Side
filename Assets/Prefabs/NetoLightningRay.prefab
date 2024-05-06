@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1056275155146459673}
   - component: {fileID: 7558907130738329464}
+  - component: {fileID: 1730159053930928556}
   m_Layer: 6
   m_Name: NetoLightningRay
   m_TagString: Untagged
@@ -141,6 +142,18 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1730159053930928556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2276730796652484773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b7138bca742cf4896802d10e407be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3617634259065119259
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4297830955857863418
 GameObject:
   m_ObjectHideFlags: 0

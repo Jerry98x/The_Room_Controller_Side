@@ -9,9 +9,10 @@ public class HandControllerRaycast : MonoBehaviour
     private XRRayInteractor rayInteractor;
     private List<GameObject> activeChildren = new List<GameObject>(); // List of current active child objects
     private GameObject activeChild = null; // Reference to the current active child object
-    private Vector3 initialInteractablePosition; // Initial position of the interactable object
+    private Vector3 initialInteractablePosition; // Initial position of the interactable
+    private Vector3 initialEndPointPosition; // Initial position of the interactable's endpoint
     private bool isConstrained = false; // Flag to indicate if movement is constrained
-    private float deltaError = 0.5f;
+    private float deltaError = 0.1f;
     //private float minY, maxY; // Define min and max y positions for movement constraint
 
     //public float maxRaycastDistance = 100f;
@@ -28,7 +29,7 @@ public class HandControllerRaycast : MonoBehaviour
     {
         
         EndPoint endPoint = args.interactable.gameObject.GetComponentInChildren<EndPoint>();
-        initialInteractablePosition = endPoint.GetInitialPosition();
+        initialEndPointPosition = endPoint.GetInitialPosition();
         Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
         if (endPoint != null)
         {
@@ -41,8 +42,12 @@ public class HandControllerRaycast : MonoBehaviour
     
     private void HandleHoverExited(HoverExitEventArgs args)
     {
-        if (args.interactable.gameObject == activeChild)
+        Debug.Log("Hover exited event triggered");
+        Debug.Log("args.interactable.gameObject: " + args.interactable.gameObject);
+        Debug.Log("activeChild: " + activeChild);
+        if (activeChildren.Contains(args.interactable.gameObject))
         {
+            Debug.Log("Hover exited event triggered for active child: if entered");
             //SetActiveChild(null);
             isConstrained = false;
             RemoveActiveChild(args.interactable.gameObject);
@@ -64,16 +69,6 @@ public class HandControllerRaycast : MonoBehaviour
         {
             // If it does, set the isConstrained flag to true
             isConstrained = true;
-
-            /*// Get the VerticalConstraint component of the object
-            VerticalConstraint verticalConstraint = endPoint.GetComponent<VerticalConstraint>();
-            if (verticalConstraint != null)
-            {
-                // If the object has a VerticalConstraint component, set the minY and maxY values
-                List<float> limits = verticalConstraint.GetLimits();
-                minY = limits[0];
-                maxY = limits[1];
-            }*/
         }
 
         
@@ -81,9 +76,11 @@ public class HandControllerRaycast : MonoBehaviour
 
     private void RemoveActiveChild(GameObject oldChild)
     {
+        Debug.Log("Entered RemoveActiveChild method");
         // If the object is in the list of active children, remove it
         if (!isConstrained && activeChildren.Contains(oldChild))
         {
+            Debug.Log("Entered if statement in RemoveActiveChild method");
             oldChild.transform.parent = null;
             activeChildren.Remove(oldChild);
             Debug.Log("Active children are " + activeChildren.Count + ": " + activeChildren);
@@ -127,12 +124,20 @@ public class HandControllerRaycast : MonoBehaviour
                         HorizontalConstraint horizontalConstraint = activeChild.GetComponentInChildren<HorizontalConstraint>();
                         List<float> limits = horizontalConstraint.GetLimits();
                         // Constrain movement to horizontal
-                        Vector3 position = endPoint.transform.position;
+                        Vector3 endPointPosition = endPoint.transform.position;
+                        
                         // Limits are defined as [-x, x]
-                        position.x = Mathf.Clamp(position.x, initialInteractablePosition.x + limits[0], initialInteractablePosition.x + limits[1]);
-                        position.y = initialInteractablePosition.y;
-                        position.z = initialInteractablePosition.z;
-                        endPoint.transform.position = position;
+                        endPointPosition.x = Mathf.Clamp(endPointPosition.x, initialEndPointPosition.x + limits[0], initialEndPointPosition.x + limits[1]);
+                        endPointPosition.y = initialEndPointPosition.y;
+                        endPointPosition.z = initialEndPointPosition.z;
+                        
+                        Vector3 interactablePosition = activeChild.transform.position;
+                        interactablePosition.x = Mathf.Clamp(interactablePosition.x, initialInteractablePosition.x + limits[0], initialInteractablePosition.x + limits[1]);
+                        interactablePosition.y = initialInteractablePosition.y;
+                        interactablePosition.z = initialInteractablePosition.z;
+                        
+                        activeChild.transform.position = interactablePosition;
+                        endPoint.transform.position = endPointPosition;
                     }
                     else
                     {
@@ -141,13 +146,20 @@ public class HandControllerRaycast : MonoBehaviour
                         List<float> limits = verticalConstraint.GetLimits();
                         Debug.Log("Limits: " + limits[0] + " " + limits[1]);
                         // Constrain movement to vertical
-                        Vector3 position = endPoint.transform.position;
-                        position.x = initialInteractablePosition.x;
+                        Vector3 endPointPosition = endPoint.transform.position;
+                        endPointPosition.x = initialEndPointPosition.x;
                         // Limits are defined as [-y, y]
-                        position.y = Mathf.Clamp(position.y, initialInteractablePosition.y + limits[0], initialInteractablePosition.y + limits[1]);
-                        position.z = initialInteractablePosition.z;
-                        Debug.Log("Clamped position: " + position);
-                        endPoint.transform.position = position;
+                        endPointPosition.y = Mathf.Clamp(endPointPosition.y, initialEndPointPosition.y + limits[0], initialEndPointPosition.y + limits[1]);
+                        endPointPosition.z = initialEndPointPosition.z;
+                        
+                        Vector3 interactablePosition = activeChild.transform.position;
+                        interactablePosition.x = initialInteractablePosition.x;
+                        interactablePosition.y = Mathf.Clamp(interactablePosition.y, initialInteractablePosition.y + limits[0], initialInteractablePosition.y + limits[1]);
+                        interactablePosition.z = initialInteractablePosition.z;
+                        
+                        Debug.Log("Clamped position: " + endPointPosition);
+                        activeChild.transform.position = interactablePosition;
+                        endPoint.transform.position = endPointPosition;
                     }
                     Debug.Log("New position: " + activeChild.transform.position);
                 }
