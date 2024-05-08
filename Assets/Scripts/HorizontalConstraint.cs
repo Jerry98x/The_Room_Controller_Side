@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class HorizontalConstraint : MonoBehaviour
 {
-    [SerializeField] private float minX; // The minimum y-coordinate
-    [SerializeField] private float maxX; // The maximum y-coordinate
-    /*private void OnTriggerStay(Collider other)
-    {
-        EndPoint endPoint = other.GetComponentInChildren<EndPoint>();
-        if (endPoint != null)
-        {
-            Vector3 constrainedPosition = other.transform.position;
-            constrainedPosition.y = Mathf.Clamp(constrainedPosition.y, minX, maxX);
-            other.transform.position = constrainedPosition;
-        }
-    }*/
+    [SerializeField] private float minX = -1f; // The minimum y-coordinate
+    [SerializeField] private float maxX = 1f; // The maximum y-coordinate
+    
 
     public List<float> GetLimits()
     {

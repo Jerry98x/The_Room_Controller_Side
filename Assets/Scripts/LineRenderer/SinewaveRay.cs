@@ -13,9 +13,6 @@ public class SinewaveRay : BaseRay
     [SerializeField] private bool isHorizontal = false;
     [SerializeField] private bool isInward = false;
 
-    [SerializeField] private Transform startPoint;
-    [SerializeField] private Transform endPoint;
-
     private void Start()
     {
             
@@ -87,12 +84,12 @@ public class SinewaveRay : BaseRay
         return !isHorizontal;
     }
     
-    public Transform GetEndPoint()
+    public override Transform GetEndPoint()
     {
         return endPoint;
     }
     
-    public EndPoint GetEndPointObject()
+    public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
     }

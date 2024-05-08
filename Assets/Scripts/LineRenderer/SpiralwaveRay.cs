@@ -13,9 +13,6 @@ public class SpiralwaveRay : BaseRay
     [SerializeField] private float radius = 1f;
     [SerializeField] private bool isInward = false;
     [SerializeField] private bool isMirrored = false;
-    
-    [SerializeField] private Transform startPoint;
-    [SerializeField] private Transform endPoint;
 
     private void Start()
     {
@@ -89,6 +86,16 @@ public class SpiralwaveRay : BaseRay
     private void Update()
     {
         DrawLine();
+    }
+    
+    public override Transform GetEndPoint()
+    {
+        return endPoint;
+    }
+    
+    public override EndPoint GetEndPointObject()
+    {
+        return endPoint.GetComponent<EndPoint>();
     }
     
 }

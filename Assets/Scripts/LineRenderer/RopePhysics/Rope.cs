@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Rope : BaseRay
 {
-    [SerializeField] private Transform startPoint;
-    [SerializeField] private Transform endPoint;
-
     [SerializeField] private float lineWidth = 0.1f;
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
@@ -163,5 +160,16 @@ public class Rope : BaseRay
             this.posNow = pos;
             this.posOld = pos;
         }
+    }
+    
+    
+    public override Transform GetEndPoint()
+    {
+        return endPoint;
+    }
+    
+    public override EndPoint GetEndPointObject()
+    {
+        return endPoint.GetComponent<EndPoint>();
     }
 }
