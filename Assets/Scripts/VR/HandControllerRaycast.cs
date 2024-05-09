@@ -180,7 +180,7 @@ public class HandControllerRaycast : MonoBehaviour
         }
     }
 
-    private void HandleSpiralwaveConstraints(GameObject child, SpiralwaveRay spiralwaveRay)
+    /*private void HandleSpiralwaveConstraints(GameObject child, SpiralwaveRay spiralwaveRay)
     {
         Transform endPoint = spiralwaveRay.GetEndPoint();
         CircularConstraint circularConstraint = child.GetComponentInChildren<CircularConstraint>();
@@ -207,8 +207,37 @@ public class HandControllerRaycast : MonoBehaviour
             // Update the position of the endPoint
             endPoint.transform.position = endPointPosition;
         }
-    }
+    }*/
     
+    
+    private void HandleSpiralwaveConstraints(GameObject child, SpiralwaveRay spiralwaveRay)
+    {
+        Transform endPoint = spiralwaveRay.GetEndPoint();
+        CircularConstraint circularConstraint = child.GetComponentInChildren<CircularConstraint>();
+        if (circularConstraint != null)
+        {
+            float radius = circularConstraint.GetRadius();
+
+            // Calculate the direction from the endPoint to the child
+            Vector3 direction = child.transform.position - endPoint.position;
+            float angle = Mathf.Atan2(direction.y, direction.x);
+
+            // Constrain the angle within the desired range
+            float minAngle = Mathf.Deg2Rad * 270f; // 270° in radians
+            float maxAngle = Mathf.Deg2Rad * (270f + 360f); // 270° + 360° in radians
+            angle = Mathf.Clamp(angle, minAngle, maxAngle);
+
+            // Calculate the new position of the child based on the circular path with the endPoint as the center
+            Vector3 childPosition = new Vector3(
+                endPoint.position.x + radius * Mathf.Cos(angle),
+                endPoint.position.y + radius * Mathf.Sin(angle),
+                endPoint.position.z
+            );
+
+            // Update the position of the child
+            child.transform.position = childPosition;
+        }
+    }
     
     
 
