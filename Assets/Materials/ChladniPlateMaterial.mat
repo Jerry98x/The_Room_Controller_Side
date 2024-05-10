@@ -82,10 +82,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _A: 3
+    - _A: 11
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _B: -3
+    - _B: 7
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -101,9 +101,9 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _M: 2
+    - _M: 11
     - _Metallic: 0
-    - _N: 3
+    - _N: 9
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
