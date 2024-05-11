@@ -27,7 +27,6 @@ public class HandControllerRaycast : MonoBehaviour
     }
     
     
-    //
     private void HandleHoverEntered(HoverEnterEventArgs args)
     {
         LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;

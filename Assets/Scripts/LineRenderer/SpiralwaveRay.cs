@@ -98,4 +98,6 @@ public class SpiralwaveRay : BaseRay
         return endPoint.GetComponent<EndPoint>();
     }
     
+    
+    
 }

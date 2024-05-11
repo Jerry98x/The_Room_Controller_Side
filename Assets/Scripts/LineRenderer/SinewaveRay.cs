@@ -94,4 +94,17 @@ public class SinewaveRay : BaseRay
         return endPoint.GetComponent<EndPoint>();
     }
     
+    
+    public void SetAmplitude(float newAmplitude)
+    {
+        //TODO clamp amplitude
+        amplitude = newAmplitude;
+    }
+    
+    public void SetSpeed(float newSpeed)
+    {
+        //TODO clamp speed
+        movementSpeed = newSpeed;
+    }
+    
 }
