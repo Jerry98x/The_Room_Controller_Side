@@ -27,7 +27,7 @@ public class HandControllerRaycast : MonoBehaviour
     }
     
     
-    private void HandleHoverEntered(HoverEnterEventArgs args)
+    public void HandleHoverEntered(HoverEnterEventArgs args)
     {
         LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;
         EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
@@ -48,7 +48,7 @@ public class HandControllerRaycast : MonoBehaviour
         
     }
     
-    private void HandleHoverExited(HoverExitEventArgs args)
+    public void HandleHoverExited(HoverExitEventArgs args)
     {
         Debug.Log("Hover exited event triggered");
         Debug.Log("args.interactable.gameObject: " + args.interactable.gameObject);

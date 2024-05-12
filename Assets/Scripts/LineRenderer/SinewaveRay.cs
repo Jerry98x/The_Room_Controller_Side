@@ -13,6 +13,13 @@ public class SinewaveRay : BaseRay
     [SerializeField] private bool isHorizontal = false;
     [SerializeField] private bool isInward = false;
 
+    
+    private float minAmplitude = 0.1f;
+    private float maxAmplitude = 0.5f;
+    private float minSpeed = 0.1f;
+    private float maxSpeed = 0.5f;
+    
+    
     private void Start()
     {
             
@@ -97,14 +104,14 @@ public class SinewaveRay : BaseRay
     
     public void SetAmplitude(float newAmplitude)
     {
-        //TODO clamp amplitude
-        amplitude = newAmplitude;
+        Debug.Log("New Amplitude: " + newAmplitude);
+        amplitude = Mathf.Clamp(Mathf.Abs(newAmplitude), minAmplitude, maxAmplitude);
+        Debug.Log("Amplitude: " + amplitude);
     }
     
     public void SetSpeed(float newSpeed)
     {
-        //TODO clamp speed
-        movementSpeed = newSpeed;
+        movementSpeed = Mathf.Clamp(Mathf.Abs(newSpeed), minSpeed, maxSpeed);
     }
     
 }
