@@ -15,7 +15,7 @@ public class SinewaveRay : BaseRay
 
     
     private float minAmplitude = 0.1f;
-    private float maxAmplitude = 0.5f;
+    private float maxAmplitude = 0.8f;
     private float minSpeed = 0.1f;
     private float maxSpeed = 0.5f;
     
@@ -86,10 +86,6 @@ public class SinewaveRay : BaseRay
         return isHorizontal;
     }
     
-    public bool IsVertical()
-    {
-        return !isHorizontal;
-    }
     
     public override Transform GetEndPoint()
     {

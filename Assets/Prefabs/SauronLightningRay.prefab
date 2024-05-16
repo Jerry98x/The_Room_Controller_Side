@@ -301,13 +301,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 1833623610483008787}
   numPoints: 200
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
   numberOfLoops: 1
   rotationSpeed: 3
   radius: 1
   isInward: 0
   isMirrored: 0
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
 --- !u!114 &1917482526087962390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 7333257267014245633}
   - component: {fileID: 5278117690784372701}
   - component: {fileID: 2258568328321207045}
+  - component: {fileID: 4263568320197079227}
   - component: {fileID: 6645931563815964312}
   m_Layer: 7
   m_Name: SauronEndpoint
@@ -390,8 +391,29 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.7828182
-  m_Center: {x: -0.019231677, y: 0, z: 0}
+  m_Radius: 1.0270166
+  m_Center: {x: -0.16439629, y: 0, z: -0.03442669}
+--- !u!135 &4263568320197079227
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7254913140293585473}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.64439344
+  m_Center: {x: -0.14439344, y: 0, z: 0}
 --- !u!114 &6645931563815964312
 MonoBehaviour:
   m_ObjectHideFlags: 0

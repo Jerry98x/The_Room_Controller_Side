@@ -164,8 +164,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7954295430979137745}
   - component: {fileID: 1439672227898170077}
-  - component: {fileID: 929544132812426883}
   - component: {fileID: 8726840885465354496}
+  - component: {fileID: 1050779927191017042}
+  - component: {fileID: 4786950236969981174}
+  - component: {fileID: 4324161656513201022}
   m_Layer: 6
   m_Name: NetoEndpoint
   m_TagString: Untagged
@@ -205,7 +207,19 @@ MonoBehaviour:
   radius: 7.26
   inclination: 19.5
   azimuth: 79
---- !u!135 &929544132812426883
+--- !u!114 &8726840885465354496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3617634259065119259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &1050779927191017042
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,20 +238,54 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.7702713
-  m_Center: {x: -0.019442797, y: 0, z: 0}
---- !u!114 &8726840885465354496
-MonoBehaviour:
+  m_Radius: 0.7586365
+  m_Center: {x: -0.021453857, y: 0, z: 0}
+--- !u!136 &4786950236969981174
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3617634259065119259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 2
+  m_Radius: 0.7762451
+  m_Height: 2.9381104
+  m_Direction: 1
+  m_Center: {x: -0.018920898, y: -0.0036621094, z: 0}
+--- !u!136 &4324161656513201022
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3617634259065119259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.7762451
+  m_Height: 2.9381104
+  m_Direction: 0
+  m_Center: {x: -0.018920898, y: -0.0036621094, z: 0}
 --- !u!1 &4297830955857863418
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,13 +438,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 1833623610483008787}
   numPoints: 0
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
   amplitude: 1
   frequency: 1
   movementSpeed: 1
   isHorizontal: 0
   isInward: 0
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
 --- !u!114 &1417319939482069459
 MonoBehaviour:
   m_ObjectHideFlags: 0
