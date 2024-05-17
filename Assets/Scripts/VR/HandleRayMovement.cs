@@ -6,6 +6,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class HandleRayMovement : MonoBehaviour
 {
+
+    [SerializeField] private Transform coreCenter;
+    
     //public XRController handController;
     private XRRayInteractor rayInteractor;
     private Pointer pointer;
@@ -14,36 +17,44 @@ public class HandleRayMovement : MonoBehaviour
     SinewaveRay sinewaveRay;
     SpiralwaveRay spiralwaveRay;
 
-    private float maxElongation = 2f;
+    
+    // Variables for simple version with amplitude based on angles
+    // minAmplitude can match the minClampingAmplitude in SinewaveRay, maxAmplitude needs to be fine-tuned
     private float minAmplitude = 0.1f;
-    private float maxAmplitude = 2.5f;
+    private float maxAmplitude = 10f;
     
     
     private bool isTracking = false;
-    private float initialHandYPosition;
+    //private bool isInitial = true;
+
+
+    // Variables for simple version with amplitude based on mere positions
+    
+    /*private float initialHandYPosition;
     private float initialHandXPosition;
     private Vector3 previousHandPosition = Vector3.zero;
-    private float previousTime;
+    private float previousTime;*/
     
     
     
     
+    // Variables for circular buffer version
     
-    private const int bufferSize = 100; // Size of the circular buffer
+    /*private const int bufferSize = 100; // Size of the circular buffer
     private Vector3[] handPositionBuffer = new Vector3[bufferSize]; // Circular buffer to store hand positions
-    private int bufferIndex = 0; // Index to keep track of the current position in the buffer
+    private int bufferIndex = 0; // Index to keep track of the current position in the buffer*/
 
 
 
 
-    // Variables for custom function attempt
-
-    private Vector3 savedMaxPosition = Vector3.zero;
+    // Variables for custom function version first attempt
+    
+    /*private Vector3 savedMaxPosition = Vector3.zero;
     private bool isInitial = true;
     private bool isFirstDirection = false;
     private bool isFirstHalf = false;
     private bool isPositiveDirection = false;
-    private Vector3 initialDirection = Vector3.zero;
+    private Vector3 initialDirection = Vector3.zero;*/
     
 
 
@@ -74,8 +85,8 @@ public class HandleRayMovement : MonoBehaviour
         }
         
         
-        initialHandYPosition = pointer.transform.position.y;
-        initialHandXPosition = pointer.transform.position.x;
+        /*initialHandYPosition = pointer.transform.position.y;
+        initialHandXPosition = pointer.transform.position.x;*/
         isTracking = true;
     }
     
@@ -107,7 +118,7 @@ public class HandleRayMovement : MonoBehaviour
         {
             if(sinewaveRay != null)
             {
-                UpdateSinewaveRay();
+                UpdateSinewaveRayByAngle();
             }
             if(spiralwaveRay != null)
             {
@@ -116,13 +127,42 @@ public class HandleRayMovement : MonoBehaviour
         }
         else
         {
-            isInitial = true;
+            //isInitial = true;
         }
     }
+    
+    
+    
+    
+    // Simple version with amplitude based on angles
+    
+    private void UpdateSinewaveRayByAngle()
+    {
+        // Get the endPoint position of the hovered ray
+        Vector3 endPointPosition = sinewaveRay.GetEndPoint().position;
+
+        // Calculate the vectors from the coreCenter to the endPoint and the pointer
+        Vector3 vectorToEndpoint = endPointPosition - coreCenter.position;
+        Vector3 vectorToPointer = pointer.transform.position - coreCenter.position;
+
+        // Calculate the angles
+        float forwardToEndpointAngle = Vector3.Angle(coreCenter.forward, vectorToEndpoint);
+        float forwardToPointerAngle = Vector3.Angle(coreCenter.forward, vectorToPointer);
+
+        // Calculate the difference between the two angles
+        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);
+
+        // Map the angle difference to the amplitude range
+        float amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, angleDifference / 180f); // Dividing by 180 because the maximum difference between two angles is 180 degrees
+
+        // Update the sinewave ray's amplitude based on the calculated amplitude
+        sinewaveRay.SetAmplitude(amplitude);
+    }
+    
 
 
     
-    // Simple version
+    // Simple version with amplitude based on mere positions
     
     private void UpdateSinewaveRay()
     {
@@ -137,6 +177,8 @@ public class HandleRayMovement : MonoBehaviour
         
         // Get the endPoint position of the hovered ray
         Vector3 endPointPosition = sinewaveRay.GetEndPoint().position;
+        /*sinewaveRay.GetEndPoint().GetLocalPositionAndRotation(out Vector3 endPointPos, out Quaternion endPointRot);
+        Vector3 endPointPosition = endPointPos;*/
         
         if(sinewaveRay.IsHorizontal())
         {
@@ -174,62 +216,7 @@ public class HandleRayMovement : MonoBehaviour
 
         // Update the sinewave ray's amplitude based on the hand amplitude
         sinewaveRay.SetAmplitude(amplitude);
-        
-        
-        
-        /*float handYPosition = pointer.transform.position.y;
-        float handXPosition = pointer.transform.position.x;
 
-        // Calculate the distance between current hand position and initial position
-        float distanceFromInitial = Vector2.Distance(new Vector2(handXPosition, handYPosition), new Vector2(initialHandXPosition, initialHandYPosition));
-
-        // Map the distance to the amplitude using a periodic function
-        float amplitude = Mathf.Sin(distanceFromInitial * Mathf.PI) * 0.5f; //0.5f is the maximum amplitude
-
-        sinewaveRay.SetAmplitude(amplitude);
-
-        // Update previous hand position and time for speed calculation
-        Vector3 currentHandPosition = pointer.transform.position;
-        float currentTime = Time.time;
-        float speed = (currentHandPosition - previousHandPosition).magnitude / (currentTime - previousTime);
-
-        previousHandPosition = currentHandPosition;
-        previousTime = currentTime;
-        */
-        
-        
-        
-        
-        
-        /*float handYPosition;
-        float handXPosition;
-        float amplitude;
-        if (sinewaveRay.IsHorizontal())
-        { 
-            handXPosition = pointer.transform.position.x;
-            amplitude = Mathf.Abs(handXPosition - initialHandYPosition);
-                            
-        }
-        else
-        {
-            
-            handYPosition = pointer.transform.position.y;
-            Debug.Log("Hand Y Position: " + handYPosition);
-            amplitude = Mathf.Abs(handYPosition - initialHandYPosition);
-            Debug.Log("Amplitude: " + amplitude);
-
-        }
-        sinewaveRay.SetAmplitude(amplitude);
-        
-        
-        Vector3 currentHandPosition = pointer.transform.position;
-        float currentTime = Time.time;
-        float speed = (currentHandPosition - previousHandPosition).magnitude / (currentTime - previousTime);
-        //float frequency = speed / 2;
-        //sinewaveRay.SetSpeed(speed);
-
-        previousHandPosition = currentHandPosition;
-        previousTime = currentTime;*/
     }
     
     
@@ -242,14 +229,8 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-    
-    
-    
-    
-    
-    
-    
     // Circular buffer version
+    
     /*private void UpdateSinewaveRay()
     {
         // Get the endPoint position of the hovered ray
@@ -326,7 +307,8 @@ public class HandleRayMovement : MonoBehaviour
 
 
 
-    // Custom version alla cazzo di cane
+    // Custom version first attempt
+    
     /*private void UpdateSinewaveRay()
     {
         

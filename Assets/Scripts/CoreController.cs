@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class CoreController : MonoBehaviour
 {
+
+    [SerializeField] private Transform coreCenter;
     
     public static CoreController Instance { get; private set; }
 
@@ -58,6 +60,11 @@ public class CoreController : MonoBehaviour
 
         selectedObject = newObject;
         selectedObject.OnSelect();
+    }
+    
+    public Transform GetCoreCenter()
+    {
+        return coreCenter;
     }
     
     
