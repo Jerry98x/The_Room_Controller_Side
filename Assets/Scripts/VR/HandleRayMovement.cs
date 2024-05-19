@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Linq;
 
 public class HandleRayMovement : MonoBehaviour
 {
@@ -16,12 +17,28 @@ public class HandleRayMovement : MonoBehaviour
     
     SinewaveRay sinewaveRay;
     SpiralwaveRay spiralwaveRay;
+    
+    private Vector3 previousPointerPosition;
+    private float previousTime;
+    
+    
+    /*private Queue<float> recentSpeeds = new Queue<float>();
+    private const int maxRecentSpeedsCount = 100;*/
 
     
     // Variables for simple version with amplitude based on angles
     // minAmplitude can match the minClampingAmplitude in SinewaveRay, maxAmplitude needs to be fine-tuned
-    private float minAmplitude = 0.1f;
+    private float minAmplitude = 0.05f;
     private float maxAmplitude = 10f;
+    /*private float minSpeed = 0.1f;
+    private float maxSpeed = 0.5f;
+    private float minFrequency = 1f;
+    private float maxFrequency = 4f;*/
+    
+    // Variables for simple version with radius based on angles
+    // minRadius can match the minClampingRadius in SpiralwaveRay, maxRadius needs to be fine-tuned
+    private float minRadius = 0.1f;
+    private float maxRadius = 5f;
     
     
     private bool isTracking = false;
@@ -92,19 +109,12 @@ public class HandleRayMovement : MonoBehaviour
     
     public void HandleHoverExited(HoverExitEventArgs args)
     {
-        isTracking = false;
+        // Reset the rays
+        sinewaveRay = null;
+        spiralwaveRay = null;
         
-        // Reset the amplitude of the ray
-        SinewaveRay sine = args.interactable.GetComponent<SinewaveRay>();
-        if (sine != null)
-        {
-            sinewaveRay = null;
-        }
-        SpiralwaveRay spiral = args.interactable.GetComponent<SpiralwaveRay>();
-        if (spiral != null)
-        {
-            spiralwaveRay = null;
-        }
+        isTracking = false;
+
     }
     
     
@@ -122,7 +132,7 @@ public class HandleRayMovement : MonoBehaviour
             }
             if(spiralwaveRay != null)
             {
-                UpdateSpiralwaveRay();
+                UpdateSpiralwaveRayByAngle();
             }
         }
         else
@@ -145,12 +155,14 @@ public class HandleRayMovement : MonoBehaviour
         Vector3 vectorToEndpoint = endPointPosition - coreCenter.position;
         Vector3 vectorToPointer = pointer.transform.position - coreCenter.position;
 
-        // Calculate the angles
+        /*// Calculate the angles
         float forwardToEndpointAngle = Vector3.Angle(coreCenter.forward, vectorToEndpoint);
         float forwardToPointerAngle = Vector3.Angle(coreCenter.forward, vectorToPointer);
 
         // Calculate the difference between the two angles
-        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);
+        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);*/
+        
+        float angleDifference = Mathf.Abs(Vector3.Angle(vectorToEndpoint, vectorToPointer));
 
         // Map the angle difference to the amplitude range
         float amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, angleDifference / 180f); // Dividing by 180 because the maximum difference between two angles is 180 degrees
@@ -159,12 +171,14 @@ public class HandleRayMovement : MonoBehaviour
         sinewaveRay.SetAmplitude(amplitude);
     }
     
+    
+    
 
 
     
     // Simple version with amplitude based on mere positions
     
-    private void UpdateSinewaveRay()
+    private void UpdateSinewaveRayByPosition()
     {
 
         float handXPosition;
@@ -492,9 +506,48 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-    private void UpdateSpiralwaveRay()
+    private void UpdateSpiralwaveRayByAngle()
     {
-       
+        // Get the endPoint position of the hovered ray
+        Vector3 endPointPosition = spiralwaveRay.GetEndPoint().position;
+
+        // Calculate the vectors from the coreCenter to the endPoint and the pointer
+        Vector3 vectorToEndpoint = endPointPosition - coreCenter.position;
+        Vector3 vectorToPointer = pointer.transform.position - coreCenter.position;
+
+        /*// Calculate the angles
+        float forwardToEndpointAngle = Vector3.Angle(coreCenter.forward, vectorToEndpoint);
+        float forwardToPointerAngle = Vector3.Angle(coreCenter.forward, vectorToPointer);
+
+        // Calculate the difference between the two angles
+        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);*/
+        
+        float angleDifference = Mathf.Abs(Vector3.Angle(vectorToEndpoint, vectorToPointer));
+
+        // Map the angle difference to the radius range
+        float radius = Mathf.Lerp(minRadius, maxRadius, angleDifference / 180f); // Dividing by 180 because the maximum difference between two angles is 180 degrees
+        
+        
+        spiralwaveRay.SetRadius(radius);
+        
+        /*
+        // Check if the hand is moving in a counterclockwise direction
+        bool isMoving = Vector3.Distance(pointer.transform.position, previousPointerPosition) > 0;
+
+        // Update the spiralwave ray's radius based on the calculated radius and whether the hand is moving
+        if (isMoving && isTracking)
+        {
+            spiralwaveRay.SetRadius(radius);
+        }
+        else
+        {
+            spiralwaveRay.ResetRadius();
+        }
+
+        // Update the previous pointer position for the next frame
+        previousPointerPosition = pointer.transform.position;
+        */
+
     }
     
 }

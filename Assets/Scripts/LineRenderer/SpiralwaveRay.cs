@@ -13,6 +13,11 @@ public class SpiralwaveRay : BaseRay
     [SerializeField] private float radius = 1f;
     [SerializeField] private bool isInward = false;
     [SerializeField] private bool isMirrored = false;
+    
+    
+    private float minClampingRadius = 0.1f;
+    private float maxClampingRadius = 1f;
+    
 
     private void Start()
     {
@@ -96,6 +101,17 @@ public class SpiralwaveRay : BaseRay
     public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
+    }
+    
+    
+    public void SetRadius(float newRadius)
+    {
+        radius = Mathf.Clamp(newRadius, minClampingRadius, maxClampingRadius);
+    }
+    
+    public void ResetRadius()
+    {
+        radius = minClampingRadius;
     }
     
     
