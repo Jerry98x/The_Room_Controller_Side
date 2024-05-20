@@ -7,11 +7,15 @@ public class EndPoint : MonoBehaviour
 
     private Vector3 initialPosition;
     
+    //[SerializeField] private List<GameObject> vfxPrefab; // Reference to the VFX object
+    
+    //TODO: create child object just for colliders and rotate it to face the core
+    
     void Start()
     {
         initialPosition = transform.position;
         
-        CapsuleCollider[] colliders = GetComponents<CapsuleCollider>();
+        /*CapsuleCollider[] colliders = GetComponents<CapsuleCollider>();
         foreach (CapsuleCollider collider in colliders)
         {
             if (collider != null && collider.enabled)
@@ -25,10 +29,27 @@ public class EndPoint : MonoBehaviour
                 // Make the visual representation red and more visible
                 Color color = Color.red;
                 color.a = 1f; // Fully opaque
-                visual.GetComponent<Renderer>().material.color = color;}
-        }
+                visual.GetComponent<Renderer>().material.color = color;
+            }
+        }*/
         
     }
+    
+    
+    /*public void ActivateVFX()
+    {
+        // Instantiate the VFX object
+        GameObject vfxObject = Instantiate(vfxPrefab, transform.position, Quaternion.identity);
+
+        // Activate the VFX object
+        vfxObject.SetActive(true);
+
+        // Optionally, destroy the VFX object after some time
+        Destroy(vfxObject, 5f); // Destroy after 5 seconds
+    }*/
+    
+    
+    
     public Vector3 GetInitialPosition()
     {
         return initialPosition;

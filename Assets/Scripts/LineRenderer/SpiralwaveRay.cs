@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class SpiralwaveRay : BaseRay
 {
+    
+    // Spiralwave representing the ray of a "Sauron" module
     
     [SerializeField] private int numberOfLoops = 1;
     [SerializeField] private float rotationSpeed = 1f;
@@ -15,8 +18,19 @@ public class SpiralwaveRay : BaseRay
     [SerializeField] private bool isMirrored = false;
     
     
+    private Renderer renderer;
+    private Color initialColor;
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+    
+    
     private float minClampingRadius = 0.1f;
     private float maxClampingRadius = 1f;
+
+    public void Awake()
+    {
+        renderer = GetComponent<Renderer>();
+        initialColor = renderer.material.GetColor(EmissionColorId);
+    }
     
 
     private void Start()
@@ -90,8 +104,56 @@ public class SpiralwaveRay : BaseRay
 
     private void Update()
     {
+        HandleEvents();
         DrawLine();
     }
+
+    
+    // Testing events for the spiralwave by pressing keys
+    private void HandleEvents()
+    {
+        // Spiralwave radius
+        if(Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            
+            if (!this.radius.Equals(0.2f))
+            {
+                this.radius = 0.2f;
+            }
+            else
+            {
+                this.radius = 0.05f;
+            }
+        }
+        // Spiralwave number of loops
+        if(Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            if (!this.numberOfLoops.Equals(8))
+            {
+                this.numberOfLoops = 8;
+            }
+            else
+            {
+                this.numberOfLoops = 5;
+            }
+        }
+        // Spiralwave color
+        if(Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            if (renderer != null && renderer.material != null)
+            {
+                if(renderer.material.GetColor(EmissionColorId) == initialColor)
+                {
+                    renderer.material.SetColor(EmissionColorId, Color.green);
+                }
+                else
+                {
+                    renderer.material.SetColor(EmissionColorId, initialColor);
+                }
+            }
+        }
+    }
+    
     
     public override Transform GetEndPoint()
     {

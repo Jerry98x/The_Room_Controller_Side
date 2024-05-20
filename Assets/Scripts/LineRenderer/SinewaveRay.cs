@@ -1,17 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class SinewaveRay : BaseRay
 {
     
+    // Sinewave representing the ray of a "Neto" module
+    
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
     [SerializeField] private float movementSpeed = 1f;
     [SerializeField] private bool isHorizontal = false;
     [SerializeField] private bool isInward = false;
+
+    private Renderer renderer;
+    private Color initialColor;
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
     
     private float minClampingAmplitude = 0.05f;
@@ -22,6 +30,12 @@ public class SinewaveRay : BaseRay
     
     private float minFrequency = 1f;
     private float maxFrequency = 2f;
+
+    private void Awake()
+    {
+        renderer = GetComponent<Renderer>();
+        initialColor = renderer.material.GetColor(EmissionColorId);
+    }
     
     private void Start()
     {
@@ -81,7 +95,56 @@ public class SinewaveRay : BaseRay
 
     private void Update()
     {
+        HandleEvents();
         DrawLine();
+    }
+
+
+    // Testing events for the sinewave by pressing keys
+    private void HandleEvents()
+    {
+        
+        // Sinewave amplitude
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            
+            if (!this.amplitude.Equals(1f))
+            {
+                this.amplitude = 1f;
+            }
+            else
+            {
+                this.amplitude = 0.5f;
+            }
+        }
+        // Sinewave frequency
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (!this.frequency.Equals(4f))
+            {
+                this.frequency = 4f;
+            }
+            else
+            {
+                this.frequency = 2f;
+            }
+        }
+        // Sinewave color
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (renderer != null && renderer.material != null)
+            {
+                if(renderer.material.GetColor(EmissionColorId) == initialColor)
+                {
+                    renderer.material.SetColor(EmissionColorId, Color.red);
+                }
+                else
+                {
+                    renderer.material.SetColor(EmissionColorId, initialColor);
+                }
+            }
+        }
+        
     }
     
     public bool IsHorizontal()

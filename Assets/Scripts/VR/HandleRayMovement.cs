@@ -154,14 +154,8 @@ public class HandleRayMovement : MonoBehaviour
         // Calculate the vectors from the coreCenter to the endPoint and the pointer
         Vector3 vectorToEndpoint = endPointPosition - coreCenter.position;
         Vector3 vectorToPointer = pointer.transform.position - coreCenter.position;
-
-        /*// Calculate the angles
-        float forwardToEndpointAngle = Vector3.Angle(coreCenter.forward, vectorToEndpoint);
-        float forwardToPointerAngle = Vector3.Angle(coreCenter.forward, vectorToPointer);
-
-        // Calculate the difference between the two angles
-        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);*/
         
+        // Calculate the angle between the two vectors
         float angleDifference = Mathf.Abs(Vector3.Angle(vectorToEndpoint, vectorToPointer));
 
         // Map the angle difference to the amplitude range
@@ -515,13 +509,7 @@ public class HandleRayMovement : MonoBehaviour
         Vector3 vectorToEndpoint = endPointPosition - coreCenter.position;
         Vector3 vectorToPointer = pointer.transform.position - coreCenter.position;
 
-        /*// Calculate the angles
-        float forwardToEndpointAngle = Vector3.Angle(coreCenter.forward, vectorToEndpoint);
-        float forwardToPointerAngle = Vector3.Angle(coreCenter.forward, vectorToPointer);
-
-        // Calculate the difference between the two angles
-        float angleDifference = Mathf.Abs(forwardToEndpointAngle - forwardToPointerAngle);*/
-        
+        // Calculate the angle between the two vectors        
         float angleDifference = Mathf.Abs(Vector3.Angle(vectorToEndpoint, vectorToPointer));
 
         // Map the angle difference to the radius range
