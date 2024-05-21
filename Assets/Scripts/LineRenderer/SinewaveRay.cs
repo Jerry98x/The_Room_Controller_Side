@@ -14,7 +14,9 @@ public class SinewaveRay : BaseRay
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
     [SerializeField] private float movementSpeed = 1f;
-    [SerializeField] private bool isHorizontal = false;
+    //[SerializeField] private bool isHorizontal = false;
+    [Range(0, 180)]
+    [SerializeField] private float inclination = 0f;
     [SerializeField] private bool isInward = false;
 
     private Renderer renderer;
@@ -53,6 +55,10 @@ public class SinewaveRay : BaseRay
 
         // Set the number of points to draw
         lineRenderer.positionCount = numPoints;
+        
+        // Convert inclination from degrees to radians
+        float inclinationRad = inclination * Mathf.Deg2Rad;
+
 
         for (int currentPoint = 0; currentPoint < numPoints; currentPoint++)
         {
@@ -76,7 +82,16 @@ public class SinewaveRay : BaseRay
             // Scale amplitude based on distance from midpoint
             float scaledAmplitude = amplitude * Mathf.Cos(distanceFromMidpoint * Mathf.PI / 2); // Cosine function for smooth scaling
 
-            // Handle sinewave parallel to YZ plane or XZ plane
+            
+            // Calculate the x and y coordinates of the sinusoid along the inclined line
+            float x = scaledAmplitude * Mathf.Sin(angle) * Mathf.Cos(inclinationRad);
+            float y = scaledAmplitude * Mathf.Sin(angle) * Mathf.Sin(inclinationRad);
+            
+            // Set the position of the line renderer using the new coordinates
+            lineRenderer.SetPosition(currentPoint, position + new Vector3(x, y, 0));
+
+            
+            /*// Handle sinewave parallel to YZ plane or XZ plane
             if (!isHorizontal)
             {
                 float y = scaledAmplitude * Mathf.Sin(angle);
@@ -86,7 +101,7 @@ public class SinewaveRay : BaseRay
             {
                 float x = scaledAmplitude * Mathf.Sin(angle);
                 lineRenderer.SetPosition(currentPoint, position + new Vector3(x, 0, 0));
-            }
+            }*/
             
         }
 
@@ -147,10 +162,10 @@ public class SinewaveRay : BaseRay
         
     }
     
-    public bool IsHorizontal()
+    /*public bool IsHorizontal()
     {
         return isHorizontal;
-    }
+    }*/
     
     
     public override Transform GetEndPoint()
@@ -161,6 +176,26 @@ public class SinewaveRay : BaseRay
     public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
+    }
+    
+    public float GetAmplitude()
+    {
+        return amplitude;
+    }
+    
+    public float GetSpeed()
+    {
+        return movementSpeed;
+    }
+    
+    public float GetFrequency()
+    {
+        return frequency;
+    }
+    
+    public float GetInclination()
+    {
+        return inclination;
     }
     
     

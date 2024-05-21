@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class VerticalConstraint : MonoBehaviour
 {
-    
     [SerializeField] private float minY; // The minimum y-coordinate
     [SerializeField] private float maxY; // The maximum y-coordinate
     

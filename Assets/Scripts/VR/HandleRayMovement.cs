@@ -180,6 +180,7 @@ public class HandleRayMovement : MonoBehaviour
 
         float relativeXPosition;
         float relativeYPosition;
+        float relativePosition;
 
         float amplitude;
         
@@ -188,7 +189,17 @@ public class HandleRayMovement : MonoBehaviour
         /*sinewaveRay.GetEndPoint().GetLocalPositionAndRotation(out Vector3 endPointPos, out Quaternion endPointRot);
         Vector3 endPointPosition = endPointPos;*/
         
-        if(sinewaveRay.IsHorizontal())
+        // Get the current position of the hand
+        handXPosition = pointer.transform.position.x;
+        handYPosition = pointer.transform.position.y;
+        // Calculate the relative position of the hand to the endPoint
+        relativeXPosition = handXPosition - endPointPosition.x;
+        relativeYPosition = handYPosition - endPointPosition.y;
+        relativePosition = Mathf.Sqrt(Mathf.Pow(relativeXPosition, 2) + Mathf.Pow(relativeYPosition, 2));
+        
+        amplitude = Mathf.Abs(relativePosition);
+        
+        /*if(sinewaveRay.IsHorizontal())
         {
             // Get the current position of the hand
             handXPosition = pointer.transform.position.x;
@@ -213,7 +224,7 @@ public class HandleRayMovement : MonoBehaviour
             amplitude = Mathf.Abs(relativeYPosition);
             //amplitude = Mathf.Lerp(0.1f, 0.8f, Mathf.InverseLerp(endPointPosition.y - maxElongation, endPointPosition.y + maxElongation, Mathf.Abs(relativeYPosition))) ;
             Debug.Log("Amplitude determined by Y Position: " + amplitude);
-        }
+        }*/
         
         // Consider endpointposition + maxelongation and endpointposition - maxelongation as a lerp
         

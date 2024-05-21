@@ -137,7 +137,27 @@ public class HandControllerRaycast : MonoBehaviour
         Transform endPoint = sinewaveRay.GetEndPoint();
         if (sinewaveRay != null)
         {
-            if (sinewaveRay.IsHorizontal())
+            Constraints constraints = child.GetComponentInChildren<Constraints>();
+            List<float> limits = constraints.GetLimits();
+            // Constrain movement depending on the inclination of the sinewave
+            Vector3 endPointPosition = endPoint.transform.position;
+
+            endPointPosition.x = Mathf.Clamp(endPointPosition.x, initialEndPointPosition.x + limits[0]*Mathf.Cos(sinewaveRay.GetInclination()*Mathf.Deg2Rad), initialEndPointPosition.x + limits[1]*Mathf.Cos(sinewaveRay.GetInclination()*Mathf.Deg2Rad));
+            endPointPosition.y = Mathf.Clamp(endPointPosition.y, initialEndPointPosition.y + limits[0]*Mathf.Sin(sinewaveRay.GetInclination()*Mathf.Deg2Rad), initialEndPointPosition.y + limits[1]*Mathf.Sin(sinewaveRay.GetInclination()*Mathf.Deg2Rad));
+            endPointPosition.z = initialEndPointPosition.z;
+            Debug.Log("endPointPosition: " + endPointPosition);
+            
+            Vector3 interactablePosition = child.transform.position;
+            interactablePosition.x = Mathf.Clamp(interactablePosition.x, initialInteractablePosition.x + limits[0]*Mathf.Cos(sinewaveRay.GetInclination()*Mathf.Deg2Rad), initialInteractablePosition.x + limits[1]*Mathf.Cos(sinewaveRay.GetInclination()*Mathf.Deg2Rad));
+            interactablePosition.y = Mathf.Clamp(interactablePosition.y, initialInteractablePosition.y + limits[0]*Mathf.Sin(sinewaveRay.GetInclination()*Mathf.Deg2Rad), initialInteractablePosition.y + limits[1]*Mathf.Sin(sinewaveRay.GetInclination()*Mathf.Deg2Rad));
+            interactablePosition.z = initialInteractablePosition.z;
+            Debug.Log("interactablePosition: " + interactablePosition);
+            
+            child.transform.position = interactablePosition;
+            endPoint.transform.position = endPointPosition;
+            
+            
+            /*if (sinewaveRay.IsHorizontal())
             {
                 HorizontalConstraint horizontalConstraint = child.GetComponentInChildren<HorizontalConstraint>();
                 List<float> limits = horizontalConstraint.GetLimits();
@@ -175,7 +195,7 @@ public class HandControllerRaycast : MonoBehaviour
                 
                 child.transform.position = interactablePosition;
                 endPoint.transform.position = endPointPosition;
-            }
+            }*/
         }
     }
 

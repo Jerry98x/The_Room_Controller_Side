@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class HandleRayMovement_FSM : MonoBehaviour
 {
     //public XRController handController;
-    private XRRayInteractor rayInteractor;
+    /*private XRRayInteractor rayInteractor;
     private Pointer pointer;
     
     SinewaveRay sinewaveRay;
@@ -66,7 +66,7 @@ public class HandleRayMovement_FSM : MonoBehaviour
         
         
         /*initialHandYPosition = pointer.transform.position.y;
-        initialHandXPosition = pointer.transform.position.x;*/
+        initialHandXPosition = pointer.transform.position.x;#1#
         isTracking = true;
     }
     
@@ -108,7 +108,7 @@ public class HandleRayMovement_FSM : MonoBehaviour
         /*else
         {
             isInitial = true;
-        }*/
+        }#1#
     }
 
 
@@ -150,13 +150,13 @@ public class HandleRayMovement_FSM : MonoBehaviour
                 break;
             case HandMovementState.MovingInOppositeHalf:
                 HandleMovingInOppositeHalf(currentHandPosition, endPointPosition);
-                break;*/
+                break;#1#
             /*case HandMovementState.MovingInInitialDirection:
                 HandleMovingInInitialDirection(currentHandPosition, endPointPosition, amplitude);
                 break;
             case HandMovementState.MovingInOppositeDirection:
                 HandleMovingInOppositeDirection(currentHandPosition, endPointPosition, amplitude);
-                break;*/
+                break;#1#
         }
         
         previousHandPosition = currentHandPosition;
@@ -165,14 +165,15 @@ public class HandleRayMovement_FSM : MonoBehaviour
 
     private void HandleInitialState(Vector3 currHandPosition, Vector3 endPointPosition, float amplitude)
     {
-        if (sinewaveRay.IsHorizontal())
+        initialDirection = new Vector3(Mathf.Sign((currHandPosition - endPointPosition).normalized.x), Mathf.Sign((currHandPosition - endPointPosition).normalized.y), 0);
+        /*if (sinewaveRay.IsHorizontal())
         {
             initialDirection = new Vector3(Mathf.Sign((currHandPosition - endPointPosition).normalized.x), 0, 0);
         }
         else
         {
             initialDirection = new Vector3(0, Mathf.Sign((currHandPosition - endPointPosition).normalized.y), 0);
-        }
+        }#1#
         
         maxPosition = endPointPosition;
         currentState = HandMovementState.FirstHalfInitialDirection;
@@ -350,7 +351,7 @@ public class HandleRayMovement_FSM : MonoBehaviour
             }
             
             sinewaveRay.SetAmplitude(amplitude);
-            #1#
+            #2#
             
         }
         else
@@ -382,7 +383,7 @@ public class HandleRayMovement_FSM : MonoBehaviour
         else
         {
             currentState = HandMovementState.MovingInOppositeDirection;
-        }#1#
+        }#2#
     }
     
     
@@ -434,8 +435,8 @@ public class HandleRayMovement_FSM : MonoBehaviour
         else
         {
             currentState = HandMovementState.MovingInInitialDirection;
-        }#1#
-    }*/
+        }#2#
+    }#1#
     
     /*private float ComputeSinusoidalWaveDirection(Vector3 currentHandPosition, Vector3 endPointPosition)
     {
@@ -454,7 +455,7 @@ public class HandleRayMovement_FSM : MonoBehaviour
         
         float dotProduct = Vector3.Dot(direction, initialDirection);
         return dotProduct;
-    }*/
+    }#1#
 
     private float CalculateAmplitude(Vector3 endPointPosition)
     {
@@ -474,6 +475,6 @@ public class HandleRayMovement_FSM : MonoBehaviour
     private void UpdateSpiralwaveRay()
     {
        
-    }
+    }*/
     
 }

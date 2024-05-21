@@ -19,6 +19,11 @@ public class SphericalCoordinates : MonoBehaviour
         // Convert spherical coordinates to Cartesian and move the object
         Vector3 cartesianPosition = SphericalCoordinatesHandler.SphericalToCartesian(radius, inclination, azimuth, centerOfSphere);
         transform.position = cartesianPosition;
+        
+        // Calculate the direction vector from the endpoint object to the core center
+        Vector3 directionToCenter = centerOfSphere.position - transform.position;
+        // Update the rotation of the endpoint object to face the core center
+        transform.rotation = Quaternion.LookRotation(directionToCenter);
     }
 
     
