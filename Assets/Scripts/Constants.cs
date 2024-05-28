@@ -1,4 +1,7 @@
-// ReSharper disable InconsistentNaming
+
+/// <summary>
+/// Class containing all the useful constants of the application
+/// </summary>
 public class Constants {
     
     #region Layers

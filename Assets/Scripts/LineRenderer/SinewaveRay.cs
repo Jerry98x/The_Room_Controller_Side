@@ -6,10 +6,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Represents a Neto ray as a sinewave
+/// </summary>
+/// <remarks>
+/// The sinewave has different modifiable parameters such as amplitude, frequency, speed, and inclination.
+/// Its shape is supposed to suggest the linear movement that the Controller should perform with the VR controller
+/// to move the Neto module.
+/// </remarks>
 public class SinewaveRay : BaseRay
 {
-    
-    // Sinewave representing the ray of a "Neto" module
     
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
@@ -19,7 +25,7 @@ public class SinewaveRay : BaseRay
     [SerializeField] private float inclination = 0f;
     [SerializeField] private bool isInward = false;
 
-    private Renderer renderer;
+    //private Renderer renderer;
     private Color initialColor;
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
@@ -32,24 +38,52 @@ public class SinewaveRay : BaseRay
     
     private float minFrequency = 1f;
     private float maxFrequency = 2f;
+    
 
+    
+    #region MonoBehaviour callbacks
+
+    /// <summary>
+    /// Initializes the line renderer and the initial color
+    /// </summary>
     private void Awake()
     {
-        renderer = GetComponent<Renderer>();
-        initialColor = renderer.material.GetColor(EmissionColorId);
+        /*renderer = GetComponent<Renderer>();*/
+        lineRenderer.GetComponent<LineRenderer>();
+        initialColor = GetComponent<LineRenderer>().material.GetColor(EmissionColorId);
     }
     
+    /// <summary>
+    /// Draws the sinewave at the start of the scene
+    /// </summary>
     private void Start()
     {
-            
-        /*Debug.Log("Solver: " + solver);
-        Debug.Log("Solver: " + solver.positions);*/
-        
-        lineRenderer.GetComponent<LineRenderer>();
+        DrawLine();
+    }
+    
+    
+    /// <summary>
+    /// Handles the events and draws the line at each frame
+    /// </summary>
+    private void Update()
+    {
+        HandleEvents();
         DrawLine();
     }
 
-    // Function representing the sine for a full cycle
+    #endregion
+
+
+
+    #region Relevant functions
+
+    /// <summary>
+    /// Concretely draws the sinewave through a line renderer. 
+    /// </summary>
+    /// <remarks>
+    /// The drawing of the line is done by computing each of its points and handling all its characteristics.
+    /// It sets the x and y coordinates of each point based on the sinewave function.
+    /// </remarks>
     protected override void DrawLine()
     {
 
@@ -89,33 +123,17 @@ public class SinewaveRay : BaseRay
             
             // Set the position of the line renderer using the new coordinates
             lineRenderer.SetPosition(currentPoint, position + new Vector3(x, y, 0));
-
             
-            /*// Handle sinewave parallel to YZ plane or XZ plane
-            if (!isHorizontal)
-            {
-                float y = scaledAmplitude * Mathf.Sin(angle);
-                lineRenderer.SetPosition(currentPoint, position + new Vector3(0, y, 0));
-            }
-            else
-            {
-                float x = scaledAmplitude * Mathf.Sin(angle);
-                lineRenderer.SetPosition(currentPoint, position + new Vector3(x, 0, 0));
-            }*/
             
         }
 
     }
     
 
-    private void Update()
-    {
-        HandleEvents();
-        DrawLine();
-    }
 
-
-    // Testing events for the sinewave by pressing keys
+    /// <summary>
+    /// Handles the events related to the sinewave such as changing its amplitude, frequency, and color
+    /// </summary>
     private void HandleEvents()
     {
         
@@ -147,72 +165,106 @@ public class SinewaveRay : BaseRay
         // Sinewave color
         if(Input.GetKeyDown(KeyCode.Alpha3))
         {
-            if (renderer != null && renderer.material != null)
+            if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
             {
-                if(renderer.material.GetColor(EmissionColorId) == initialColor)
+                if(GetComponent<Renderer>().material.GetColor(EmissionColorId) == initialColor)
                 {
-                    renderer.material.SetColor(EmissionColorId, Color.red);
+                    GetComponent<Renderer>().material.SetColor(EmissionColorId, Color.red);
                 }
                 else
                 {
-                    renderer.material.SetColor(EmissionColorId, initialColor);
+                    GetComponent<Renderer>().material.SetColor(EmissionColorId, initialColor);
                 }
             }
         }
         
     }
-    
-    /*public bool IsHorizontal()
-    {
-        return isHorizontal;
-    }*/
+
+    #endregion
     
     
+
+
+    #region Getters and setters
+
+    /// <summary>
+    /// Returns the endpoint of the sinewave
+    /// </summary>
     public override Transform GetEndPoint()
     {
         return endPoint;
     }
     
+    /// <summary>
+    /// Returns the endpoint object
+    /// </summary>
     public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
     }
     
+    /// <summary>
+    /// Returns the amplitude of the sinewave
+    /// </summary>
     public float GetAmplitude()
     {
         return amplitude;
     }
     
+    /// <summary>
+    /// Returns the speed of the sinewave
+    /// </summary>
     public float GetSpeed()
     {
         return movementSpeed;
     }
     
+    /// <summary>
+    /// Returns the frequency of the sinewave
+    /// </summary>
     public float GetFrequency()
     {
         return frequency;
     }
     
+    /// <summary>
+    /// Returns the inclination of the sinewave
+    /// </summary>
     public float GetInclination()
     {
         return inclination;
     }
     
     
+    /// <summary>
+    /// Sets the amplitude of the sinewave after clamping it
+    /// </summary>
+    /// /// <param name="newAmplitude"> The updated amplitude for the sinewave </param>
     public void SetAmplitude(float newAmplitude)
     {
         amplitude = Mathf.Clamp(Mathf.Abs(newAmplitude), minClampingAmplitude, maxClampingAmplitude);
         //amplitude = newAmplitude;;
     }
     
+    /// <summary>
+    /// Sets the speed of the sinewave after clamping it
+    /// </summary>
+    /// <param name="newSpeed"> The updated speed for the sinewave </param>
     public void SetSpeed(float newSpeed)
     {
         movementSpeed = Mathf.Clamp(Mathf.Abs(newSpeed), minSpeed, maxSpeed);
     }
     
+    /// <summary>
+    /// Sets the inclination of the sinewave after clamping it
+    /// </summary>
+    /// <param name="newFrequency"> The updated frequency for the sinewave </param>
     public void SetFrequency(float newFrequency)
     {
         frequency = Mathf.Clamp(Mathf.Abs(newFrequency), minFrequency, maxFrequency);
     }
+
+    #endregion
     
+
 }

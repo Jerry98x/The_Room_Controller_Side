@@ -16,8 +16,8 @@ public class NetoFeedbackHandler : MonoBehaviour
     private Vector3 particleDirection;
     private float soundSpeed; // Speed of the AudioSource object movement
 
-    private bool shouldMove = false; // Variable to control when the AudioSource object should start moving
-    private Vector3 initialPosition; // Variable to store the initial position of the AudioSource object
+    private bool shouldMove = false; // To control when the AudioSource object should start moving
+    private Vector3 initialPosition;
 
     
     
@@ -34,6 +34,7 @@ public class NetoFeedbackHandler : MonoBehaviour
     }
 
 
+    // Set the direction of the particle system
     private void SetParticleSystemDirection()
     {
         particleDirection = particleEndpointPosition.position - partSystem.transform.position;
@@ -80,6 +81,7 @@ public class NetoFeedbackHandler : MonoBehaviour
     }
     
     
+    // Translate the AudioSource object in the same direction of the particles
     private void MoveAudioSource()
     {
         if (shouldMove) // Check if shouldMove is true before moving the AudioSource object
@@ -92,18 +94,19 @@ public class NetoFeedbackHandler : MonoBehaviour
             {
                 source.transform.Translate(soundSpeed  * Time.deltaTime * normalizedDirection, Space.World);
 
-                // Check if the AudioSource object has reached the particleEndpointPosition
+                // Check if the AudioSource object has reached the particleEndpointPosition and reset its position
                 if (Vector3.Distance(source.transform.position, particleEndpointPosition.position) <= 0.3f)
                 {
-                    // Reset the position of the AudioSource object to the initial position
                     source.transform.position = initialPosition;
                 }
                 
+                
+                // Check if the AudioSource object has moved past the particleEndpointPosition and reposition it in the initial position
+                // Needed because the precision of the previous check may be too high
                 float offset = 1.5f;
                 if (Vector3.Distance(initialPosition, particleEndpointPosition.position) >=
                     Vector3.Distance(initialPosition, particleEndpointPosition.position) + offset)
                 {
-                    // Reset the position of the AudioSource object to the initial position
                     source.transform.position = initialPosition;
                 }
             

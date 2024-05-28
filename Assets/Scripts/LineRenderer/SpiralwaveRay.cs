@@ -6,10 +6,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Represents a Sauron ray as a spiralwave
+/// </summary>
+/// <remarks>
+/// The spiralwave has different modifiable parameters such as number of loops, rotation speed, radius, and direction.
+/// Its shape is supposed to suggest the rotatory movement that the Controller should perform with the VR controller
+/// to move the Sauron module.
+/// </remarks>
 public class SpiralwaveRay : BaseRay
 {
-    
-    // Spiralwave representing the ray of a "Sauron" module
+
     
     [SerializeField] private int numberOfLoops = 1;
     [SerializeField] private float rotationSpeed = 1f;
@@ -18,7 +25,7 @@ public class SpiralwaveRay : BaseRay
     [SerializeField] private bool isMirrored = false;
     
     
-    private Renderer renderer;
+    //private Renderer renderer;
     private Color initialColor;
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
     
@@ -26,20 +33,52 @@ public class SpiralwaveRay : BaseRay
     private float minClampingRadius = 0.1f;
     private float maxClampingRadius = 1f;
 
+
+    #region MonoBehaviour callbacks
+
+    /// <summary>
+    /// Initializes the line renderer and the initial color
+    /// </summary>
     public void Awake()
     {
-        renderer = GetComponent<Renderer>();
-        initialColor = renderer.material.GetColor(EmissionColorId);
+        //renderer = GetComponent<Renderer>();
+        lineRenderer.GetComponent<LineRenderer>();
+        initialColor = GetComponent<LineRenderer>().material.GetColor(EmissionColorId);
     }
     
 
+    /// <summary>
+    /// Draws the sinewave at the start of the scene
+    /// </summary>
     private void Start()
     {
-        lineRenderer.GetComponent<LineRenderer>();
+        DrawLine();
+    }
+    
+    
+    /// <summary>
+    /// Handles the events and draws the line at each frame
+    /// </summary>
+    private void Update()
+    {
+        HandleEvents();
         DrawLine();
     }
 
-    // Function representing the spiral for a full cycle
+    #endregion
+
+
+
+
+    #region Relevant functions
+    
+    /// <summary>
+    /// Concretely draws the spiralwave through a line renderer. 
+    /// </summary>
+    /// <remarks>
+    /// The drawing of the line is done by computing each of its points and handling all its characteristics.
+    /// It sets the position of each point based on the spiralwave radius and rotation.
+    /// </remarks>
     protected override void DrawLine()
     {
         
@@ -91,25 +130,20 @@ public class SpiralwaveRay : BaseRay
             }
             
             
-            Vector3 offset = rotation * Vector3.up * scaledRadius; // Rotate around the "up" axis
+            // Rotate around the "up" axis
+            Vector3 offset = rotation * Vector3.up * scaledRadius;
 
             position += offset;
 
             lineRenderer.SetPosition(currentPoint, position);
         }
         
-
-    }
-
-
-    private void Update()
-    {
-        HandleEvents();
-        DrawLine();
     }
 
     
-    // Testing events for the spiralwave by pressing keys
+    /// <summary>
+    /// Handles the events related to the sinewave such as changing its radius, number of loops, and color
+    /// </summary>
     private void HandleEvents()
     {
         // Spiralwave radius
@@ -140,42 +174,78 @@ public class SpiralwaveRay : BaseRay
         // Spiralwave color
         if(Input.GetKeyDown(KeyCode.Alpha6))
         {
-            if (renderer != null && renderer.material != null)
+            if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
             {
-                if(renderer.material.GetColor(EmissionColorId) == initialColor)
+                if(GetComponent<Renderer>().material.GetColor(EmissionColorId) == initialColor)
                 {
-                    renderer.material.SetColor(EmissionColorId, Color.green);
+                    GetComponent<Renderer>().material.SetColor(EmissionColorId, Color.green);
                 }
                 else
                 {
-                    renderer.material.SetColor(EmissionColorId, initialColor);
+                    GetComponent<Renderer>().material.SetColor(EmissionColorId, initialColor);
                 }
             }
         }
     }
-    
-    
+
+    #endregion
+
+
+
+    #region Getters and setters
+
+    /// <summary>
+    /// Returns the endpoint of the spiralwave
+    /// </summary>
     public override Transform GetEndPoint()
     {
         return endPoint;
     }
     
+    /// <summary>
+    /// Returns the endpoint object
+    /// </summary>
     public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
     }
     
     
+    /// <summary>
+    /// Returns the radius of the spiralwave
+    /// </summary>
+    public float GetRadius()
+    {
+        return radius;
+    }
+
+    /// <summary>
+    /// Returns the numeber of loops of the spiralwave
+    /// </summary>
+    public float GetNumberOfLoops()
+    {
+        return numberOfLoops;
+    }
+    
+    
+    /// <summary>
+    /// Set the radius after clamping it
+    /// </summary>
+    /// <param name="newRadius"> The updated radius of the spiralwave </param>
     public void SetRadius(float newRadius)
     {
         radius = Mathf.Clamp(newRadius, minClampingRadius, maxClampingRadius);
     }
     
+    /// <summary>
+    /// Reset the radius to the minimum value
+    /// </summary>
     public void ResetRadius()
     {
         radius = minClampingRadius;
-    }
+    }    
+
+    #endregion
     
-    
-    
+   
 }
