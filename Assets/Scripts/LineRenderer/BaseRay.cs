@@ -12,11 +12,9 @@ public abstract class BaseRay : MonoBehaviour
     
     [SerializeField] protected Transform startPoint;
     [SerializeField] protected Transform endPoint;
-    
-    /// <summary>
-    /// Concretely draws the ray through a line renderer
-    /// </summary>
-    protected abstract void DrawLine();
+
+
+    #region MonoBehaviour callbacks
 
     /// <summary>
     /// Initializes the line renderer and draws the ray at the start of the scene
@@ -28,12 +26,31 @@ public abstract class BaseRay : MonoBehaviour
     }
 
     /// <summary>
-    /// Draws the ray
+    /// Draws the ray at each frame
     /// </summary>
     private void Update()
     {
         DrawLine();
     }
+
+    #endregion
+    
+
+
+
+
+    #region Relevant functions
+
+    /// <summary>
+    /// Concretely draws the ray through a line renderer
+    /// </summary>
+    protected abstract void DrawLine();
+    
+    #endregion
+    
+    
+    
+    #region Getters and setters
 
     /// <summary>
     /// Returns the endpoint of the ray
@@ -44,4 +61,8 @@ public abstract class BaseRay : MonoBehaviour
     /// Returns the endpoint object
     /// </summary>
     public abstract EndPoint GetEndPointObject();
+
+    #endregion
+    
+
 }

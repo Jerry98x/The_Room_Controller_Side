@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a rope, which
+/// </summary>
 public class Rope : BaseRay
 {
     [SerializeField] private float lineWidth = 0.1f;
@@ -17,7 +20,12 @@ public class Rope : BaseRay
     private int segmentLength = 35;
     private float stiffness = 0.01f;
 
-    // Use this for initialization
+
+    #region Monobehaviour callbacks
+
+    /// <summary>
+    /// Initializes the line renderer and draws the ray at the start of the scene
+    /// </summary>
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -30,17 +38,49 @@ public class Rope : BaseRay
         }
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Draws the ray at each frame
+    /// </summary>
     void Update()
     {
         DrawLine();
     }
 
+    /// <summary>
+    /// Simulates the physics of the rope at each fixed frame
+    /// </summary>
     private void FixedUpdate()
     {
         Simulate();
     }
 
+    #endregion
+
+
+    #region Relevant functions and structures
+
+    /// <summary>
+    /// Struct that represents a rope segment
+    /// </summary>
+    public struct RopeSegment
+    {
+        public Vector3 posNow;
+        public Vector3 posOld;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"> Position of a rope segment </param>
+        public RopeSegment(Vector3 pos)
+        {
+            this.posNow = pos;
+            this.posOld = pos;
+        }
+    }
+    
+    /// <summary>
+    /// Handles the simulation of the rope with gravity and constraints for each rope segment
+    /// </summary>
     private void Simulate()
     {
         // SIMULATION
@@ -73,6 +113,9 @@ public class Rope : BaseRay
         }
     }
 
+    /// <summary>
+    /// Defines the constraints of the rope so that its behavior can be more realistic
+    /// </summary>
     private void ApplyConstraint()
     {
         // First segment
@@ -130,6 +173,12 @@ public class Rope : BaseRay
         }
     }
 
+    /// <summary>
+    /// Concretely draws the ray through a line renderer
+    /// </summary>
+    /// <remarks>
+    /// The drawing of the line is done by computing each of its points related to each rope segment
+    /// </remarks>
     protected override void DrawLine()
     {
         // Set width of the line
@@ -150,26 +199,28 @@ public class Rope : BaseRay
         }
     }
 
-    public struct RopeSegment
-    {
-        public Vector3 posNow;
-        public Vector3 posOld;
+    #endregion
 
-        public RopeSegment(Vector3 pos)
-        {
-            this.posNow = pos;
-            this.posOld = pos;
-        }
-    }
     
-    
+    #region Getters and setters
+
+    /// <summary>
+    /// Returns the endpoint of the rope ray
+    /// </summary>
     public override Transform GetEndPoint()
     {
         return endPoint;
     }
     
+    /// <summary>
+    /// Returns the endpoint object
+    /// </summary>
     public override EndPoint GetEndPointObject()
     {
         return endPoint.GetComponent<EndPoint>();
     }
+
+    #endregion
+    
+    
 }

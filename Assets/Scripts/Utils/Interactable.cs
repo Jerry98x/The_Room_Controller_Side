@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class representing a generic interactable object in the context of the XR Ray Interactor component
+/// </summary>
 public class Interactable : MonoBehaviour
 {
     

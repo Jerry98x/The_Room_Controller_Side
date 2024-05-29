@@ -1,5 +1,9 @@
 using UnityEngine;
 
+//TODO: see if it can be deleted because it is not used
+/// <summary>
+/// Class representing a sound (reduced version of the Unity AudioSource)
+/// </summary>
 [System.Serializable]
 public class Sound
 {

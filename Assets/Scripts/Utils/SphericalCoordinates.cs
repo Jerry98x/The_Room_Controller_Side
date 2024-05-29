@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Utility class to use in the Unity Editor to get Cartesian coordinates from spherical coordinates
+/// </summary>
 public class SphericalCoordinates : MonoBehaviour
 {
     
@@ -14,6 +17,9 @@ public class SphericalCoordinates : MonoBehaviour
     [Range(-180, 180)]
     [SerializeField] private float azimuth; // Azimuthal angle (phi)
 
+    /// <summary>
+    /// Converts spherical coordinates to Cartesian coordinates and moves the object accordingly at each frame
+    /// </summary>
     void Update()
     {
         // Convert spherical coordinates to Cartesian and move the object
