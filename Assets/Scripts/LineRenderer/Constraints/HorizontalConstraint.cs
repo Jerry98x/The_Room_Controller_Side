@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Constraint class used to define the horizontal limits of the area where a ray (endpoint) can move
+/// Constraint class used to define the horizontal limits of the area where a Neto ray (endpoint) can move
 /// </summary>
 /// <remarks>
 /// Used for the first version of the Room, where action/movement is on the endpoint (the whole ray moves in the space)

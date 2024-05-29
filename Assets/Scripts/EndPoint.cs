@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents the endpoint of a ray
+/// </summary>
+/// <remarks>
+/// The endpoint can refer to either a Neto ray or a Sauron ray
+/// </remarks>
 public class EndPoint : MonoBehaviour
 {
 
@@ -9,8 +15,9 @@ public class EndPoint : MonoBehaviour
     
     //[SerializeField] private List<GameObject> vfxPrefab; // Reference to the VFX object
     
-    //TODO: create child object just for colliders and rotate it to face the core
-    
+    /// <summary>
+    /// Initializes the endpoint's initial position
+    /// </summary>
     void Start()
     {
         initialPosition = transform.position;
@@ -50,6 +57,9 @@ public class EndPoint : MonoBehaviour
     
     
     
+    /// <summary>
+    /// Returns the initial position of the endpoint
+    /// </summary>
     public Vector3 GetInitialPosition()
     {
         return initialPosition;

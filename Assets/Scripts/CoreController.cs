@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class that represents the core of the Room
+/// </summary>
+/// <remarks>
+/// The core of the Room is called "Deathtrap"
+/// </remarks>
 public class CoreController : MonoBehaviour
 {
+    
+    // Singleton pattern
 
     [SerializeField] private Transform coreCenter;
     
@@ -12,7 +20,13 @@ public class CoreController : MonoBehaviour
 
     
     private Interactable selectedObject;
-    
+
+
+    #region MonoBehaviourr callbacks
+
+    /// <summary>
+    /// Initializes the core instance according to the Singleton pattern
+    /// </summary>
     private void Awake()
     {
         if (Instance != null)
@@ -22,12 +36,24 @@ public class CoreController : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Handles the raycasting at each frame
+    /// </summary>
     private void Update()
     {
         HandleRaycasting();
     }
 
+    #endregion
 
+
+
+    #region Relevant functions
+
+    //TODO: see if this custom function is really necessary and in case it is not, remove it
+    /// <summary>
+    /// Handles the raycasting to detect the objects that the player is looking at
+    /// </summary>
     private void HandleRaycasting()
     {
         RaycastHit hit;
@@ -36,8 +62,6 @@ public class CoreController : MonoBehaviour
 
             if (hit.transform.TryGetComponent(out Interactable interactable))
             {
-                // 
-                
                 
                 // Hit object is interactable and it's either a Neto module or a Sauron module
                 SelectObject(interactable);
@@ -51,6 +75,10 @@ public class CoreController : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Updates the selected object
+    /// </summary>
+    /// <param name="newObject"> Updated object to select </param>
     public void SelectObject(Interactable newObject)
     {
         if (selectedObject != null)
@@ -61,11 +89,23 @@ public class CoreController : MonoBehaviour
         selectedObject = newObject;
         selectedObject.OnSelect();
     }
-    
+
+    #endregion
+
+
+
+    #region Getters and setters
+
+    /// <summary>
+    /// Returns the core center
+    /// </summary>
     public Transform GetCoreCenter()
     {
         return coreCenter;
     }
+
+    #endregion
+
     
     
 }

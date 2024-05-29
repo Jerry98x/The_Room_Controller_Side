@@ -184,7 +184,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: -2.2
+      m_SerializableObject: -0.001
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -198,7 +198,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 2.2
+      m_SerializableObject: 0.001
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -212,7 +212,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 15
+      m_SerializableObject: 10
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -751,6 +751,7 @@ MonoBehaviour:
   m_Owners:
   - {fileID: 8926484042661614558}
   - {fileID: 8926484042661614583}
+  - {fileID: 8926484042661615543}
   dataType: 0
   capacity: 16
   stripCapacity: 16
@@ -877,7 +878,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614874}
   - {fileID: 8926484042661614732}
   - {fileID: 8926484042661614797}
-  m_UIPosition: {x: 930, y: 619}
+  m_UIPosition: {x: 930, y: 625}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
@@ -889,7 +890,9 @@ MonoBehaviour:
     - context: {fileID: 8926484042661614558}
       slotIndex: 0
   m_OutputFlowSlot:
-  - link: []
+  - link:
+    - context: {fileID: 8926484042661615543}
+      slotIndex: 0
   integration: 0
   angularIntegration: 0
   ageParticles: 1
@@ -6684,7 +6687,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: -2.2
+      m_SerializableObject: -0.001
     m_Space: 2147483647
   m_Property:
     name: o
@@ -6764,7 +6767,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 2.2
+      m_SerializableObject: 0.001
     m_Space: 2147483647
   m_Property:
     name: o
@@ -6844,7 +6847,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 15
+      m_SerializableObject: 10
     m_Space: 2147483647
   m_Property:
     name: o
@@ -7436,7 +7439,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614863}
   - {fileID: 8926484042661614868}
   dataType: 0
-  capacity: 10000
+  capacity: 10
   stripCapacity: 1
   particlePerStripCount: 128
   needsComputeBounds: 0
@@ -16233,6 +16236,7 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661615642}
+  - {fileID: 8926484042661615647}
 --- !u!114 &8926484042661615313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16646,7 +16650,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
   m_OutputSlots:
@@ -16672,6 +16676,8 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615325}
       inputSlot: {fileID: 8926484042661615637}
+    - outputSlot: {fileID: 8926484042661615325}
+      inputSlot: {fileID: 8926484042661615640}
     position: {x: 575.2, y: 1563.2001}
     expandedSlots: []
     expanded: 0
@@ -16710,6 +16716,7 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661615637}
+  - {fileID: 8926484042661615640}
 --- !u!114 &8926484042661615485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16792,9 +16799,11 @@ MonoBehaviour:
   m_InputSlots: []
   m_OutputSlots: []
   m_Label: 
-  m_Data: {fileID: 8926484042661615767}
+  m_Data: {fileID: 8926484042661614568}
   m_InputFlowSlot:
-  - link: []
+  - link:
+    - context: {fileID: 8926484042661614583}
+      slotIndex: 0
   m_OutputFlowSlot:
   - link: []
   integration: 0
@@ -18432,7 +18441,8 @@ MonoBehaviour:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661615325}
 --- !u!114 &8926484042661615641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18672,7 +18682,8 @@ MonoBehaviour:
       m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661615312}
 --- !u!114 &8926484042661615648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19287,31 +19298,3 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
   m_LinkedSlots: []
---- !u!114 &8926484042661615767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d78581a96eae8bf4398c282eb0b098bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  title: 
-  m_Owners:
-  - {fileID: 8926484042661615543}
-  dataType: 0
-  capacity: 128
-  stripCapacity: 1
-  particlePerStripCount: 128
-  needsComputeBounds: 0
-  boundsMode: 0
-  m_Space: 0

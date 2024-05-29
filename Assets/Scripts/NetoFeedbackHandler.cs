@@ -4,6 +4,12 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Class that handles the feedback received by the Controller when perceiving the Visitor through a Neto module
+/// </summary>
+/// <remarks>
+/// Neto modules can provide feedback in the form of audio (and its visualization)
+/// </remarks>
 public class NetoFeedbackHandler : MonoBehaviour
 {
     
@@ -19,8 +25,12 @@ public class NetoFeedbackHandler : MonoBehaviour
     private bool shouldMove = false; // To control when the AudioSource object should start moving
     private Vector3 initialPosition;
 
-    
-    
+
+    #region MonoBehaviour callbacks
+
+    /// <summary>
+    /// Initializes the ParticleSystem component and the AudioSource object's relevant properties
+    /// </summary>
     private void Start()
     {
         // Get the ParticleSystem component
@@ -32,16 +42,11 @@ public class NetoFeedbackHandler : MonoBehaviour
         audioSource[0].loop = true;
 
     }
-
-
-    // Set the direction of the particle system
-    private void SetParticleSystemDirection()
-    {
-        particleDirection = particleEndpointPosition.position - partSystem.transform.position;
-        partSystem.transform.rotation = Quaternion.LookRotation(particleDirection);
-    }
     
     
+    /// <summary>
+    /// Handles events and updates the AudioSource object's position at each frame
+    /// </summary>
     private void Update()
     {
         HandledEvents();
@@ -69,7 +74,24 @@ public class NetoFeedbackHandler : MonoBehaviour
     }
     
     //TODO: rewrite it in a cleaner way; this is only for testing purposes
+
+    #endregion
+
+
+
+    #region Relevant functions
+
+    // Set the direction of the particle system
+    private void SetParticleSystemDirection()
+    {
+        particleDirection = particleEndpointPosition.position - partSystem.transform.position;
+        partSystem.transform.rotation = Quaternion.LookRotation(particleDirection);
+    }
     
+    
+    /// <summary>
+    /// Handles the events that trigger the feedback, playing the particle system and the audio source
+    /// </summary>
     private void HandledEvents()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -81,7 +103,9 @@ public class NetoFeedbackHandler : MonoBehaviour
     }
     
     
-    // Translate the AudioSource object in the same direction of the particles
+    /// <summary>
+    /// Translate the AudioSource object in the same direction of the particles emitted by the ParticleSystem
+    /// </summary>
     private void MoveAudioSource()
     {
         if (shouldMove) // Check if shouldMove is true before moving the AudioSource object
@@ -113,5 +137,9 @@ public class NetoFeedbackHandler : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    
     
 }

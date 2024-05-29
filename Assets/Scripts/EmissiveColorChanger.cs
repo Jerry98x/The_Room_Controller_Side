@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO: fix the class or remove it completely if it's not used
 public class EmissiveColorChanger : MonoBehaviour
 {
     private MaterialPropertyBlock propBlock;
