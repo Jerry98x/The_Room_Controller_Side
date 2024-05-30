@@ -5,6 +5,15 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class that handles the raycast interaction with the modules of the Room and updates the rays' characteristics;
+/// tries to use a finite state machine to manage the movement of the ray
+/// </summary>
+/// <remarks>
+/// Used for the second version of the Room, where action/movement is on the ray itself
+/// (the movement is reflected in the change in the characteristics of the ray) and perception of the Visitor
+/// is on the endpoint (visual effects are applied near the endpoint of the ray)
+/// </remarks>
 public class HandleRayMovement_FSM : MonoBehaviour
 {
     //public XRController handController;

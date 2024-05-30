@@ -4,8 +4,18 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class that handles the raycast interaction with the modules of the Room and the movement constraints
+/// </summary>
+/// <remarks>
+/// Used for the first version of the Room, where action/movement is on the endpoint (the whole ray moves in the space)
+/// and perception of the Visitor is on the ray itself (reflected in the change in the characteristics of the ray)
+/// </remarks>
 public class HandControllerRaycast : MonoBehaviour
 {
+    
+    //TODO: Clean the code and remove unnecessary comments and debug logs
+    
     private XRRayInteractor rayInteractor;
     private List<GameObject> activeChildren = new List<GameObject>(); // List of current active child objects
     private GameObject activeChild = null; // Reference to the current active child object
@@ -19,6 +29,12 @@ public class HandControllerRaycast : MonoBehaviour
 
     //public float maxRaycastDistance = 100f;
 
+
+    #region MonoBehaviour callbacks
+
+    /// <summary>
+    /// Initializes the rayInteractor and subscribes to the events for hover entered and hover exited
+    /// </summary>
     private void Awake()
     {
         rayInteractor = GetComponent<XRRayInteractor>();
@@ -27,74 +43,13 @@ public class HandControllerRaycast : MonoBehaviour
     }
     
     
-    public void HandleHoverEntered(HoverEnterEventArgs args)
-    {
-        LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;
-        EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
-        initialEndPointPosition = endPoint.GetInitialPosition();
-        if (lightningRay != null)
-        {
-           initialInteractablePosition = lightningRay.GetInitialPosition(); 
-           lastEndPointPosition = initialEndPointPosition;
-           lastInteractablePosition = initialInteractablePosition;
-        }
-        Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
-        if (endPoint != null)
-        {
-            
-            //SetActiveChild(interactable.gameObject);
-            AddActiveChild(args.interactable.gameObject);
-        }
-        
-    }
-    
-    public void HandleHoverExited(HoverExitEventArgs args)
-    {
-        Debug.Log("Hover exited event triggered");
-        Debug.Log("args.interactable.gameObject: " + args.interactable.gameObject);
-        Debug.Log("activeChild: " + activeChild);
-        if (activeChildren.Contains(args.interactable.gameObject))
-        {
-            Debug.Log("Hover exited event triggered for active child: if entered");
-            //SetActiveChild(null);
-            isConstrained = false;
-            RemoveActiveChild(args.interactable.gameObject);
-        }
-    }
-    
-    private void AddActiveChild(GameObject newChild)
-    {
-        // Add the new object to the list of active children, if none of the other rays objects are already in the list
-        if (gameObject.GetComponentInChildren<XRSimpleInteractable>() == null)
-        { 
-            activeChildren.Add(newChild);
-            newChild.transform.SetParent(transform);
-        }
-        
-        // Check if the object has a SinewaveRay component
-        SinewaveRay sinewaveRay = newChild.GetComponentInChildren<SinewaveRay>();
-        if (sinewaveRay != null)
-        {
-            // If it does, set the isConstrained flag to true
-            isConstrained = true;
-        }
-
-        
-    }
-
-    private void RemoveActiveChild(GameObject oldChild)
-    {
-        Debug.Log("Entered RemoveActiveChild method");
-        // If the object is in the list of active children, remove it
-        if (!isConstrained && activeChildren.Contains(oldChild))
-        {
-            Debug.Log("Entered if statement in RemoveActiveChild method");
-            oldChild.transform.parent = null;
-            activeChildren.Remove(oldChild);
-            Debug.Log("Active children are " + activeChildren.Count + ": " + activeChildren);
-        }
-    }
-    
+    /// <summary>
+    /// Handles the active children (who become children of the HandControllerRaycast object)
+    /// and updates their position applying the movement area constraints at each frame
+    /// </summary>
+    /// <remarks>
+    /// The list approach is not strictly necessary because there is only one element, but it worked better.
+    /// </remarks>
     private void Update()
     {
         
@@ -126,12 +81,110 @@ public class HandControllerRaycast : MonoBehaviour
             }
         }
         
-
         
+    }
+    
+
+    #endregion
+
+
+
+
+    #region Relevant functions
+
+    /// <summary>
+    /// Handles the hover entered event and adds the interactable object to the list of active children
+    /// </summary>
+    /// <param name="args"> Event data </param>
+    public void HandleHoverEntered(HoverEnterEventArgs args)
+    {
+        LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;
+        EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
+        initialEndPointPosition = endPoint.GetInitialPosition();
+        if (lightningRay != null)
+        {
+           initialInteractablePosition = lightningRay.GetInitialPosition(); 
+           lastEndPointPosition = initialEndPointPosition;
+           lastInteractablePosition = initialInteractablePosition;
+        }
+        Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
+        if (endPoint != null)
+        {
+            
+            //SetActiveChild(interactable.gameObject);
+            AddActiveChild(args.interactable.gameObject);
+        }
+        
+    }
+    
+    /// <summary>
+    /// Handles the hover exited event and remove the interactable object from the list of active children
+    /// </summary>
+    /// <param name="args"> Event data </param>
+    public void HandleHoverExited(HoverExitEventArgs args)
+    {
+        Debug.Log("Hover exited event triggered");
+        Debug.Log("args.interactable.gameObject: " + args.interactable.gameObject);
+        Debug.Log("activeChild: " + activeChild);
+        if (activeChildren.Contains(args.interactable.gameObject))
+        {
+            Debug.Log("Hover exited event triggered for active child: if entered");
+            //SetActiveChild(null);
+            isConstrained = false;
+            RemoveActiveChild(args.interactable.gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// Adds the object to the list of active children and sets it as the active child
+    /// </summary>
+    /// <param name="newChild"> Object that is becoming a child </param>
+    private void AddActiveChild(GameObject newChild)
+    {
+        // Add the new object to the list of active children, if none of the other rays objects are already in the list
+        if (gameObject.GetComponentInChildren<XRSimpleInteractable>() == null)
+        { 
+            activeChildren.Add(newChild);
+            newChild.transform.SetParent(transform);
+        }
+        
+        //TODO: same for SpiralwaveRay component
+        // Check if the object has a SinewaveRay component
+        SinewaveRay sinewaveRay = newChild.GetComponentInChildren<SinewaveRay>();
+        if (sinewaveRay != null)
+        {
+            // If it does, set the isConstrained flag to true
+            isConstrained = true;
+        }
+
         
     }
 
+    /// <summary>
+    /// Removes the object from the list of active children and frees it from being a child
+    /// </summary>
+    /// <param name="oldChild"> Object that is being freed from being a child  </param>
+    private void RemoveActiveChild(GameObject oldChild)
+    {
+        Debug.Log("Entered RemoveActiveChild method");
+        // If the object is in the list of active children, remove it
+        if (!isConstrained && activeChildren.Contains(oldChild))
+        {
+            Debug.Log("Entered if statement in RemoveActiveChild method");
+            oldChild.transform.parent = null;
+            activeChildren.Remove(oldChild);
+            Debug.Log("Active children are " + activeChildren.Count + ": " + activeChildren);
+        }
+    }
+    
 
+    /// <summary>
+    /// Applies the linear constraints to the movement of the endpoint of the sinusoidal ray active child
+    /// (and so the ray itself), which is a Neto module, by limiting it along the inclination direction
+    /// and by clamping the x and y positions of the interactable object
+    /// </summary>
+    /// <param name="child"> The active child of the hand controller </param>
+    /// <param name="sinewaveRay"> The sinewave component of the object </param>
     private void HandleSinewaveConstraints(GameObject child, SinewaveRay sinewaveRay)
     {
         Transform endPoint = sinewaveRay.GetEndPoint();
@@ -199,6 +252,7 @@ public class HandControllerRaycast : MonoBehaviour
         }
     }
 
+    //TODO: Fix or update the function for handling the constraints to the movement of Sauron modules
     /*private void HandleSpiralwaveConstraints(GameObject child, SpiralwaveRay spiralwaveRay)
     {
         Transform endPoint = spiralwaveRay.GetEndPoint();
@@ -229,6 +283,12 @@ public class HandControllerRaycast : MonoBehaviour
     }*/
     
     
+    /// <summary>
+    /// Applies the rotatory constraints to the movement of the endpoint of the helicoidal ray active child
+    /// (and so the ray itself), which is a Sauron module, by limiting it within a circle
+    /// </summary>
+    /// <param name="child"> The active child of the hand controller </param>
+    /// <param name="spiralwaveRay"> The spiralwave component of the object </param>
     private void HandleSpiralwaveConstraints(GameObject child, SpiralwaveRay spiralwaveRay)
     {
         Transform endPoint = spiralwaveRay.GetEndPoint();
@@ -258,13 +318,13 @@ public class HandControllerRaycast : MonoBehaviour
         }
     }
     
-    
-
-    
-    
 
 
-
+    //TODO: see if this function is really necessary, and remove it if it is not
+    /// <summary>
+    /// Handles the raycast interaction with the movement areas
+    /// </summary>
+    /// <param name="child"> The object that is going to become the new child of the hand controller object </param>
     private void HandleEndPointRaycast(GameObject child)
     {
         
@@ -312,4 +372,9 @@ public class HandControllerRaycast : MonoBehaviour
         //Debug.DrawWireSphere(endPoint.transform.position, endPoint.GetComponent<SphereCollider>().radius, Color.red);
 
     }
+
+    #endregion
+    
+    
+
 }

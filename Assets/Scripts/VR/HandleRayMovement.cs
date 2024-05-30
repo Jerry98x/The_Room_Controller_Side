@@ -5,6 +5,14 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 
+/// <summary>
+/// Class that handles the raycast interaction with the modules of the Room and updates the rays' characteristics
+/// </summary>
+/// <remarks>
+/// Used for the second version of the Room, where action/movement is on the ray itself
+/// (the movement is reflected in the change in the characteristics of the ray) and perception of the Visitor
+/// is on the endpoint (visual effects are applied near the endpoint of the ray)
+/// </remarks>
 public class HandleRayMovement : MonoBehaviour
 {
 
@@ -72,9 +80,14 @@ public class HandleRayMovement : MonoBehaviour
     private bool isFirstHalf = false;
     private bool isPositiveDirection = false;
     private Vector3 initialDirection = Vector3.zero;*/
-    
 
 
+
+    #region MonoBehaviour callbacks
+
+    /// <summary>
+    /// Initializes the ray interactor and the pointer
+    /// </summary>
     private void Awake()
     {
         rayInteractor = GetComponent<XRRayInteractor>();
@@ -85,6 +98,38 @@ public class HandleRayMovement : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Updates the rays' characteristics at each frame
+    /// </summary>
+    private void Update()
+    {
+        if (isTracking)
+        {
+            if(sinewaveRay != null)
+            {
+                UpdateSinewaveRayByAngle();
+            }
+            if(spiralwaveRay != null)
+            {
+                UpdateSpiralwaveRayByAngle();
+            }
+        }
+        else
+        {
+            //isInitial = true;
+        }
+    }
+
+    #endregion
+
+
+
+    #region Relevant functions
+
+    /// <summary>
+    /// Handles the event when the hand enters the ray and find if the ray is a SinewaveRay or a SpiralwaveRay
+    /// </summary>
+    /// <param name="args"> Event data </param>
     public void HandleHoverEntered(HoverEnterEventArgs args)
     {
         // Set the amplitude of the ray
@@ -107,6 +152,11 @@ public class HandleRayMovement : MonoBehaviour
         isTracking = true;
     }
     
+    
+    /// <summary>
+    /// Handles the event when the hand exits the ray
+    /// </summary>
+    /// <param name="args"> Event data </param>
     public void HandleHoverExited(HoverExitEventArgs args)
     {
         // Reset the rays
@@ -122,30 +172,15 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-    private void Update()
-    {
-        if (isTracking)
-        {
-            if(sinewaveRay != null)
-            {
-                UpdateSinewaveRayByAngle();
-            }
-            if(spiralwaveRay != null)
-            {
-                UpdateSpiralwaveRayByAngle();
-            }
-        }
-        else
-        {
-            //isInitial = true;
-        }
-    }
     
     
-    
-    
-    // Simple version with amplitude based on angles
-    
+    /// <summary>
+    /// Takes the angle between the direction of the ray and the direction of the hand
+    /// and maps it to the sinewave ray's amplitude, updating it accordingly
+    /// </summary>
+    /// <remarks>
+    /// Simple version with amplitude based on relative angles
+    /// </remarks>
     private void UpdateSinewaveRayByAngle()
     {
         // Get the endPoint position of the hovered ray
@@ -168,10 +203,14 @@ public class HandleRayMovement : MonoBehaviour
     
     
 
-
     
-    // Simple version with amplitude based on mere positions
-    
+    /// <summary>
+    /// Takes the distance between the hand and the endPoint of the ray (which is radially centered)
+    /// and maps it to the sinewave ray's amplitude, updating it accordingly
+    /// </summary>
+    /// <remarks>
+    /// Simple version with amplitude based on mere positions
+    /// </remarks>
     private void UpdateSinewaveRayByPosition()
     {
 
@@ -244,7 +283,9 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-    
+    //TODO: see if there is a way to make the version with the circular buffer storing a history of hand position work
+    //TODO: and if there is a way to make the custom version with all the if-else statements work;
+    //TODO: otherwise remove them and keep the simple version with amplitude based on angles
     
     
     
@@ -510,9 +551,17 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-    
+    /// <summary>
+    /// Takes the angle between the direction of the ray and the direction of the hand
+    /// and maps it to the spiralwave ray's radius, updating it accordingly
+    /// </summary>
+    /// <remarks>
+    /// Simple version with amplitude based on relative angles
+    /// </remarks>
     private void UpdateSpiralwaveRayByAngle()
     {
+        //TODO: Now the endpoint gets directed towards the core at the start. Check if fixes the small issue of missing perfect symmetry
+        
         // Get the endPoint position of the hovered ray
         Vector3 endPointPosition = spiralwaveRay.GetEndPoint().position;
 
@@ -548,5 +597,10 @@ public class HandleRayMovement : MonoBehaviour
         */
 
     }
+
+    #endregion
+    
+    
+    
     
 }

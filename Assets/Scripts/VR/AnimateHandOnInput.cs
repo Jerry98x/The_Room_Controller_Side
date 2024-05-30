@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Class that handles the actions and animation of the VR hand model
+/// </summary>
+/// <remarks>
+/// Dummy class used to learn VR
+/// </remarks>
 public class AnimateHandOnInput : MonoBehaviour
 {
 
@@ -14,6 +20,9 @@ public class AnimateHandOnInput : MonoBehaviour
     private float triggerValue = 0f;
     private float gripValue = 0f;
 
+    /// <summary>
+    /// Updates the values of the hand's actions at each frame
+    /// </summary>
     private void Update()
     {
         triggerValue = pinchAnimationAction.action.ReadValue<float>();
