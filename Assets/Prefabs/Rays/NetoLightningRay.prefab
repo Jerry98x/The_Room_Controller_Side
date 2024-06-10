@@ -443,7 +443,7 @@ MonoBehaviour:
   amplitude: 1
   frequency: 1
   movementSpeed: 1
-  isHorizontal: 0
+  inclination: 0
   isInward: 0
 --- !u!114 &1417319939482069459
 MonoBehaviour:

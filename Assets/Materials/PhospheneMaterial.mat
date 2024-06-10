@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.012
+    - _Alpha: 0.01
     - _Time: 0
     m_Colors:
     - _Resolution: {r: 512, g: 512, b: 1, a: 1}

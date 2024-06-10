@@ -70,7 +70,7 @@ public class NetoFeedbackHandler : MonoBehaviour
             shouldMove = false;
         }
         
-        Debug.Log(shouldMove);
+        //Debug.Log(shouldMove);
     }
     
     //TODO: rewrite it in a cleaner way; this is only for testing purposes
@@ -118,18 +118,12 @@ public class NetoFeedbackHandler : MonoBehaviour
             {
                 source.transform.Translate(soundSpeed  * Time.deltaTime * normalizedDirection, Space.World);
 
-                // Check if the AudioSource object has reached the particleEndpointPosition and reset its position
-                if (Vector3.Distance(source.transform.position, particleEndpointPosition.position) <= 0.3f)
-                {
-                    source.transform.position = initialPosition;
-                }
-                
-                
                 // Check if the AudioSource object has moved past the particleEndpointPosition and reposition it in the initial position
-                // Needed because the precision of the previous check may be too high
-                float offset = 1.5f;
-                if (Vector3.Distance(initialPosition, particleEndpointPosition.position) >=
-                    Vector3.Distance(initialPosition, particleEndpointPosition.position) + offset)
+                // when the distance between the AudioSource object and the particleEndpointPosition is greater than 3 units
+                // (adjustable offset parameter to allow the Controller to perceive better the spatialization of the sound)
+                float offset = 3f;
+                if ((Vector3.Distance(source.transform.position, particleEndpointPosition.position) >= offset) && (Vector3.Distance(initialPosition, source.transform.position) >=
+                    Vector3.Distance(initialPosition, particleEndpointPosition.position) + offset))
                 {
                     source.transform.position = initialPosition;
                 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb946b4b5f99f64c8592b624d91dad8, type: 3}
+  m_Name: NetoAudioTesting
+  m_EditorClassIdentifier: 
+  objectName: NetoAudioTesting
+  testIntensityCharacteristics:
+  - {fileID: 11400000, guid: 0ff6cf5488ab6db4dacce4c73a2e0786, type: 2}
+  - {fileID: 11400000, guid: eab7662f245032041925deca056c0bd2, type: 2}
+  - {fileID: 11400000, guid: f9a0775bc3fcf504d9fb0e27bed5fa81, type: 2}
+  testDurationCharacteristics: []
