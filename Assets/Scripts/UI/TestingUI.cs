@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Serialization;
+using TS.ColorPicker;
 
 public class TestingUI : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class TestingUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI durationValueTextBox;
     
     private Canvas uiCanvas;
+    private Canvas colorPickerCanvas;
     
     private ObjectSO selectedObject;
     
@@ -33,9 +35,7 @@ public class TestingUI : MonoBehaviour
         public string name;
         public GameObject effectObject;
     }
-
     public Effect[] effects;
-
     private Dictionary<string, GameObject> effectsDictionary;
     
     
@@ -43,12 +43,19 @@ public class TestingUI : MonoBehaviour
     private Dictionary<string, float> intensityValues = new Dictionary<string, float>();
     private Dictionary<string, float> durationValues = new Dictionary<string, float>();
     
+    // Color to store the selected color from the color picker, in the case of characteristic change by color
+    private Color newColor;
+    private Color tempColor;
+    
 
     private void Start()
     {
 
         // Set the testing UI to be disabled at the start
         uiCanvas = gameObject.GetComponent<Canvas>();
+        var allCanvases = uiCanvas.GetComponentsInChildren<Canvas>(true);
+        colorPickerCanvas = allCanvases[1];
+        colorPickerCanvas.enabled = false;
         uiCanvas.enabled = false;
         
         // Turn struct array into dictionary
@@ -268,6 +275,13 @@ public class TestingUI : MonoBehaviour
             intensityValueTextBox.text = intensitySlider.value.ToString("F2");
         }
         
+        // Handle specific case where additional UI elements are needed (color wheel)
+        if (option == Constants.NETO_INTENSITY_BY_CIRCLES_COLOR)
+        {
+            colorPickerCanvas.enabled = true;
+            HandleColorPicker();
+        }
+        
         
         // Re-subscribe OnIntensityChanged to the onValueChanged event
         intensitySlider.onValueChanged.AddListener(OnIntensityChanged);
@@ -394,7 +408,7 @@ public class TestingUI : MonoBehaviour
                         if (audioSourceByVolume.isPlaying)
                         {
                             audioSourceByVolume.volume = value;
-                            audioSourceByVolume.outputAudioMixerGroup.audioMixer.SetFloat("volume", 10f);
+                            //audioSourceByVolume.outputAudioMixerGroup.audioMixer.SetFloat("volume", -20.0f);
                             
                         }
                         else
@@ -426,6 +440,20 @@ public class TestingUI : MonoBehaviour
                 case Constants.NETO_DURATION_BY_SUBEMITTER:
                     break;
                 case Constants.NETO_INTENSITY_BY_CIRCLES_COLOR:
+                    ParticleSystem partSystemByCircleColor = effect.GetComponent<ParticleSystem>();
+                    Debug.Log("NEW COLOR: " + newColor);
+                    if(partSystemByCircleColor != null)
+                    {
+                        if(partSystemByCircleColor.isPlaying)
+                        {
+                            var colorOverLifetime = partSystemByCircleColor.main.startColor;
+                            colorOverLifetime.color = newColor;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("No ParticleSystem component found in the object");
+                    }
                     break;
                 case Constants.NETO_INTENSITY_BY_CIRCLES_NUMBER:
                     
@@ -453,4 +481,40 @@ public class TestingUI : MonoBehaviour
         
         
     }
+    
+    
+    
+    private void HandleColorPicker()
+    {
+        ColorPicker colorPicker = colorPickerCanvas.GetComponentInChildren<ColorPicker>();
+        if(colorPicker != null)
+        {
+            colorPicker.OnChanged.AddListener(OnColorChanged);
+            colorPicker.OnSubmit.AddListener(OnColorSelected);
+            colorPicker.OnCancel.AddListener(OnColorCanceled);
+        }
+        else
+        {
+            Debug.LogError("ColorPicker component not found");
+        }
+
+    }
+
+    
+    private void OnColorChanged(Color color)
+    {
+        tempColor = color;
+    }
+
+    private void OnColorSelected(Color color)
+    {
+        newColor = tempColor;
+    }
+    
+    private void OnColorCanceled()
+    {
+        newColor = newColor;
+    }
+    
+    
 }

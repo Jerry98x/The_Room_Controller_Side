@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: NetoVisualizationTesting
   testIntensityCharacteristics:
-  - {fileID: 11400000, guid: 6fa549ff3870bfa479a40c659780bb6e, type: 2}
   - {fileID: 11400000, guid: 766f255c53c96a74abd20696bacece36, type: 2}
+  - {fileID: 11400000, guid: 6fa549ff3870bfa479a40c659780bb6e, type: 2}
   testDurationCharacteristics:
   - {fileID: 11400000, guid: 5262220146e8a5b43945c21f64847e90, type: 2}
   - {fileID: 11400000, guid: 795cc33f9632fab42af98cb91f25da68, type: 2}

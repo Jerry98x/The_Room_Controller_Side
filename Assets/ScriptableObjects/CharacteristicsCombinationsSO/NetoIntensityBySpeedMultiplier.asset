@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01131ba7031fd734d89d1319ab7b6f70, type: 3}
-  m_Name: NetoDurationByCirclesNumber
+  m_Name: NetoIntensityBySpeedMultiplier
   m_EditorClassIdentifier: 
-  characteristicName: NetoDurationByCirclesNumber
-  lowerBound: 0
-  upperBound: 50
-  initialValue: 10
-  value: 10
+  characteristicName: NetoIntensityBySpeedMultiplier
+  lowerBound: 0.1
+  upperBound: 5
+  initialValue: 1
+  value: 1
   multiplier: 0
   color: {r: 0, g: 0, b: 0, a: 0}
   texture: {fileID: 0}
-  toActivate: 1
+  toActivate: 0

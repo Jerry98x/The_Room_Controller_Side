@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NetoIntensityByCirclesNumber
   m_EditorClassIdentifier: 
   characteristicName: NetoIntensityByCirclesNumber
-  lowerBound: 1
+  lowerBound: 0
   upperBound: 50
   initialValue: 10
   value: 10

@@ -36,6 +36,15 @@ public class Constants {
     public const string NETO_DURATION_BY_SUBEMITTER = "NetoDurationBySubemitter";
     public const string NETO_INTENSITY_BY_CIRCLES_COLOR = "NetoIntensityByCirclesColor";
     public const string NETO_INTENSITY_BY_CIRCLES_NUMBER = "NetoIntensityByCirclesNumber";
+    public const string NETO_INTENSITY_BY_SPEED_MULTIPLIER = "NetoIntensityBySpeedMultiplier";
+    #endregion
+
+
+
+    #region Useful values
+
+    public const float NETO_INTENSITY_BY_CIRCLES_COLOR_VALUE = -1000f;
+
     #endregion
 
 

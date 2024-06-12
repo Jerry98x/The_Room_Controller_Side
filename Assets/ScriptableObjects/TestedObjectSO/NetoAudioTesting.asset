@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: NetoAudioTesting
   testIntensityCharacteristics:
-  - {fileID: 11400000, guid: 0ff6cf5488ab6db4dacce4c73a2e0786, type: 2}
   - {fileID: 11400000, guid: eab7662f245032041925deca056c0bd2, type: 2}
   - {fileID: 11400000, guid: f9a0775bc3fcf504d9fb0e27bed5fa81, type: 2}
+  - {fileID: 11400000, guid: 0ff6cf5488ab6db4dacce4c73a2e0786, type: 2}
   testDurationCharacteristics: []

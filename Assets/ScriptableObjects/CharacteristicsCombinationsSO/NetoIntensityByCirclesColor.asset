@@ -15,6 +15,8 @@ MonoBehaviour:
   characteristicName: NetoIntensityByCirclesColor
   lowerBound: 0
   upperBound: 0
+  initialValue: 0
+  value: -1000
   multiplier: 0
   color: {r: 0.30980393, g: 1, b: 1, a: 1}
   texture: {fileID: 0}

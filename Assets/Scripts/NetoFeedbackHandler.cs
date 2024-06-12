@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,11 @@ public class NetoFeedbackHandler : MonoBehaviour
 
     private bool shouldMove = false; // To control when the AudioSource object should start moving
     private Vector3 initialPosition;
+    
+    
+    //public delegate void ParticleSystemEventHandler();
+    //public event EventHandler OnParticleSystemStopped;
+    public event EventHandler OnSpeedChanged;
 
 
     #region MonoBehaviour callbacks
@@ -40,6 +46,14 @@ public class NetoFeedbackHandler : MonoBehaviour
         // Store the initial position of the AudioSource object
         initialPosition = audioSource[0].transform.position;
         audioSource[0].loop = true;
+        
+        
+        
+        // Add event listeners to the ParticleSystem component
+        //OnParticleSystemStopped += HandleParticleSystemStopped;
+        OnSpeedChanged += HandleSpeedChanged;
+        OnSpeedChanged += HandleAudioSourceSpeedChanged;
+
 
     }
     
@@ -52,6 +66,9 @@ public class NetoFeedbackHandler : MonoBehaviour
         HandledEvents();
         SetParticleSystemDirection();
         MoveAudioSource();
+        
+        //OnSpeedChanged?.Invoke(this, EventArgs.Empty);
+
         
         
         // Check if the particle system is no longer alive and the sound is playing
@@ -68,10 +85,22 @@ public class NetoFeedbackHandler : MonoBehaviour
 
             // Set shouldMove to false
             shouldMove = false;
+            
         }
+        
+        
+        /*if (!partSystem.IsAlive() && OnParticleSystemStopped != null)
+        {
+            OnParticleSystemStopped?.Invoke(this, EventArgs.Empty);
+        }*/
+        
+        
         
         //Debug.Log(shouldMove);
     }
+    
+    
+    
     
     //TODO: rewrite it in a cleaner way; this is only for testing purposes
 
@@ -135,5 +164,53 @@ public class NetoFeedbackHandler : MonoBehaviour
     #endregion
 
     
+    
+    private void HandleParticleSystemStopped(object sender, EventArgs e)
+    {
+        // Stop the sound
+        foreach (AudioSource source in audioSource)
+        {
+            source.Stop();
+        }
+
+        // Reposition the AudioSource to its initial position
+        audioSource[0].transform.position = initialPosition;
+
+        // Set shouldMove to false
+        shouldMove = false;
+    }
+    
+    private void HandleSpeedChanged(object sender, EventArgs e)
+    {
+        Debug.Log("Speed changed");
+        // Wait a second and then destroy all previously emitted particles
+        // (to avoid seeing both new particles and those slower than the new speed)
+        StartCoroutine(DestroyParticles());
+    }
+    
+    private IEnumerator DestroyParticles()
+    {
+        yield return new WaitForSeconds(1f);
+        partSystem.Clear();
+    }
+    
+    
+    private void HandleAudioSourceSpeedChanged(object sender, EventArgs e)
+    {
+        // Change the speed of the AudioSource object
+        soundSpeed = partSystem.main.startSpeed.constant;
+    }
+   
+    
+    
+    public void TriggerSpeedChanged()
+    {
+        OnSpeedChanged?.Invoke(this, EventArgs.Empty);
+    }
+    
+    public void TriggerAudioSourceSpeedChanged()
+    {
+        OnSpeedChanged?.Invoke(this, EventArgs.Empty);
+    }
     
 }
