@@ -47,5 +47,12 @@ public class Constants {
 
     #endregion
 
+    
+    
+    #region UDP-ESP communication
+    
+    
+    #endregion
+    
 
 }
