@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Oasis.GameEvents;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,13 @@ using UnityEngine.Serialization;
 public class SinewaveRay : BaseRay
 {
     
+    /*
+    // Events
+    [SerializeField] private StringGameEventSO netoPositionChangeEvent;
+    */
+    [SerializeField] private string prova;
+    
+    
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
     [SerializeField] private float movementSpeed = 1f;
@@ -27,7 +35,7 @@ public class SinewaveRay : BaseRay
 
     //private Renderer renderer;
     private Color initialColor;
-    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+    //private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
     
     private float minClampingAmplitude = 0.05f;
@@ -50,7 +58,7 @@ public class SinewaveRay : BaseRay
     {
         /*renderer = GetComponent<Renderer>();*/
         lineRenderer.GetComponent<LineRenderer>();
-        initialColor = GetComponent<LineRenderer>().material.GetColor(EmissionColorId);
+        initialColor = GetComponent<LineRenderer>().material.GetColor(Constants.EMISSION_COLOR_ID);
     }
     
     /// <summary>
@@ -67,6 +75,14 @@ public class SinewaveRay : BaseRay
     /// </summary>
     private void Update()
     {
+        /*// Position events
+        if(!endPoint.transform.position.z.Equals(this.GetEndPointObject().GetLastPosition().z))
+        {
+            float depth = endPoint.transform.position.z;
+            netoPositionChangeEvent.Invoke(depth.ToString());
+        }*/
+        
+        
         HandleEvents();
         DrawLine();
     }
@@ -167,18 +183,42 @@ public class SinewaveRay : BaseRay
         {
             if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
             {
-                if(GetComponent<Renderer>().material.GetColor(EmissionColorId) == initialColor)
+                if(GetComponent<Renderer>().material.GetColor(Constants.EMISSION_COLOR_ID) == initialColor)
                 {
-                    GetComponent<Renderer>().material.SetColor(EmissionColorId, Color.red);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSION_COLOR_ID, Color.red);
                 }
                 else
                 {
-                    GetComponent<Renderer>().material.SetColor(EmissionColorId, initialColor);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSION_COLOR_ID, initialColor);
                 }
+            }
+        }
+
+        
+        // Test, to be deleted
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            EmissiveColorChanger ecc = GetComponent<EmissiveColorChanger>();
+            if (prova == "a")
+            {
+                ecc.ChangeMaterialEmission(Color.blue);
+                ecc.ChangeMaterialEmissionIntensity(6f);
+            }
+            if(prova == "b")
+            {
+                ecc.ChangeMaterialEmission(Color.magenta);
+                ecc.ChangeMaterialAlpha(-2f);
             }
         }
         
     }
+    
+    
+    //TODO: handle events for the change of Neto's endpoint position, Neto's microphone volume,
+    //TODO: and Neto's light brightness
+    
+    
+    
 
     #endregion
     

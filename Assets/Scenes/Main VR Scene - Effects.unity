@@ -1859,11 +1859,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d7ed04e4e9b4548b4f8087be19545f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultEndpoint: {fileID: 0}
-  myPort: 12345
+  onMessageReceived:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1359962484}
+        m_TargetAssemblyTypeName: RoomBasicElement, Assembly-CSharp
+        m_MethodName: OnMessageReceived
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _defaultEndpoint: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0, type: 2}
+  myPort: 4210
   maxUdpAge: 2
   bufferSize: 1
-  onKeyValueReceived: {fileID: 0}
+  onKeyValueReceived: {fileID: 11400000, guid: f525574cad3dd425aaeb1affc6cdf109, type: 2}
+  onStringReceived: {fileID: 11400000, guid: 547ee07fa9c825f4fa5084d4eba8685d, type: 2}
 --- !u!4 &147514829
 Transform:
   m_ObjectHideFlags: 0
@@ -11760,6 +11776,27 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: endPointSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e71b0d84c7128f4f913e3e937a4af1c,
+        type: 2}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: udpManager
+      value: 
+      objectReference: {fileID: 147514828}
+    - target: {fileID: 1833623610483008787, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 42c7e54d78fcd1342ba1eafd07e79f79, type: 2}
+    - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: prova
+      value: a
+      objectReference: {fileID: 0}
     - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: points
@@ -11805,6 +11842,12 @@ PrefabInstance:
       propertyPath: movementSpeed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: netoPositionChangeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5d1f7c3db3ae08e4b9769ddbe1a92837,
+        type: 2}
     - target: {fileID: 2276730796652484773, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_Name
@@ -17627,6 +17670,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2909234668659291264, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2909234668659291264, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: endPointSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 025e56d45263b514190e320d56a95241,
+        type: 2}
+    - target: {fileID: 2909234668659291264, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: udpManager
+      value: 
+      objectReference: {fileID: 147514828}
     - target: {fileID: 4263568320197079227, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_Enabled
@@ -24309,6 +24368,111 @@ Transform:
   - {fileID: 1769613076}
   m_Father: {fileID: 631182223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1355394847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355394851}
+  - component: {fileID: 1355394850}
+  - component: {fileID: 1355394849}
+  - component: {fileID: 1355394848}
+  m_Layer: 0
+  m_Name: EmissiveTransparentSphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!135 &1355394848
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355394847}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1355394849
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355394847}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 2e667577a1295ec43ba5d3812b0e598e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1355394850
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355394847}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1355394851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355394847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.39, y: 0.8328087, z: 8.814077}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1356810334
 GameObject:
   m_ObjectHideFlags: 0
@@ -29139,6 +29303,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &1359962484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+    type: 3}
+  m_PrefabInstance: {fileID: 1930912276}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b7138bca742cf4896802d10e407be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1361965715
 GameObject:
   m_ObjectHideFlags: 0
@@ -29986,6 +30162,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minX: -1
   maxX: 1
+--- !u!114 &1438817406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438817403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a793dc11e792f48b494706eacac5e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomElement: {fileID: 1359962484}
+  netoPositionChangeEvent: {fileID: 11400000, guid: 547ee07fa9c825f4fa5084d4eba8685d,
+    type: 2}
+  netoFeedbackHandler: {fileID: 1648178249}
 --- !u!1 &1439427890
 GameObject:
   m_ObjectHideFlags: 0
@@ -34468,6 +34660,27 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: endPointSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0,
+        type: 2}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: udpManager
+      value: 
+      objectReference: {fileID: 147514828}
+    - target: {fileID: 1833623610483008787, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 42c7e54d78fcd1342ba1eafd07e79f79, type: 2}
+    - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: prova
+      value: b
+      objectReference: {fileID: 0}
     - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: endPoint
@@ -34508,6 +34721,12 @@ PrefabInstance:
       propertyPath: movementSpeed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2003717472790511860, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: netoPositionChangeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5d1f7c3db3ae08e4b9769ddbe1a92837,
+        type: 2}
     - target: {fileID: 2276730796652484773, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_Name
@@ -34656,6 +34875,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1438817405}
+    - targetCorrespondingSourceObject: {fileID: 3617634259065119259, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1438817406}
   m_SourcePrefab: {fileID: 100100000, guid: 14a44f16a2195484ca6a535bfaa05760, type: 3}
 --- !u!1 &1935797467
 GameObject:
@@ -42484,3 +42707,4 @@ SceneRoots:
   - {fileID: 75489268}
   - {fileID: 1871524855}
   - {fileID: 477473325}
+  - {fileID: 1355394851}

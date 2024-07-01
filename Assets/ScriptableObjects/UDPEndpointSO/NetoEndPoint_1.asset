@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3172ad6db434f1b45a1fb9e8fed69584, type: 3}
-  m_Name: DeathtrapEndPoint
+  m_Name: NetoEndPoint_1
   m_EditorClassIdentifier: 
-  stringIP: 
-  port: 0
-  uiName: DeathtrapEndPoint
+  stringIP: 192.168.0.205
+  port: 4210
+  uiName: NetoEndPoint_1

@@ -4,10 +4,21 @@ using System.Net;
 using Core;
 using Oasis.GameEvents;
 using UnityEngine;
+using UnityEngine.Events;
 
+
+[System.Serializable]
+public class MessageReceivedEvent : UnityEvent<byte[], EndPointSO> {}
 
 public class UDPManager : Monosingleton<UDPManager>
 {
+    
+    // Event
+    public MessageReceivedEvent onMessageReceived;
+    
+    
+    
+    
     [Header("Network setup")]
     
     [SerializeField] private EndPointSO _defaultEndpoint;
@@ -20,6 +31,7 @@ public class UDPManager : Monosingleton<UDPManager>
     [SerializeField] private int bufferSize = 1;
     
     [SerializeField] private KeyValueGameEventSO onKeyValueReceived;
+    [SerializeField] private StringGameEventSO onStringReceived;
     
     private UDPMessenger _udpMessenger;
 
@@ -86,6 +98,28 @@ public class UDPManager : Monosingleton<UDPManager>
         }
     }
     
+    public void SendByteArrayUdp(byte[] message, IPEndPoint endPoint)
+    {
+        // only works if INITIALIZED, meaning, if game has started
+        // Debug.Log($"[UDP MANAGER][SendStringUpdToRasp] - INIT: '{_initialized}'");
+        if (_initialized)
+        {
+            // Debug.Log($"[UDP MANAGER] - sending message: '{message}' to RASP");
+            _udpMessenger.SendUdp(message, endPoint);
+        }
+    }
+
+    public void SendIntUdp(int[] message, IPEndPoint endPoint)
+    {
+        // only works if INITIALIZED, meaning, if game has started
+        // Debug.Log($"[UDP MANAGER][SendStringUpdToRasp] - INIT: '{_initialized}'");
+        if (_initialized)
+        {
+            // Debug.Log($"[UDP MANAGER] - sending message: '{message}' to RASP");
+            _udpMessenger.SendUdp(message, endPoint);
+        }
+    }
+    
     void Update()
     {
         if (!_initialized)
@@ -116,14 +150,23 @@ public class UDPManager : Monosingleton<UDPManager>
             foreach (var message in messages)
             {
                 //TODO: not using key-value messages anymore
+                // Upon receiving a message, call an event passing message and endpoint
+                onMessageReceived.Invoke(message.RawMsg, _defaultEndpoint);
+                //onMessageReceived.Invoke(message.Msg.ToCharArray(), _defaultEndpoint);
+                
+                
+                //onMessageReceived.Invoke(message.Msg, _defaultEndpoint);
+
+                
+                
                 
                 // check if it's a key-value message
                 // otherwise, store the raw data in the input buffer, to be used by the UdpCameraViewer
-                if (!CheckKeyValueMessage(message.Msg))
+                /*if (!CheckKeyValueMessage(message.Msg))
                 {
                     // Debug.Log($"[UDP MANAGER] - RECEIVED RAW MESSAGE: {message.RawMsg} - {message.RawMsg.Length}");
                     _data = message.RawMsg;
-                }
+                }*/
             }
         }
     }
@@ -131,6 +174,17 @@ public class UDPManager : Monosingleton<UDPManager>
     
     //TODO: write a method that doesn't use a key-value message, but just a raw message, because we 
     //TODO: need to use as less space as possible on the ESP32 side
+    
+    private bool CheckStringMessage(string msg)
+    {
+        // Check if it's a string message and if the string is in the right format and number of bytes
+        if (msg.Length < 1)
+            return false;
+        
+        // ON STRING MSG GE
+        onStringReceived.Invoke(msg);
+        return true;
+    }
     
     
     private bool CheckKeyValueMessage(string msg)

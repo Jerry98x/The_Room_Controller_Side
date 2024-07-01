@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3172ad6db434f1b45a1fb9e8fed69584, type: 3}
-  m_Name: NetoEndPoint
+  m_Script: {fileID: 11500000, guid: baf90b0e81f2b304ea05651f0c3d6c79, type: 3}
+  m_Name: OnStringReceived
   m_EditorClassIdentifier: 
-  stringIP: 
-  port: 0
-  uiName: 
+  info: 

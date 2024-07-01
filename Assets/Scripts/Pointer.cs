@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,15 @@ public class Pointer : MonoBehaviour
     {
         pointerPosition = transform.position;
     }
-    
-    
+
+
+    private void Update()
+    {
+        //Testing how much can the pointer move
+        //Debug.Log("Pointer position: " + transform.position);
+    }
+
+
     /// <summary>
     /// Returns the initial position of the pointer
     /// </summary>

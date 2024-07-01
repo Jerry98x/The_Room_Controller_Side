@@ -98,12 +98,12 @@ public class HandControllerRaycast : MonoBehaviour
     /// <param name="args"> Event data </param>
     public void HandleHoverEntered(HoverEnterEventArgs args)
     {
-        LightningRay lightningRay = args.interactable.gameObject.TryGetComponent(out LightningRay interactable) ? interactable : null;
+        RoomNetoElement roomNetoElement = args.interactable.gameObject.TryGetComponent(out RoomNetoElement interactable) ? interactable : null;
         EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
         initialEndPointPosition = endPoint.GetInitialPosition();
-        if (lightningRay != null)
+        if (roomNetoElement != null)
         {
-           initialInteractablePosition = lightningRay.GetInitialPosition(); 
+           initialInteractablePosition = roomNetoElement.GetInitialPosition(); 
            lastEndPointPosition = initialEndPointPosition;
            lastInteractablePosition = initialInteractablePosition;
         }

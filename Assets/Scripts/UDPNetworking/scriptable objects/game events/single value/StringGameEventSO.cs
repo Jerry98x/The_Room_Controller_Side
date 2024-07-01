@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Oasis.GameEvents;
 using UnityEngine;
 
-public class StringGameEventSO : ValueGameEventSO<string>
+namespace Oasis.GameEvents
 {
+    [CreateAssetMenu(fileName = "String Game Event", menuName = "Scriptable Objects/Game Events/One Input/String Game Event")]
+    public class StringGameEventSO : ValueGameEventSO<string>
+    {
 
-    
-    
-    
+    }
 }

@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 /// <summary>
 /// Class containing all the useful constants of the application
 /// </summary>
@@ -45,12 +47,49 @@ public class Constants {
 
     public const float NETO_INTENSITY_BY_CIRCLES_COLOR_VALUE = -1000f;
 
+    public const float POINTER_REACH_DISTANCE_Z_AXIS = 0.8f;
+    public const float ENDPOINT_REACH_DISTANCE_Z_AXIS = 8f;
+    public const float ENDPOINT_REACH_Z_MIN = 2f;
+    public const float ENDPOINT_REACH_Z_MAX = 10f;
+    
+    public const float CAPPED_MIN_EMISSION_INTENSITY = -3f;
+    public const float CAPPED_MAX_EMISSION_INTENSITY = 3f;
+
     #endregion
+
+
+
+
+    #region Shader properties
+
+    public static int EMISSION_COLOR_ID = Shader.PropertyToID("_EmissionColor");
+    public static int EMISSION_INTENSITY_ID = Shader.PropertyToID("_EmissionIntensity");
+
+    #endregion
+    
 
     
     
     #region UDP-ESP communication
     
+    public const int NETO_SOUND_TYPE_1 = 1;
+    public const int NETO_SOUND_TYPE_2 = 2;
+    
+    public const int NETO_SOUND_VOLUME_MIN = 0;
+    public const int NETO_SOUND_VOLUME_MAX = 30;
+    
+    public const int NETO_SERVO_ANGLE_MIN = 0;
+    public const int NETO_SERVO_ANGLE_MAX = 180;
+    
+    // Radius may be a misleading name, but it's the amount of leds
+    // that should be turned on in the ESP32 of the Neto module along its height
+    public const int NETO_RADIUS_MIN = 0;
+    public const int NETO_RADIUS_MAX = 10;
+    
+    public const int NETO_BRIGHTNESS_MIN = 0;
+    public const int NETO_BRIGHTNESS_MAX = 255;
+    
+    public const string TERMINATION_CHARACTER = "\0";
     
     #endregion
     

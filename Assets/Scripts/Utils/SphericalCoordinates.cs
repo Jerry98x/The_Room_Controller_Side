@@ -10,7 +10,7 @@ public class SphericalCoordinates : MonoBehaviour
     
     [SerializeField] private Transform centerOfSphere;
 
-    [Range(0.1f, 10f)]
+    [Range(2f, 10f)]
     [SerializeField] private float radius;
     [Range(-90, 90)]
     [SerializeField] private float inclination; // Polar angle (theta)

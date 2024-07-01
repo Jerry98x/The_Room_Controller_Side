@@ -182,6 +182,17 @@ public class UDPMessenger
             
             SendUdp(System.Text.Encoding.ASCII.GetBytes(message), destination);
         }
+        
+        public void SendUdp(char[] message, IPEndPoint destination = null)
+        {
+            if (message.Length == 0)
+            {
+                return;
+            }
+            
+            SendUdp(System.Text.Encoding.ASCII.GetBytes(message), destination);
+                
+        }
 
         public void SendUdp(Int32 message, IPEndPoint destination = null) =>
             SendUdp(BitConverter.GetBytes(message), destination);

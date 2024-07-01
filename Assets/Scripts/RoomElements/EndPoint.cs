@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class EndPoint : MonoBehaviour
 {
 
     private Vector3 initialPosition;
+    private Vector3 lastPosition;
     
     //[SerializeField] private List<GameObject> vfxPrefab; // Reference to the VFX object
     
@@ -21,6 +23,7 @@ public class EndPoint : MonoBehaviour
     void Start()
     {
         initialPosition = transform.position;
+        lastPosition = initialPosition;
         
         /*CapsuleCollider[] colliders = GetComponents<CapsuleCollider>();
         foreach (CapsuleCollider collider in colliders)
@@ -41,8 +44,13 @@ public class EndPoint : MonoBehaviour
         }*/
         
     }
-    
-    
+
+    private void LateUpdate()
+    {
+        lastPosition = transform.position;
+    }
+
+
     /*public void ActivateVFX()
     {
         // Instantiate the VFX object
@@ -63,6 +71,11 @@ public class EndPoint : MonoBehaviour
     public Vector3 GetInitialPosition()
     {
         return initialPosition;
+    }
+    
+    public Vector3 GetLastPosition()
+    {
+        return lastPosition;
     }
 
 
