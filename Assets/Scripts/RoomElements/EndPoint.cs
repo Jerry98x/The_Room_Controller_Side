@@ -11,6 +11,10 @@ using UnityEngine;
 /// </remarks>
 public class EndPoint : MonoBehaviour
 {
+    
+    [SerializeField] private float endpointZMovementMultiplier;
+    [SerializeField] private float minEndpointDistance;
+    [SerializeField] private float maxEndpointDistance;
 
     private Vector3 initialPosition;
     private Vector3 lastPosition;
@@ -76,6 +80,23 @@ public class EndPoint : MonoBehaviour
     public Vector3 GetLastPosition()
     {
         return lastPosition;
+    }
+    
+    
+        
+    public float GetEndpointZMovementMultiplier()
+    {
+        return endpointZMovementMultiplier;
+    }
+    
+    public float GetMinEndpointDistance()
+    {
+        return minEndpointDistance;
+    }
+    
+    public float GetMaxEndpointDistance()
+    {
+        return maxEndpointDistance;
     }
 
 

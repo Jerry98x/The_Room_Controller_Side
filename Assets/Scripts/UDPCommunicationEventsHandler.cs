@@ -8,6 +8,7 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
 {
     // Events
     [SerializeField] private RoomBasicElement roomElement;
+    [SerializeField] private Transform roomCore;
     [SerializeField] private StringGameEventSO netoPositionChangeEvent;
     [SerializeField] private NetoFeedbackHandler netoFeedbackHandler;
     
@@ -48,14 +49,19 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
         endPoint = GetComponent<EndPoint>();
         particleSystem = netoFeedbackHandler.GetComponent<ParticleSystem>();
         audioSource = netoFeedbackHandler.GetHandledAudioSource();
+
+        SinewaveRay deselectedSinewaveRay = roomElement.GetComponentInChildren<SinewaveRay>();
+        SpiralwaveRay deselectedSpiralwaveRay = roomElement.GetComponentInChildren<SpiralwaveRay>();
         
-        if(roomElement.GetComponentInChildren<SinewaveRay>())
+        if(deselectedSinewaveRay)
         {
-            renderer = roomElement.GetComponentInChildren<SinewaveRay>().GetComponent<Renderer>();
+            SinewaveRay selectedSinewaveRay = deselectedSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
+            renderer = selectedSinewaveRay.GetComponent<Renderer>();
         }
-        if(roomElement.GetComponentInChildren<SpiralwaveRay>())
+        if(deselectedSpiralwaveRay)
         {
-            renderer = roomElement.GetComponentInChildren<SpiralwaveRay>().GetComponent<Renderer>();
+            SpiralwaveRay selectedSpiralwaveRay = deselectedSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
+            renderer = selectedSpiralwaveRay.GetComponent<Renderer>();
         }
         Debug.Log("Renderer: " + renderer);
         
@@ -98,24 +104,29 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
     
     private void HandleValuesToSend()
     {
+        HandleNetoParametersToSend();
+        HandleSauronParametersToSend();
+
+    }
+
+
+    private void HandleNetoParametersToSend()
+    {
         // Sound parameters
         soundType = Constants.NETO_SOUND_TYPE_1;
-        soundVolume = (int) Math.Round(Mathf.Lerp(Constants.NETO_SOUND_VOLUME_MIN, Constants.NETO_SOUND_VOLUME_MAX, audioSource.volume));
+        // Sound volume in Unity is from 0 to 1
+        soundVolume = (int) Mathf.Round(RangeRemappingHelper.Remap(audioSource.volume, 1, 0,
+            Constants.NETO_SOUND_VOLUME_MAX, Constants.NETO_SOUND_VOLUME_MIN));
         
         
-        // TODO: fixe the mismatch between the depth of the ray and the servo angle
         // Position parameters
-        float depth = endPoint.transform.position.z;
-        Debug.Log("ENDPOINT DEPTH: " + depth);
+        Vector3 coreToEndPointVector = endPoint.transform.position - roomCore.position;
+        Vector3 directionFromCoreToEndPoint = coreToEndPointVector.normalized;
+        float distanceAlongDirection = Vector3.Dot(directionFromCoreToEndPoint, coreToEndPointVector);
         /*SphericalCoordinatesHandler.CartesianToSpherical(endPoint.transform.position, out float rad, out float inc, out float az);
         Debug.Log("ENDPOINT RADIUS: " + rad);*/
-        
-        // normalizedValue = (value - minValue) / (maxValue - minValue)
-        float normalizedDepth = (depth - Constants.ENDPOINT_REACH_Z_MIN) /
-                          (Constants.ENDPOINT_REACH_Z_MAX - Constants.ENDPOINT_REACH_Z_MIN);
-        Debug.Log("NORMALIZED ENDPOINT DEPTH: " + normalizedDepth);
-        servoAngle = (int) Math.Round(Mathf.Lerp(Constants.NETO_SERVO_ANGLE_MIN, 
-            Constants.NETO_SERVO_ANGLE_MAX, normalizedDepth));
+        servoAngle = (int) Mathf.Round(RangeRemappingHelper.Remap(distanceAlongDirection, Constants.ENDPOINT_REACH_Z_MAX,
+            Constants.ENDPOINT_REACH_Z_MIN, Constants.NETO_SERVO_ANGLE_MAX, Constants.NETO_SERVO_ANGLE_MIN));
         Debug.Log("FINAL SERVO ANGLE: " + servoAngle);
         
         
@@ -124,15 +135,21 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
         radius = 5;
         
         //float emissionIntensity = renderer.material.GetFloat(Constants.EMISSION_INTENSITY_ID);
-        Color color = renderer.material.GetColor(Constants.EMISSION_COLOR_ID);
+        Color color = renderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
         GetHDRIntensity.DecomposeHdrColor(color, out Color32 baseLinearColor, out float emissionIntensity);
         Debug.Log("EMISSION INTENSITY: " + emissionIntensity);
-        // normalizedValue = (value - minValue) / (maxValue - minValue)
-        float normalizedEmissionIntensity = (emissionIntensity - Constants.CAPPED_MIN_EMISSION_INTENSITY) /
-                                            (Constants.CAPPED_MAX_EMISSION_INTENSITY - Constants.CAPPED_MIN_EMISSION_INTENSITY);
-        brightness = (int) Math.Round(Mathf.Lerp(Constants.NETO_BRIGHTNESS_MIN,
-            Constants.NETO_BRIGHTNESS_MAX, normalizedEmissionIntensity));
+        float clampedIntensity = Mathf.Clamp(emissionIntensity, Constants.CAPPED_MIN_EMISSION_INTENSITY,
+            Constants.CAPPED_MAX_EMISSION_INTENSITY);
+        float remappedIntensity = RangeRemappingHelper.Remap(clampedIntensity, Constants.CAPPED_MAX_EMISSION_INTENSITY,
+            Constants.CAPPED_MIN_EMISSION_INTENSITY, Constants.NETO_BRIGHTNESS_MAX, Constants.NETO_BRIGHTNESS_MIN);
+        Debug.Log("REMAPPED INTENSITY: " + remappedIntensity);
+        brightness = (int) Mathf.Round(remappedIntensity);
+        Debug.Log("FINAL BRIGHTNESS: " + brightness);
+    }
 
+    private void HandleSauronParametersToSend()
+    {
+        
     }
 
 

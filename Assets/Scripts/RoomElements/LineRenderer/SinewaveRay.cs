@@ -38,14 +38,14 @@ public class SinewaveRay : BaseRay
     //private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
     
-    private float minClampingAmplitude = 0.05f;
+    private float minClampingAmplitude = 0.01f;
     private float maxClampingAmplitude = 0.6f;
     
     private float minSpeed = 0.1f;
     private float maxSpeed = 0.5f;
     
-    private float minFrequency = 1f;
-    private float maxFrequency = 2f;
+    private float minFrequency = 0.5f;
+    private float maxFrequency = 10f;
     
 
     
@@ -58,7 +58,7 @@ public class SinewaveRay : BaseRay
     {
         /*renderer = GetComponent<Renderer>();*/
         lineRenderer.GetComponent<LineRenderer>();
-        initialColor = GetComponent<LineRenderer>().material.GetColor(Constants.EMISSION_COLOR_ID);
+        initialColor = GetComponent<LineRenderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID);
     }
     
     /// <summary>
@@ -66,7 +66,18 @@ public class SinewaveRay : BaseRay
     /// </summary>
     private void Start()
     {
+        // Set the amplitude and the frequency to be consistent with the distance rates
+        float distance = Vector3.Distance(startPoint.position, endPoint.position);
+        Debug.Log("La fottuta distanza iniziale è: " + distance);
+        SetAmplitude(Constants.NETO_AMPLITUDE_DISTANCE_RATE / distance);
+        SetFrequency(Constants.NETO_FREQUENCY_DISTANCE_RATE / distance);
+        Debug.Log("La fottuta ampiezza iniziale è: " + GetAmplitude());
+        Debug.Log("La fottuta frequenza iniziale è: " + GetFrequency());
+        
+        
+        
         DrawLine();
+        
     }
     
     
@@ -85,7 +96,10 @@ public class SinewaveRay : BaseRay
         
         HandleEvents();
         DrawLine();
-    }
+        
+        Debug.Log("Distanza attuale: " + Vector3.Distance(GetEndPoint().position, startPoint.position));
+        Debug.Log("Ampiezza attuale: " + GetAmplitude());
+        Debug.Log("Frequenza attuale: " + GetFrequency());  }
 
     #endregion
 
@@ -183,13 +197,13 @@ public class SinewaveRay : BaseRay
         {
             if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
             {
-                if(GetComponent<Renderer>().material.GetColor(Constants.EMISSION_COLOR_ID) == initialColor)
+                if(GetComponent<Renderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID) == initialColor)
                 {
-                    GetComponent<Renderer>().material.SetColor(Constants.EMISSION_COLOR_ID, Color.red);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, Color.red);
                 }
                 else
                 {
-                    GetComponent<Renderer>().material.SetColor(Constants.EMISSION_COLOR_ID, initialColor);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, initialColor);
                 }
             }
         }
@@ -201,13 +215,13 @@ public class SinewaveRay : BaseRay
             EmissiveColorChanger ecc = GetComponent<EmissiveColorChanger>();
             if (prova == "a")
             {
-                ecc.ChangeMaterialEmission(Color.blue);
+                ecc.ChangeMaterialEmissiveColor(Color.blue);
                 ecc.ChangeMaterialEmissionIntensity(6f);
             }
             if(prova == "b")
             {
-                ecc.ChangeMaterialEmission(Color.magenta);
-                ecc.ChangeMaterialAlpha(-2f);
+                ecc.ChangeMaterialEmissiveColor(Color.magenta);
+                //ecc.ChangeMaterialAlpha(-2f);
             }
         }
         
@@ -303,7 +317,7 @@ public class SinewaveRay : BaseRay
     {
         frequency = Mathf.Clamp(Mathf.Abs(newFrequency), minFrequency, maxFrequency);
     }
-
+    
     #endregion
     
 

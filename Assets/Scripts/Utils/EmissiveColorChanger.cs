@@ -44,16 +44,16 @@ public class EmissiveColorChanger : MonoBehaviour
     }
     
     
-    public void ChangeMaterialEmission(Color newColor)
+    public void ChangeMaterialEmissiveColor(Color newColor)
     {
         // Change the emission color of the instantiated material
-        instantiatedMaterial.SetColor("_EmissionColor", newColor);
+        instantiatedMaterial.SetColor(Constants.EMISSIVE_COLOR_ID, newColor);
     }
     
     public void ChangeMaterialEmissionIntensity(float newIntensity)
     {
         // Change the emission intensity of the instantiated material
-        instantiatedMaterial.SetFloat("_EmissionIntensity", newIntensity);
+        instantiatedMaterial.SetFloat(Constants.EMISSION_INTENSITY_ID, newIntensity);
     }
     
     

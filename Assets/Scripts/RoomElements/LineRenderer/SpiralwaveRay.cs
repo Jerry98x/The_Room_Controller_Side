@@ -27,7 +27,7 @@ public class SpiralwaveRay : BaseRay
     
     //private Renderer renderer;
     private Color initialColor;
-    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+    //private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
     
     
     private float minClampingRadius = 0.1f;
@@ -43,7 +43,7 @@ public class SpiralwaveRay : BaseRay
     {
         //renderer = GetComponent<Renderer>();
         lineRenderer.GetComponent<LineRenderer>();
-        initialColor = GetComponent<LineRenderer>().material.GetColor(EmissionColorId);
+        initialColor = GetComponent<LineRenderer>().material.GetColor(Constants. EMISSIVE_COLOR_ID);
     }
     
 
@@ -176,13 +176,13 @@ public class SpiralwaveRay : BaseRay
         {
             if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
             {
-                if(GetComponent<Renderer>().material.GetColor(EmissionColorId) == initialColor)
+                if(GetComponent<Renderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID) == initialColor)
                 {
-                    GetComponent<Renderer>().material.SetColor(EmissionColorId, Color.green);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, Color.green);
                 }
                 else
                 {
-                    GetComponent<Renderer>().material.SetColor(EmissionColorId, initialColor);
+                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, initialColor);
                 }
             }
         }

@@ -8,21 +8,24 @@ using UnityEngine;
 /// </summary>
 public class Pointer : MonoBehaviour
 {
-    private Vector3 pointerPosition;
+    private Vector3 initialPosition;
+    private Vector3 previousPosition;
     
     /// <summary>
     /// Initializes the pointer position
     /// </summary>
     void Start()
     {
-        pointerPosition = transform.position;
+        initialPosition = transform.position;
+        previousPosition = initialPosition;
     }
 
 
     private void Update()
     {
-        //Testing how much can the pointer move
-        //Debug.Log("Pointer position: " + transform.position);
+        // Update the previous position
+        previousPosition = transform.position;
+        
     }
 
 
@@ -31,7 +34,14 @@ public class Pointer : MonoBehaviour
     /// </summary>
     public Vector3 GetInitialPosition()
     {
-        return pointerPosition;
+        return initialPosition;
+    }
+    
+    
+    public Vector3 GetPreviousPosition()
+    {
+        return previousPosition;
+        
     }
     
 }

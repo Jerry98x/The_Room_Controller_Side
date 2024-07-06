@@ -43,7 +43,7 @@ public class Constants {
 
 
 
-    #region Useful values
+    #region Useful ray values
 
     public const float NETO_INTENSITY_BY_CIRCLES_COLOR_VALUE = -1000f;
 
@@ -52,8 +52,17 @@ public class Constants {
     public const float ENDPOINT_REACH_Z_MIN = 2f;
     public const float ENDPOINT_REACH_Z_MAX = 10f;
     
-    public const float CAPPED_MIN_EMISSION_INTENSITY = -3f;
-    public const float CAPPED_MAX_EMISSION_INTENSITY = 3f;
+    public const float CAPPED_MIN_EMISSION_INTENSITY = 0f;
+    public const float CAPPED_MAX_EMISSION_INTENSITY = 5f;
+
+
+    // Inversely proportional to the distance
+    public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.3f;
+    public const float NETO_FREQUENCY_DISTANCE_RATE = 10f;
+
+
+    public const float PARENT_LINERENDERER_WIDTH_MULTIPLIER = 0.8f;
+    public const float CHILD_LINERENDERER_WIDTH_MUKTIPLIER = 1f;
 
     #endregion
 
@@ -62,7 +71,7 @@ public class Constants {
 
     #region Shader properties
 
-    public static int EMISSION_COLOR_ID = Shader.PropertyToID("_EmissionColor");
+    public static int EMISSIVE_COLOR_ID = Shader.PropertyToID("_EmissiveColor");
     public static int EMISSION_INTENSITY_ID = Shader.PropertyToID("_EmissionIntensity");
 
     #endregion
@@ -72,22 +81,25 @@ public class Constants {
     
     #region UDP-ESP communication
     
+    // ESP32 need int values, but here most of them are float for the sake of the remapping.
+    // They will be casted to int before sending.
+    
     public const int NETO_SOUND_TYPE_1 = 1;
     public const int NETO_SOUND_TYPE_2 = 2;
     
-    public const int NETO_SOUND_VOLUME_MIN = 0;
-    public const int NETO_SOUND_VOLUME_MAX = 30;
+    public const float NETO_SOUND_VOLUME_MIN = 0f;
+    public const float NETO_SOUND_VOLUME_MAX = 30f;
     
-    public const int NETO_SERVO_ANGLE_MIN = 0;
-    public const int NETO_SERVO_ANGLE_MAX = 180;
+    public const float NETO_SERVO_ANGLE_MIN = 0f;
+    public const float NETO_SERVO_ANGLE_MAX = 180f;
     
     // Radius may be a misleading name, but it's the amount of leds
     // that should be turned on in the ESP32 of the Neto module along its height
-    public const int NETO_RADIUS_MIN = 0;
-    public const int NETO_RADIUS_MAX = 10;
+    public const float NETO_RADIUS_MIN = 0f;
+    public const float NETO_RADIUS_MAX = 10f;
     
-    public const int NETO_BRIGHTNESS_MIN = 0;
-    public const int NETO_BRIGHTNESS_MAX = 255;
+    public const float NETO_BRIGHTNESS_MIN = 0f;
+    public const float NETO_BRIGHTNESS_MAX = 255f;
     
     public const string TERMINATION_CHARACTER = "\0";
     

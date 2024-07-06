@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EmissiveTransparentMaterial
+  m_Name: EmissiveTransparentMaterialHalf
   m_Shader: {fileID: -6465566751694194690, guid: 0e8942ecec65f47458741647cfdc7f23,
     type: 3}
   m_Parent: {fileID: 0}
@@ -38,7 +38,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
+    - _Alpha: 0.8
     - _AlphaBase: 1
     - _AlphaEmission: 1
     - _EmissionIntensity: 1
@@ -48,7 +48,7 @@ Material:
     - _Transparency: 1
     m_Colors:
     - _BaseColor: {r: 0.8509804, g: 0.7803922, b: 0.02352941, a: 1}
-    - _EmissiveColor: {r: 2.9960783, g: 2.747556, b: 0.08284085, a: 1}
+    - _EmissiveColor: {r: 0.74901956, g: 0.686889, b: 0.020710213, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &4076770329741338337
 MonoBehaviour:
