@@ -11,6 +11,10 @@ public class Pointer : MonoBehaviour
     private Vector3 initialPosition;
     private Vector3 previousPosition;
     
+    private bool isFirstFrame = true;
+    
+    
+    
     /// <summary>
     /// Initializes the pointer position
     /// </summary>
@@ -21,10 +25,22 @@ public class Pointer : MonoBehaviour
     }
 
 
-    private void Update()
+    private void LateUpdate()
     {
         // Update the previous position
-        previousPosition = transform.position;
+        // Do it in LateUpdate to ensure that the previous position is updated after the current position
+        // (loose the first frame, but that's acceptable)
+        if (isFirstFrame)
+        {
+            // Ensure the previous position is set correctly during the first frame
+            previousPosition = transform.position;
+            isFirstFrame = false;
+        }
+        else
+        {
+            // Update the previous position in LateUpdate
+            previousPosition = transform.position;
+        }
         
     }
 

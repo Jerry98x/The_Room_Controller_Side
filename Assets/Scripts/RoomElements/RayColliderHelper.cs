@@ -5,15 +5,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-public class RayColliderHelper : MonoBehaviour
+/*public class RayColliderHelper : MonoBehaviour
 {
     
     /*public UnityEvent<RayColliderHelper> onPointerEnterRay;
     public UnityEvent<RayColliderHelper> onPointerExitRay;
-    */
+    #1#
     
     /*public UnityEvent onPointerEnter;
-    public UnityEvent onPointerExit;*/
+    public UnityEvent onPointerExit;#1#
     
     
     public UnityEvent<RayColliderHelper> onPointerEnter;
@@ -91,5 +91,5 @@ public class RayColliderHelper : MonoBehaviour
         {
             onPointerStay?.Invoke(this);
         }
-    }*/
-}
+    }#1#
+}*/

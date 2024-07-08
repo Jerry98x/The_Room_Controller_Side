@@ -13,7 +13,7 @@ using System.Linq;
 /// (the movement is reflected in the change in the characteristics of the ray) and perception of the Visitor
 /// is on the endpoint (visual effects are applied near the endpoint of the ray)
 /// </remarks>
-public class HandleRayMovement : MonoBehaviour
+/*public class HandleRayMovement : MonoBehaviour
 {
 
     [SerializeField] private Transform coreCenter;
@@ -31,7 +31,7 @@ public class HandleRayMovement : MonoBehaviour
     
     
     /*private Queue<float> recentSpeeds = new Queue<float>();
-    private const int maxRecentSpeedsCount = 100;*/
+    private const int maxRecentSpeedsCount = 100;#1#
 
     
     // Variables for simple version with amplitude based on angles
@@ -41,7 +41,7 @@ public class HandleRayMovement : MonoBehaviour
     /*private float minSpeed = 0.1f;
     private float maxSpeed = 0.5f;
     private float minFrequency = 1f;
-    private float maxFrequency = 4f;*/
+    private float maxFrequency = 4f;#1#
     
     // Variables for simple version with radius based on angles
     // minRadius can match the minClampingRadius in SpiralwaveRay, maxRadius needs to be fine-tuned
@@ -58,7 +58,7 @@ public class HandleRayMovement : MonoBehaviour
     /*private float initialHandYPosition;
     private float initialHandXPosition;
     private Vector3 previousHandPosition = Vector3.zero;
-    private float previousTime;*/
+    private float previousTime;#1#
     
     
     
@@ -67,7 +67,7 @@ public class HandleRayMovement : MonoBehaviour
     
     /*private const int bufferSize = 100; // Size of the circular buffer
     private Vector3[] handPositionBuffer = new Vector3[bufferSize]; // Circular buffer to store hand positions
-    private int bufferIndex = 0; // Index to keep track of the current position in the buffer*/
+    private int bufferIndex = 0; // Index to keep track of the current position in the buffer#1#
 
 
 
@@ -79,7 +79,7 @@ public class HandleRayMovement : MonoBehaviour
     private bool isFirstDirection = false;
     private bool isFirstHalf = false;
     private bool isPositiveDirection = false;
-    private Vector3 initialDirection = Vector3.zero;*/
+    private Vector3 initialDirection = Vector3.zero;#1#
 
 
 
@@ -148,7 +148,7 @@ public class HandleRayMovement : MonoBehaviour
         
         
         /*initialHandYPosition = pointer.transform.position.y;
-        initialHandXPosition = pointer.transform.position.x;*/
+        initialHandXPosition = pointer.transform.position.x;#1#
         isTracking = true;
     }
     
@@ -226,7 +226,7 @@ public class HandleRayMovement : MonoBehaviour
         // Get the endPoint position of the hovered ray
         Vector3 endPointPosition = sinewaveRay.GetEndPoint().position;
         /*sinewaveRay.GetEndPoint().GetLocalPositionAndRotation(out Vector3 endPointPos, out Quaternion endPointRot);
-        Vector3 endPointPosition = endPointPos;*/
+        Vector3 endPointPosition = endPointPos;#1#
         
         // Get the current position of the hand
         handXPosition = pointer.transform.position.x;
@@ -263,7 +263,7 @@ public class HandleRayMovement : MonoBehaviour
             amplitude = Mathf.Abs(relativeYPosition);
             //amplitude = Mathf.Lerp(0.1f, 0.8f, Mathf.InverseLerp(endPointPosition.y - maxElongation, endPointPosition.y + maxElongation, Mathf.Abs(relativeYPosition))) ;
             Debug.Log("Amplitude determined by Y Position: " + amplitude);
-        }*/
+        }#1#
         
         // Consider endpointposition + maxelongation and endpointposition - maxelongation as a lerp
         
@@ -356,7 +356,7 @@ public class HandleRayMovement : MonoBehaviour
         }
 
         return handAmplitude;
-    }*/
+    }#1#
 
 
 
@@ -414,7 +414,7 @@ public class HandleRayMovement : MonoBehaviour
             else
             {
                 isPositiveDirection = false;
-            }#1#
+            }#2#
             
             //if(Mathf.Abs(currentHandPosition.y) > Mathf.Abs(previousHandPosition.y))
             if(currentHandPosition.y > endPointPosition.y) // Maybe RHS 0
@@ -542,12 +542,12 @@ public class HandleRayMovement : MonoBehaviour
         
         
         
-    }*/
+    }#1#
     
     /*private float HandlePositionChange()
     {
         
-    }*/
+    }#1#
     
     
     
@@ -594,7 +594,7 @@ public class HandleRayMovement : MonoBehaviour
 
         // Update the previous pointer position for the next frame
         previousPointerPosition = pointer.transform.position;
-        */
+        #1#
 
     }
 
@@ -603,4 +603,4 @@ public class HandleRayMovement : MonoBehaviour
     
     
     
-}
+}*/

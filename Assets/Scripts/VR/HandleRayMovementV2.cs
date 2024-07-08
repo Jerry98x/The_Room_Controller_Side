@@ -6,8 +6,28 @@ using UnityEngine.Events;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class HandleRayMovementV2 : MonoBehaviour
+/*public class HandleRayMovementV2 : MonoBehaviour
 {
+    
+    private class RayControlInfo
+    {
+        public Transform RayEndPoint;
+        public float NetoMovementMultiplier;
+        public XRController Controller;
+        public SinewaveRay ActiveSinewaveRay;
+        public SinewaveRay InactiveSinewaveRay;
+        public SpiralwaveRay ActiveSpiralwaveRay;
+        public SpiralwaveRay InactiveSpiralwaveRay;
+    }
+    
+    
+    private Dictionary<RayColliderHelper, RayControlInfo> rayControlInfos = new Dictionary<RayColliderHelper, RayControlInfo>();
+
+    
+    
+    
+    
+    
     
     public UnityEvent<SinewaveRay, SinewaveRay, float> onNetoRayDistanceChange;
     
@@ -15,7 +35,9 @@ public class HandleRayMovementV2 : MonoBehaviour
     
     private Pointer pointer;
     private RayColliderHelper currentRayColliderHelper;
-
+    
+    private Dictionary<int, RayColliderHelper> activeRayColliderHelpers = new Dictionary<int, RayColliderHelper>();
+    
     
     private SinewaveRay inactiveSinewaveRay;
     private SinewaveRay activeSinewaveRay;
@@ -35,7 +57,7 @@ public class HandleRayMovementV2 : MonoBehaviour
 
     private void Awake()
     {
-        xrController = GetComponent<XRController>();
+        //xrController = GetComponent<XRController>();
         pointer = GetComponentInChildren<Pointer>();
         
     }
@@ -50,6 +72,23 @@ public class HandleRayMovementV2 : MonoBehaviour
     
     private void Update()
     {
+        
+        
+        foreach (var rayControlInfo in rayControlInfos.Values)
+        {
+            // Check if the controller associated with this ray is in control
+            // and then handle the ray's movement based on the controller's input
+            if (IsControllerInControl(rayControlInfo.Controller))
+            {
+                HandleRayEndpointMovement(rayControlInfo, out float finalNewDistance);
+                onNetoRayDistanceChange?.Invoke(rayControlInfo.InactiveSinewaveRay, rayControlInfo.ActiveSinewaveRay, finalNewDistance);
+                HandleEmissiveIntensityBasedOnTrigger(rayControlInfo.Controller, rayControlInfo.ActiveSinewaveRay);
+
+            }
+        }
+        
+        
+        
         if (currentRayColliderHelper != null)
         {
             // The pointer is currently inside the collider at the base of the ray
@@ -72,73 +111,44 @@ public class HandleRayMovementV2 : MonoBehaviour
     
     
     
-    public void OnPointerEnter(RayColliderHelper rayColliderHelper)
+    
+    // Example method to check if a controller is in control
+    /*private bool IsControllerInControl(XRController controller)
     {
-        Debug.Log("ENTER COLLIDER");
-        
-        
-        // TODO: Understand if there is a better way to handle events. currentRayColliderHelper can
-        // TODO: dynamically change!
-        
-        // The pointer has entered a ray's collider
-        currentRayColliderHelper = rayColliderHelper;
-        currentRayColliderHelper.onPointerEnter.AddListener(OnPointerEnter);
-        currentRayColliderHelper.onPointerExit.AddListener(OnPointerExit);
-        //currentRayColliderHelper.onPointerStay.AddListener(OnPointerStay);
-        
-        currentRayColliderHelper.onPointerEnterLineRendererActivation.AddListener(OnPointerEnterLineRendererActivation);
-        currentRayColliderHelper.onPointerExitLineRendererDeactivation.AddListener(OnPointerExitLineRendererDeactivation);
-        
-        
-        // Get corresponding ray linerenderer and ray endpoint
-        if (currentRayColliderHelper.transform.parent.GetComponentInChildren<SinewaveRay>())
+        // Example logic to determine if the controller is in control
+        // This should be replaced with your actual logic to check controller input
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool isPressed) && isPressed)
         {
-            inactiveSinewaveRay = currentRayColliderHelper.transform.parent.GetComponentInChildren<SinewaveRay>();
-            rayEndPoint = inactiveSinewaveRay.GetEndPoint();
-            activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
-            //activeRayEndPoint = activeSinewaveRay.GetEndPoint();
-            netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointZMovementMultiplier();
+            return true;
         }
-        if (currentRayColliderHelper.transform.parent.GetComponentInChildren<SpiralwaveRay>())
-        {
-            inactiveSpiralwaveRay = currentRayColliderHelper.transform.parent.GetComponentInChildren<SpiralwaveRay>();
-            rayEndPoint = inactiveSpiralwaveRay.GetEndPoint();
-            activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
-            //activeRayEndPoint = activeSpiralwaveRay.GetEndPoint();
-            
-        }
-        
-        Debug.Log("Ray endpoint: " + rayEndPoint);
-
-        isInControl = true;
-
-    }
-
-    public void OnPointerExit(RayColliderHelper rayColliderHelper)
+        return false;
+    }#1#
+    
+    
+    
+    // Adjusted method to handle ray endpoint movement based on the controller
+    private void HandleRayEndpointMovement(RayControlInfo rayControlInfo, out float finalNewDistance)
     {
-        Debug.Log("EXIT COLLIDER");
-        
-        // The pointer has exited a ray's collider
-        if (currentRayColliderHelper == rayColliderHelper)
-        {
-            currentRayColliderHelper.onPointerEnter.RemoveListener(OnPointerEnter);
-            currentRayColliderHelper.onPointerExit.RemoveListener(OnPointerExit);
-            currentRayColliderHelper = null;
-        }
-        
-        // Free ray linerenderer and ray endpoint
-        inactiveSinewaveRay = null;
-        activeSinewaveRay = null;
-        inactiveSpiralwaveRay = null;
-        activeSpiralwaveRay = null;
-        rayEndPoint = null;
-        //activeRayEndPoint = null;
-
-
-        isInControl = false;
+        Vector3 direction = (rayControlInfo.RayEndPoint.position - coreCenter.position).normalized;
+        Vector3 currentPointerPosition = pointer.transform.position;
+        Vector3 previousPointerPosition = pointer.GetPreviousPosition();
+        Vector3 pointerMovement = currentPointerPosition - previousPointerPosition;
+        Vector3 projectedMovement = Vector3.Project(pointerMovement, direction);
+        Vector3 scaledMovement = projectedMovement * rayControlInfo.NetoMovementMultiplier;
+        Vector3 newEndPointPosition = rayControlInfo.RayEndPoint.position + scaledMovement;
+        float newDistance = Vector3.Distance(coreCenter.position, newEndPointPosition);
+        float clampedDistance = Mathf.Clamp(newDistance, rayControlInfo.RayEndPoint.GetComponent<EndPoint>().GetMinEndpointDistance(), rayControlInfo.RayEndPoint.GetComponent<EndPoint>().GetMaxEndpointDistance());
+        Vector3 clampedEndPointPosition = coreCenter.position + direction * clampedDistance;
+        rayControlInfo.RayEndPoint.position = clampedEndPointPosition;
+        finalNewDistance = clampedDistance;
     }
-
-
+    
+    
+    
+    
+    
+    
+    
     public void HandleRayEndpointMovement(out float finalNewDistance)
     {
 
@@ -179,6 +189,183 @@ public class HandleRayMovementV2 : MonoBehaviour
         finalNewDistance = clampedDistance;
 
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    // You'll need to adjust your OnPointerEnter and OnPointerExit methods to manage the rayControlInfos dictionary
+    // This includes adding and removing entries based on the rays being interacted with
+    
+    
+    
+    
+    
+    
+    /*public void OnPointerEnter(RayColliderHelper rayColliderHelper)
+    {
+        var controller = // Determine the controller interacting with the ray
+            var rayControlInfo = new RayControlInfo
+        {
+            Controller = controller,
+            RayEndPoint = // Determine the ray's endpoint,
+                InactiveSinewaveRay = // Get the InactiveSinewaveRay component,
+                    ActiveSinewaveRay = // Get the ActiveSinewaveRay component,
+                        InactiveSpiralwaveRay = // Get the InactiveSpiralwaveRay component if applicable,
+                            ActiveSpiralwaveRay = // Get the ActiveSpiralwaveRay component if applicable
+                                NetoMovementMultiplier = // Set the netoMovementMultiplier
+        };
+
+        rayControlInfos[rayColliderHelper] = rayControlInfo;
+    
+    }#1#
+    
+    
+    public void OnPointerEnter(RayColliderHelper rayColliderHelper)
+    {
+        Debug.Log("ENTER COLLIDER");
+
+        // Determine the controller interacting with the ray
+        // For simplicity, this example assumes there are two controllers, left and right
+        // Adjust the logic to fit your actual controller identification method
+        XRController controller = GetInteractingController(rayColliderHelper);
+
+        // Get the corresponding ray components
+        SinewaveRay inactiveSinewaveRay = rayColliderHelper.transform.parent.GetComponentInChildren<SinewaveRay>();
+        SpiralwaveRay inactiveSpiralwaveRay = rayColliderHelper.transform.parent.GetComponentInChildren<SpiralwaveRay>();
+
+        // If the ray components are found, proceed to get their active counterparts
+        SinewaveRay activeSinewaveRay = null;
+        if (inactiveSinewaveRay != null)
+        {
+            activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
+        }
+
+        SpiralwaveRay activeSpiralwaveRay = null;
+        if (inactiveSpiralwaveRay != null)
+        {
+            activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
+        }
+
+        // Determine the ray's endpoint and neto movement multiplier
+        Transform rayEndPoint = inactiveSinewaveRay != null ? inactiveSinewaveRay.GetEndPoint() : inactiveSpiralwaveRay.GetEndPoint();
+        float netoMovementMultiplier = inactiveSinewaveRay != null ? inactiveSinewaveRay.GetEndPointObject().GetEndpointZMovementMultiplier() : inactiveSpiralwaveRay.GetEndPointObject().GetEndpointZMovementMultiplier();
+
+        // Create and store RayControlInfo
+        var rayControlInfo = new RayControlInfo
+        {
+            Controller = controller,
+            RayEndPoint = rayEndPoint,
+            InactiveSinewaveRay = inactiveSinewaveRay,
+            ActiveSinewaveRay = activeSinewaveRay,
+            InactiveSpiralwaveRay = inactiveSpiralwaveRay,
+            ActiveSpiralwaveRay = activeSpiralwaveRay,
+            NetoMovementMultiplier = netoMovementMultiplier
+        };
+
+        // Add or update the rayControlInfo in the dictionary
+        rayControlInfos[rayColliderHelper] = rayControlInfo;
+
+        // Additional logic for setting up the interaction
+        rayColliderHelper.onPointerEnter.AddListener(OnPointerEnter);
+        rayColliderHelper.onPointerExit.AddListener(OnPointerExit);
+
+        Debug.Log("Ray endpoint: " + rayEndPoint);
+    }
+    
+    
+    
+    
+    
+    /*public void OnPointerEnter(RayColliderHelper rayColliderHelper)
+    {
+        Debug.Log("ENTER COLLIDER");
+        
+        
+        // TODO: Understand if there is a better way to handle events. currentRayColliderHelper can
+        // TODO: dynamically change!
+        
+        // The pointer has entered a ray's collider
+        currentRayColliderHelper = rayColliderHelper;
+        currentRayColliderHelper.onPointerEnter.AddListener(OnPointerEnter);
+        currentRayColliderHelper.onPointerExit.AddListener(OnPointerExit);
+        //currentRayColliderHelper.onPointerStay.AddListener(OnPointerStay);
+        
+        currentRayColliderHelper.onPointerEnterLineRendererActivation.AddListener(OnPointerEnterLineRendererActivation);
+        currentRayColliderHelper.onPointerExitLineRendererDeactivation.AddListener(OnPointerExitLineRendererDeactivation);
+        
+        
+        // Get corresponding ray linerenderer and ray endpoint
+        if (currentRayColliderHelper.transform.parent.GetComponentInChildren<SinewaveRay>())
+        {
+            inactiveSinewaveRay = currentRayColliderHelper.transform.parent.GetComponentInChildren<SinewaveRay>();
+            rayEndPoint = inactiveSinewaveRay.GetEndPoint();
+            activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
+            //activeRayEndPoint = activeSinewaveRay.GetEndPoint();
+            netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointZMovementMultiplier();
+        }
+        if (currentRayColliderHelper.transform.parent.GetComponentInChildren<SpiralwaveRay>())
+        {
+            inactiveSpiralwaveRay = currentRayColliderHelper.transform.parent.GetComponentInChildren<SpiralwaveRay>();
+            rayEndPoint = inactiveSpiralwaveRay.GetEndPoint();
+            activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
+            //activeRayEndPoint = activeSpiralwaveRay.GetEndPoint();
+            
+        }
+        
+        Debug.Log("Ray endpoint: " + rayEndPoint);
+
+        isInControl = true;
+
+    }#1#
+
+    /*public void OnPointerExit(RayColliderHelper rayColliderHelper)
+    {
+        Debug.Log("EXIT COLLIDER");
+        
+        // The pointer has exited a ray's collider
+        if (currentRayColliderHelper == rayColliderHelper)
+        {
+            currentRayColliderHelper.onPointerEnter.RemoveListener(OnPointerEnter);
+            currentRayColliderHelper.onPointerExit.RemoveListener(OnPointerExit);
+            currentRayColliderHelper = null;
+        }
+        
+        // Free ray linerenderer and ray endpoint
+        inactiveSinewaveRay = null;
+        activeSinewaveRay = null;
+        inactiveSpiralwaveRay = null;
+        activeSpiralwaveRay = null;
+        rayEndPoint = null;
+        //activeRayEndPoint = null;
+
+
+        isInControl = false;
+    }#1#
+    
+    
+    public void OnPointerExit(RayColliderHelper rayColliderHelper)
+    {
+        if (rayControlInfos.ContainsKey(rayColliderHelper))
+        {
+            rayControlInfos.Remove(rayColliderHelper);
+        }
+    }
+    
+    
+
+
+
 
 
     public void OnPointerEnterLineRendererActivation(LineRenderer parentLineRenderer, LineRenderer childLineRenderer)
@@ -238,6 +425,59 @@ public class HandleRayMovementV2 : MonoBehaviour
             //rayMaterial.SetColor("_EmissiveColor", rayMaterial.GetColor("_EmissiveColor") * emissiveIntensity);
         }
     }
+    
+    
+    private void HandleEmissiveIntensityBasedOnTrigger(XRController controller, SinewaveRay activeSinewaveRay)
+    {
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
+        {
+            float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, 0f, 1.0f, Constants.CAPPED_MIN_EMISSION_INTENSITY, Constants.CAPPED_MAX_EMISSION_INTENSITY);
+            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            if (rayRenderer != null)
+            {
+                rayRenderer.material.SetFloat(Constants.EMISSION_INTENSITY_ID, cappedEmissiveIntensity);
+            }
+        }
+    }
+    
+    
+    
+    
+    private XRController GetInteractingController(RayColliderHelper rayColliderHelper)
+    {
+        // Placeholder method to determine which controller is interacting with the ray
+        // You should replace this with your actual logic to identify the correct controller
+        // For simplicity, we assume there are two controllers: left and right
+
+        // Example of getting the left and right controllers from the scene
+        XRController leftController = GetComponent<XRController>();
+        XRController rightController = GetComponent<XRController>();
+        
+        Debug.Log("Gameobject is: " + gameObject);
+        Debug.Log("LEFT CONTROLLER: " + leftController);
+        Debug.Log("RIGHT CONTROLLER: " + rightController);
+        
+        Debug.Log("LEFT CONTROLLER POSITION: " + leftController.transform.position);
+        Debug.Log("RIGHT CONTROLLER POSITION: " + rightController.transform.position);
+        
+        Debug.Log("RAY COLLIDER HELPER: " + rayColliderHelper);
+        Debug.Log("RAY COLLIDER HELPER POSITION: " + rayColliderHelper.transform.position);
+
+        // Logic to determine which controller is interacting
+        // This is a simplified example, adjust as needed
+        if (Vector3.Distance(leftController.transform.position, rayColliderHelper.transform.position) < Vector3.Distance(rightController.transform.position, rayColliderHelper.transform.position))
+        {
+            return leftController;
+        }
+        else
+        {
+            return rightController;
+        }
+    }
+    
+    
+    
+    
 
 
     public bool IsInControl()
@@ -245,4 +485,9 @@ public class HandleRayMovementV2 : MonoBehaviour
         return isInControl;
     }
     
-}
+    private bool IsControllerInControl(XRController controller)
+    {
+        return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool isPressed) && isPressed;
+    }
+    
+}*/
