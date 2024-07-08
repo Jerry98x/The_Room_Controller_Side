@@ -14,7 +14,8 @@ public class HandleNetoRayMovement : MonoBehaviour
     
     public UnityEvent<SinewaveRay, SinewaveRay, float> onNetoRayDistanceChange;
     
-    public InputAction gripEmissionAction;
+
+    //private InputData inputData;
     
     
     [SerializeField] private Transform coreCenter;
@@ -34,6 +35,9 @@ public class HandleNetoRayMovement : MonoBehaviour
     
     private void Start()
     {
+        //inputData = GetComponent<InputData>();
+        
+        
         // Listeners
         onNetoRayDistanceChange.AddListener(UpdateLineRenderers);
     }
@@ -171,19 +175,33 @@ public class HandleNetoRayMovement : MonoBehaviour
     {
         Debug.Log("XR CONTROLLER: " + xrController);
         
-        /*InputDevice device = xrController.inputDevice;
-        
-        if (xrController.inputDevice.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
+        /*if(inputData._leftController.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
         {
+            Debug.Log("GRIP VALUE: " + gripValue);
+            
+            
+        }*/
+        
+        float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+        if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
+        {
+            Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
             
             // Map the grip value to the capped emissive intensity range defined in the Constants class
-            float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, 0f, 1.0f,
-                Constants.CAPPED_MIN_EMISSION_INTENSITY, Constants.CAPPED_MAX_EMISSION_INTENSITY);
+            float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
+                Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
+            Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
             Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
             if (rayRenderer != null)
             {
-                rayRenderer.material.SetFloat(Constants.EMISSION_INTENSITY_ID, cappedEmissiveIntensity);
+                Color currentEmissiveColor = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
+                Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
+                
+                rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
             }
+            
+            
             
             
             // Adjust emissive intensity based on the grip value (0.0 to 1.0)
@@ -191,7 +209,7 @@ public class HandleNetoRayMovement : MonoBehaviour
             
             // Assuming the rayMaterial has an emissive color property
             //rayMaterial.SetColor("_EmissiveColor", rayMaterial.GetColor("_EmissiveColor") * emissiveIntensity);
-        }*/
+        }
     }
 
 

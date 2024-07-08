@@ -10,14 +10,14 @@ public class GetHDRIntensity : MonoBehaviour
 
     private void Start()
     {
-        Color32 color32;
+        Color color32;
         float exp;
         DecomposeHdrColor(color, out color32, out exp);
         Debug.Log(exp);
     }
 
     private const byte k_MaxByteForOverexposedColor = 191;
-    public static void DecomposeHdrColor(Color linearColorHdr, out Color32 baseLinearColor, out float exposure)
+    public static void DecomposeHdrColor(Color linearColorHdr, out Color baseLinearColor, out float exposure)
     {
         baseLinearColor = linearColorHdr;
         var maxColorComponent = linearColorHdr.maxColorComponent;
@@ -40,4 +40,24 @@ public class GetHDRIntensity : MonoBehaviour
             baseLinearColor.b = Math.Min(k_MaxByteForOverexposedColor, (byte)Mathf.CeilToInt(scaleFactor * linearColorHdr.b));
         }
     }
+    
+    
+    
+    public static Color AdjustEmissiveIntensity(Color hdrColor, float newIntensity)
+    {
+        DecomposeHdrColor(hdrColor, out Color baseColor, out float exposure);
+
+        float factor = Mathf.Pow(2, newIntensity) / 255f;
+
+        // Recompose the HDR color with the adjusted exposure
+        Color adjustedHdrColor = new Color(
+            baseColor.r * factor,
+            baseColor.g * factor,
+            baseColor.b * factor,
+            hdrColor.a
+        );
+
+        return adjustedHdrColor;
+    }
+    
 }

@@ -136,7 +136,7 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
         
         //float emissionIntensity = renderer.material.GetFloat(Constants.EMISSION_INTENSITY_ID);
         Color color = renderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
-        GetHDRIntensity.DecomposeHdrColor(color, out Color32 baseLinearColor, out float emissionIntensity);
+        GetHDRIntensity.DecomposeHdrColor(color, out Color baseLinearColor, out float emissionIntensity);
         Debug.Log("EMISSION INTENSITY: " + emissionIntensity);
         float clampedIntensity = Mathf.Clamp(emissionIntensity, Constants.CAPPED_MIN_EMISSION_INTENSITY,
             Constants.CAPPED_MAX_EMISSION_INTENSITY);

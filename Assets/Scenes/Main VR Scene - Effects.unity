@@ -31303,15 +31303,6 @@ MonoBehaviour:
   onNetoRayDistanceChange:
     m_PersistentCalls:
       m_Calls: []
-  gripEmissionAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: b82d55af-9e5c-449a-a768-6fd6a439a700
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
   coreCenter: {fileID: 2106698161}
   rayEndPoint: {fileID: 955954813}
 --- !u!120 &1546702311 stripped
@@ -31537,15 +31528,6 @@ MonoBehaviour:
   onNetoRayDistanceChange:
     m_PersistentCalls:
       m_Calls: []
-  gripEmissionAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: beceab78-ede6-463e-a911-27bd2125b872
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
   coreCenter: {fileID: 2106698161}
   rayEndPoint: {fileID: 1438817404}
 --- !u!1 &1564433798
