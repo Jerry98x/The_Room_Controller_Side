@@ -252,9 +252,9 @@ public class SinewaveRay : BaseRay
     /// <summary>
     /// Returns the endpoint object
     /// </summary>
-    public override EndPoint GetEndPointObject()
+    public override RayEndPoint GetEndPointObject()
     {
-        return endPoint.GetComponent<EndPoint>();
+        return endPoint.GetComponent<RayEndPoint>();
     }
     
     /// <summary>

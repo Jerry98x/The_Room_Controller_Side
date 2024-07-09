@@ -21,6 +21,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     [SerializeField] private Transform coreCenter;
     [SerializeField] private Transform rayEndPoint;
     
+    [SerializeField] [ColorUsage(true, true)] private Color initialEmissiveColor;
     
     private ActionBasedController xrController;
     private XRDirectInteractor interactor;
@@ -132,7 +133,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         float newDistance = Vector3.Distance(coreCenter.position, newEndPointPosition);
 
         // Clamp the new distance within the allowed range
-        float clampedDistance = Mathf.Clamp(newDistance, rayEndPoint.GetComponent<EndPoint>().GetMinEndpointDistance(), rayEndPoint.GetComponent<EndPoint>().GetMaxEndpointDistance());
+        float clampedDistance = Mathf.Clamp(newDistance, rayEndPoint.GetComponent<RayEndPoint>().GetMinEndpointDistance(), rayEndPoint.GetComponent<RayEndPoint>().GetMaxEndpointDistance());
 
         // Calculate the new clamped position of the endpoint
         Vector3 clampedEndPointPosition = coreCenter.position + direction * clampedDistance;
@@ -175,13 +176,8 @@ public class HandleNetoRayMovement : MonoBehaviour
     {
         Debug.Log("XR CONTROLLER: " + xrController);
         
-        /*if(inputData._leftController.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
-        {
-            Debug.Log("GRIP VALUE: " + gripValue);
-            
-            
-        }*/
-        
+        //bool isGripping = xrController.selectAction.action.ReadValue<float>().Equals(1.0f);
+        //Debug.Log("GRIPPING: " + isGripping);
         float gripValue = xrController.selectActionValue.action.ReadValue<float>();
         if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
         {
@@ -200,16 +196,18 @@ public class HandleNetoRayMovement : MonoBehaviour
                 
                 rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
             }
-            
-            
-            
-            
-            // Adjust emissive intensity based on the grip value (0.0 to 1.0)
-            //float emissiveIntensity = Mathf.Lerp(0f, 1.0f, gripValue);
-            
-            // Assuming the rayMaterial has an emissive color property
-            //rayMaterial.SetColor("_EmissiveColor", rayMaterial.GetColor("_EmissiveColor") * emissiveIntensity);
+
         }
+        /*else
+        {
+            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            if (rayRenderer != null)
+            {
+                Color newEmissiveColor = initialEmissiveColor;
+                
+                rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
+            }
+        }*/
     }
 
 

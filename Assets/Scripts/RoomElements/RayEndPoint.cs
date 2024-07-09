@@ -9,7 +9,7 @@ using UnityEngine;
 /// <remarks>
 /// The endpoint can refer to either a Neto ray or a Sauron ray
 /// </remarks>
-public class EndPoint : MonoBehaviour
+public class RayEndPoint : MonoBehaviour
 {
     
     [SerializeField] private float endpointZMovementMultiplier;

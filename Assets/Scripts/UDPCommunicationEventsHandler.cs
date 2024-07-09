@@ -9,10 +9,11 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
     // Events
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private Transform roomCore;
+    [SerializeField] private Transform rayEndPoint;
     [SerializeField] private StringGameEventSO netoPositionChangeEvent;
     [SerializeField] private NetoFeedbackHandler netoFeedbackHandler;
     
-    private EndPoint endPoint;
+    //private RayEndPoint rayEndPointObject;
     private ParticleSystem particleSystem;
     private AudioSource audioSource;
     private Renderer renderer;
@@ -46,7 +47,6 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
     
     private void Start()
     {
-        endPoint = GetComponent<EndPoint>();
         particleSystem = netoFeedbackHandler.GetComponent<ParticleSystem>();
         audioSource = netoFeedbackHandler.GetHandledAudioSource();
 
@@ -120,7 +120,7 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
         
         
         // Position parameters
-        Vector3 coreToEndPointVector = endPoint.transform.position - roomCore.position;
+        Vector3 coreToEndPointVector = rayEndPoint.position - roomCore.position;
         Vector3 directionFromCoreToEndPoint = coreToEndPointVector.normalized;
         float distanceAlongDirection = Vector3.Dot(directionFromCoreToEndPoint, coreToEndPointVector);
         /*SphericalCoordinatesHandler.CartesianToSpherical(endPoint.transform.position, out float rad, out float inc, out float az);

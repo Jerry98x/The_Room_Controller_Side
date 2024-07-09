@@ -99,8 +99,8 @@ public class HandControllerRaycast : MonoBehaviour
     public void HandleHoverEntered(HoverEnterEventArgs args)
     {
         RoomNetoElement roomNetoElement = args.interactable.gameObject.TryGetComponent(out RoomNetoElement interactable) ? interactable : null;
-        EndPoint endPoint = interactable.gameObject.GetComponentInChildren<EndPoint>();
-        initialEndPointPosition = endPoint.GetInitialPosition();
+        RayEndPoint rayEndPoint = interactable.gameObject.GetComponentInChildren<RayEndPoint>();
+        initialEndPointPosition = rayEndPoint.GetInitialPosition();
         if (roomNetoElement != null)
         {
            initialInteractablePosition = roomNetoElement.GetInitialPosition(); 
@@ -108,7 +108,7 @@ public class HandControllerRaycast : MonoBehaviour
            lastInteractablePosition = initialInteractablePosition;
         }
         Debug.Log("THIS IS THE GAME OBJECT: " + args.interactable.gameObject.name);
-        if (endPoint != null)
+        if (rayEndPoint != null)
         {
             
             //SetActiveChild(interactable.gameObject);
@@ -334,12 +334,12 @@ public class HandControllerRaycast : MonoBehaviour
         rayInteractor.enabled = true;
         
         float interactDistance = 1f;
-        EndPoint endPoint = child.GetComponentInChildren<EndPoint>();
-        Vector3 direction = new Vector3(0, 0, endPoint.transform.position.z + 1);
+        RayEndPoint rayEndPoint = child.GetComponentInChildren<RayEndPoint>();
+        Vector3 direction = new Vector3(0, 0, rayEndPoint.transform.position.z + 1);
         int layerMask = LayerMask.GetMask("NetoLayerWall");
         
         
-        if(Physics.SphereCast(endPoint.transform.position, endPoint.GetComponent<SphereCollider>().radius, direction, out RaycastHit raycastHit, interactDistance, layerMask))
+        if(Physics.SphereCast(rayEndPoint.transform.position, rayEndPoint.GetComponent<SphereCollider>().radius, direction, out RaycastHit raycastHit, interactDistance, layerMask))
         {
             Debug.Log("Raycast hit: " + raycastHit.transform.name);
             Debug.Log("Layermask name: " + raycastHit.transform.gameObject.layer);
@@ -349,14 +349,14 @@ public class HandControllerRaycast : MonoBehaviour
                 // The ray has hit a movement area and it can be controlled
                 rayInteractor.enabled = true;
                 // Save the last useful positions
-                lastEndPointPosition = endPoint.transform.position;
+                lastEndPointPosition = rayEndPoint.transform.position;
                 lastInteractablePosition = child.transform.position;
             }
         }
         else
         {
             Debug.Log("Raycast did not hit anything");
-            endPoint.transform.position = lastEndPointPosition;
+            rayEndPoint.transform.position = lastEndPointPosition;
             child.transform.position = lastInteractablePosition;
             //rayInteractor.enabled = false;
         }
@@ -367,7 +367,7 @@ public class HandControllerRaycast : MonoBehaviour
 
         
         // Draw the direction of the sphere cast
-        Debug.DrawRay(endPoint.transform.position, direction * interactDistance, Color.green);
+        Debug.DrawRay(rayEndPoint.transform.position, direction * interactDistance, Color.green);
         // Draw the sphere itself at the start of the cast
         //Debug.DrawWireSphere(endPoint.transform.position, endPoint.GetComponent<SphereCollider>().radius, Color.red);
 

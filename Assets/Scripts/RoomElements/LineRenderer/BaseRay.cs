@@ -60,7 +60,7 @@ public abstract class BaseRay : MonoBehaviour
     /// <summary>
     /// Returns the endpoint object
     /// </summary>
-    public abstract EndPoint GetEndPointObject();
+    public abstract RayEndPoint GetEndPointObject();
 
     #endregion
     
