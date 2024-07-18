@@ -203,6 +203,16 @@ public class Rope : BaseRay
 
     
     #region Getters and setters
+    
+    
+    /// <summary>
+    /// Returns the startpoint of the rope ray
+    /// </summary>
+    public override Transform GetStartPoint()
+    {
+        return startPoint;
+    }
+    
 
     /// <summary>
     /// Returns the endpoint of the rope ray

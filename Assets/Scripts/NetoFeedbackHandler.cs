@@ -66,7 +66,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         
         // Redefine the initial position of the AudioSource object to account for eventual
         // cases in which the endpoint of the ray moves
-        initialPosition = partSystem.transform.position;  // SHould be the same position as the particle system
+        initialPosition = partSystem.transform.position;  // Should be the same position as the particle system
         
         HandledEvents();
         SetParticleSystemDirection();
@@ -114,8 +114,11 @@ public class NetoFeedbackHandler : MonoBehaviour
 
 
     #region Relevant functions
-
-    // Set the direction of the particle system
+    
+    
+    /// <summary>
+    /// Set the direction of the particle system
+    /// </summary>
     private void SetParticleSystemDirection()
     {
         particleDirection = particleEndpointPosition.position - partSystem.transform.position;

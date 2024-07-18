@@ -18,12 +18,6 @@ using UnityEngine.Serialization;
 public class SinewaveRay : BaseRay
 {
     
-    /*
-    // Events
-    [SerializeField] private StringGameEventSO netoPositionChangeEvent;
-    */
-    [SerializeField] private string prova;
-    
     
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
@@ -166,6 +160,7 @@ public class SinewaveRay : BaseRay
     /// </summary>
     private void HandleEvents()
     {
+        // TODO: Remove test events
         
         // Sinewave amplitude
         if(Input.GetKeyDown(KeyCode.Alpha1))
@@ -207,39 +202,23 @@ public class SinewaveRay : BaseRay
                 }
             }
         }
-
-        
-        // Test, to be deleted
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            EmissiveColorChanger ecc = GetComponent<EmissiveColorChanger>();
-            if (prova == "a")
-            {
-                ecc.ChangeMaterialEmissiveColor(Color.blue);
-                ecc.ChangeMaterialEmissionIntensity(6f);
-            }
-            if(prova == "b")
-            {
-                ecc.ChangeMaterialEmissiveColor(Color.magenta);
-                //ecc.ChangeMaterialAlpha(-2f);
-            }
-        }
         
     }
     
-    
-    //TODO: handle events for the change of Neto's endpoint position, Neto's microphone volume,
-    //TODO: and Neto's light brightness
-    
-    
-    
-
     #endregion
     
     
 
 
     #region Getters and setters
+    
+    
+    /// <summary>
+    /// Returns the startpoint of the sinewave
+    /// </summary>
+    public override Transform GetStartPoint() {
+        return startPoint;
+    }
 
     /// <summary>
     /// Returns the endpoint of the sinewave

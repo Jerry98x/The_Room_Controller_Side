@@ -19,7 +19,8 @@ public class PortalVFXHandler : MonoBehaviour
         // First one in the hierarchy!
         sphereAttractor = GetComponentInChildren<Transform>();
         
-        rayDirection = center.position - transform.position;
+        Vector3 yOffset = new Vector3(0, 0, 0);
+        rayDirection = center.position - transform.position - yOffset;
         sphereAttractor.rotation = Quaternion.LookRotation(rayDirection);
     }
 }

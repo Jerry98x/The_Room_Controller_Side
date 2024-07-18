@@ -53,6 +53,12 @@ public abstract class BaseRay : MonoBehaviour
     #region Getters and setters
 
     /// <summary>
+    /// Returns the startpoint of the ray
+    /// </summary>
+    public abstract Transform GetStartPoint();
+    
+    
+    /// <summary>
     /// Returns the endpoint of the ray
     /// </summary>
     public abstract Transform GetEndPoint();

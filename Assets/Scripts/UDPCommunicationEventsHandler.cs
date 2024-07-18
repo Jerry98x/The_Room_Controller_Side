@@ -123,10 +123,11 @@ public class UDPCommunicationEventsHandler : MonoBehaviour
         Vector3 coreToEndPointVector = rayEndPoint.position - roomCore.position;
         Vector3 directionFromCoreToEndPoint = coreToEndPointVector.normalized;
         float distanceAlongDirection = Vector3.Dot(directionFromCoreToEndPoint, coreToEndPointVector);
+        Debug.Log("DISTANCE ALONG DIRECTION: " + distanceAlongDirection);
         /*SphericalCoordinatesHandler.CartesianToSpherical(endPoint.transform.position, out float rad, out float inc, out float az);
         Debug.Log("ENDPOINT RADIUS: " + rad);*/
         servoAngle = (int) Mathf.Round(RangeRemappingHelper.Remap(distanceAlongDirection, Constants.ENDPOINT_REACH_Z_MAX,
-            Constants.ENDPOINT_REACH_Z_MIN, Constants.NETO_SERVO_ANGLE_MAX, Constants.NETO_SERVO_ANGLE_MIN));
+            Constants.ENDPOINT_REACH_Z_MIN, Constants.NETO_SERVO_ANGLE_HIGH, Constants.NETO_SERVO_ANGLE_LOW));
         Debug.Log("FINAL SERVO ANGLE: " + servoAngle);
         
         
