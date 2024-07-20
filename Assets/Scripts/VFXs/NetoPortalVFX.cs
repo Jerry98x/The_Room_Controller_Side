@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PortalVFXHandler : MonoBehaviour
+public class NetoPortalVFX : MonoBehaviour
 {
 
-    //TODO: probably this script is not needed. Check it out later.
-    
     [SerializeField] private Transform center;
 
     private Transform sphereAttractor;

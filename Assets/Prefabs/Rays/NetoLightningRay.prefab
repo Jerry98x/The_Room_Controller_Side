@@ -5534,6 +5534,7 @@ MonoBehaviour:
   volumetricRadius: 0
   earlyReflectionsSendDb: 0
   reverbReach: 0.5
+  occlusionIntensity: 1
   directivityIntensity: 1
   directivityPattern: 1
   directSoundEnabled: 1
@@ -7492,6 +7493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sinewaveRay: {fileID: 2003717472790511860}
+  distantPoint: {fileID: 0}
 --- !u!1001 &8067776534780560808
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7508,7 +7510,7 @@ PrefabInstance:
     - target: {fileID: 3019538779052776901, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_Name
-      value: PortalVFX
+      value: NetoPortalVFX
       objectReference: {fileID: 0}
     - target: {fileID: 3032159869182669247, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
@@ -7583,12 +7585,12 @@ PrefabInstance:
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
-      value: 962.56274
+      value: 2.5627356
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
-      value: 540.9172
+      value: 0.91715956
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}

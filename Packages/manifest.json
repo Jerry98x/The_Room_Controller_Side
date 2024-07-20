@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.meta.xr.sdk.audio": "66.0.0",
+    "com.meta.xr.sdk.audio": "67.0.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.ide.rider": "3.0.31",
