@@ -50,7 +50,7 @@ public class Constants {
     public const float POINTER_REACH_DISTANCE_Z_AXIS = 0.8f;
     public const float ENDPOINT_REACH_DISTANCE_Z_AXIS = 8f;
     public const float ENDPOINT_REACH_Z_MIN = 2f;
-    public const float ENDPOINT_REACH_Z_MAX = 10f;
+    public const float ENDPOINT_REACH_Z_MAX = 12f;
     
     public const float CAPPED_MIN_EMISSION_INTENSITY = 2f;
     public const float CAPPED_MAX_EMISSION_INTENSITY = 5f;
@@ -63,6 +63,14 @@ public class Constants {
 
     public const float PARENT_LINERENDERER_WIDTH_MULTIPLIER = 0.8f;
     public const float CHILD_LINERENDERER_WIDTH_MUKTIPLIER = 1f;
+
+    #endregion
+
+
+
+    #region Effects values
+
+    public const bool PASSIVE_AUDIO_NETO = true;
 
     #endregion
 
@@ -102,7 +110,7 @@ public class Constants {
     public const float NETO_SOUND_VOLUME_MAX = 30f;
     
     public const float NETO_SERVO_ANGLE_HIGH = 0f;
-    public const float NETO_SERVO_ANGLE_LOW = 100f;
+    public const float NETO_SERVO_ANGLE_LOW = 90f;
     
     // Radius may be a misleading name, but it's the amount of leds
     // that should be turned on in the ESP32 of the Neto module along its height

@@ -9,9 +9,8 @@ public class SphericalCoordinates : MonoBehaviour
 {
     
     [SerializeField] private Transform centerOfSphere;
-
-    [Range(2f, 10f)]
-    [SerializeField] private float radius;
+    [SerializeField, Range(Constants.ENDPOINT_REACH_Z_MIN, Constants.ENDPOINT_REACH_Z_MAX)]
+    private float radius;
     [Range(-90, 90)]
     [SerializeField] private float inclination; // Polar angle (theta)
     [Range(-180, 180)]

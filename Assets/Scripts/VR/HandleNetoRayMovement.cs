@@ -83,7 +83,7 @@ public class HandleNetoRayMovement : MonoBehaviour
             
             inactiveSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>();
             activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
-            netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointZMovementMultiplier();
+            netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
             
             isInControl = true;
         }
@@ -198,7 +198,7 @@ public class HandleNetoRayMovement : MonoBehaviour
             }
 
         }
-        /*else
+        else
         {
             Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
             if (rayRenderer != null)
@@ -207,7 +207,7 @@ public class HandleNetoRayMovement : MonoBehaviour
                 
                 rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
             }
-        }*/
+        }
     }
 
 

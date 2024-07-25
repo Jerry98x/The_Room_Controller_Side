@@ -5823,7 +5823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointZMovementMultiplier: 20
+  endpointMovementMultiplier: 0
   minEndpointDistance: 2
   maxEndpointDistance: 10
 --- !u!135 &1050779927191017042
@@ -6425,7 +6425,7 @@ RectTransform:
   m_GameObject: {fileID: 8334666338621001467}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.6, z: 0.8}
+  m_LocalScale: {x: 0.4, y: 0.7, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1056275155146459673}
@@ -7585,12 +7585,12 @@ PrefabInstance:
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
-      value: 2.5627356
+      value: 962.56274
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
-      value: 0.91715956
+      value: 540.9172
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}

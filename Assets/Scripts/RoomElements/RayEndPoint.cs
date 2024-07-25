@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Represents the endpoint of a ray
@@ -12,7 +13,7 @@ using UnityEngine;
 public class RayEndPoint : MonoBehaviour
 {
     
-    [SerializeField] private float endpointZMovementMultiplier;
+    [SerializeField] private float endpointMovementMultiplier;
     [SerializeField] private float minEndpointDistance;
     [SerializeField] private float maxEndpointDistance;
 
@@ -84,9 +85,9 @@ public class RayEndPoint : MonoBehaviour
     
     
         
-    public float GetEndpointZMovementMultiplier()
+    public float GetEndpointMovementMultiplier()
     {
-        return endpointZMovementMultiplier;
+        return endpointMovementMultiplier;
     }
     
     public float GetMinEndpointDistance()
