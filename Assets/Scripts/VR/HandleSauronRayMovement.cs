@@ -80,7 +80,7 @@ public class HandleSauronRayMovement : MonoBehaviour
     }
     
     
-    private void FixedUpdate()
+    private void Update()
     {
         if (isInControl)
         {
@@ -168,7 +168,7 @@ public class HandleSauronRayMovement : MonoBehaviour
 
         // Check if the new position is inside any of the portal support colliders
         bool isInside = false;
-        foreach (Collider coll in portalSupportColliders)
+        foreach (MeshCollider coll in portalSupportColliders)
         {
             if (coll.bounds.Contains(newEndPointPosition))
             {
