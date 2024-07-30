@@ -82,6 +82,7 @@ public class Constants {
     public const float XR_CONTROLLER_MIN_GRIP_VALUE = 0.0f;
     public const float XR_CONTROLLER_MAX_GRIP_VALUE = 1.0f;
     public const float XR_CONTROLLER_GRIP_VALUE_THRESHOLD = 0.1f;
+    public const float XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD = 0.1f;
 
     #endregion
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UniColliderInterpolator;
 using UnityEngine;
 using UnityEngine.Events;
@@ -110,7 +111,13 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             // Invoke the event that will notify the Neto module of the distance change
             //onSauronRayDistanceChange?.Invoke(inactiveSpiralwaveRay, activeSpiralwaveRay, finalNewDistance);
             
+            
+            // Handle control interruption
+            HandleControlInterruption();
+            
         }
+        
+        
     }
     
 
@@ -123,12 +130,8 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         }
 
         interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        Debug.Log("INTERACTOR: " + interactor);
         pointer = other.gameObject.GetComponent<Pointer>();
-        Debug.Log("POINTER: " + pointer);
         xrController = interactor.GetComponentInParent<ActionBasedController>();
-        Debug.Log("XR CONTROLLER: " + xrController);
-        Debug.Log("XR CONTROLLER NAME: " + xrController.gameObject.name);
         
         if (interactor != null || pointer != null)
         {
@@ -196,6 +199,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             // Collision detected, revert to previous position
             rayEndPointRb.MovePosition(previousPosition);
             Debug.Log("DIO: Collision detected, movement blocked.");
+            
         }
 
         
@@ -284,15 +288,21 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         // Check for collision
         if (!IsColliding(newEndPointPosition))
         {
+            Debug.Log("NON COLLIDE: DIO TULIPANO APPASSITO");
             previousPosition = rayEndPoint.position;
             rayEndPointRb.MovePosition(newEndPointPosition);
             Debug.Log($"DIO: Sphere moved to: {newEndPointPosition}");
         }
         else
         {
+            Debug.Log("COLLIDE: DIO PANTEGANA");
             // Collision detected, revert to previous position
             rayEndPointRb.MovePosition(previousPosition);
             Debug.Log("DIO: Collision detected, movement blocked.");
+            
+            
+            // Send haptic feedback to the hand controller
+            ProvideHapticFeedback(0.5f, 1f);
         }
         
         
@@ -417,6 +427,29 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             
             
+    }
+    
+    
+    
+    
+    private void HandleControlInterruption()
+    {
+        Debug.Log("XR CONTROLLER: " + xrController);
+
+        bool backTriggerPressed = xrController.activateActionValue.action.ReadValue<float>() > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD;
+        if (backTriggerPressed)
+        {
+            isInControl = false;
+        }
+
+    }
+    
+    public void ProvideHapticFeedback(float amplitude, float duration)
+    {
+        Debug.Log("XR CONTROLLER: " + xrController);
+
+        // Trigger the haptic feedback on the controller
+        xrController.SendHapticImpulse(amplitude, duration);
     }
 
 

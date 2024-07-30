@@ -57,7 +57,13 @@ public class HandleNetoRayMovement : MonoBehaviour
                 
             // Handle emissive intensity based on trigger press
             HandleEmissiveIntensityBasedOnTrigger();
+            
+            
+            // Handle control interruption
+            HandleControlInterruption();
+            
         }
+        
     }
 
 
@@ -71,12 +77,8 @@ public class HandleNetoRayMovement : MonoBehaviour
         }
 
         interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        Debug.Log("INTERACTOR: " + interactor);
         pointer = other.gameObject.GetComponent<Pointer>();
-        Debug.Log("POINTER: " + pointer);
         xrController = interactor.GetComponentInParent<ActionBasedController>();
-        Debug.Log("XR CONTROLLER: " + xrController);
-        Debug.Log("XR CONTROLLER NAME: " + xrController.gameObject.name);
         
         if (interactor != null || pointer != null)
         {
@@ -208,6 +210,20 @@ public class HandleNetoRayMovement : MonoBehaviour
                 rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
             }
         }
+    }
+
+
+    private void HandleControlInterruption()
+    {
+        Debug.Log("XR CONTROLLER: " + xrController);
+
+        Debug.Log("TRIGGER VALUE: " + xrController.activateActionValue.action.ReadValue<float>());
+        float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+        if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
+        {
+            isInControl = false;
+        }
+
     }
 
 

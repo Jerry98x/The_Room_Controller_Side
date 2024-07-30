@@ -101,7 +101,11 @@ public class HandleSauronRayMovement : MonoBehaviour
             // Invoke the event that will notify the Neto module of the distance change
             onSauronRayDistanceChange?.Invoke(inactiveSpiralwaveRay, activeSpiralwaveRay, finalNewDistance);
             
+            // Handle control interruption
+            HandleControlInterruption();
         }
+        
+        
     }
     
 
@@ -114,12 +118,8 @@ public class HandleSauronRayMovement : MonoBehaviour
         }
 
         interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        Debug.Log("INTERACTOR: " + interactor);
         pointer = other.gameObject.GetComponent<Pointer>();
-        Debug.Log("POINTER: " + pointer);
         xrController = interactor.GetComponentInParent<ActionBasedController>();
-        Debug.Log("XR CONTROLLER: " + xrController);
-        Debug.Log("XR CONTROLLER NAME: " + xrController.gameObject.name);
         
         if (interactor != null || pointer != null)
         {
@@ -262,6 +262,19 @@ public class HandleSauronRayMovement : MonoBehaviour
             
             
             
+    }
+    
+    
+    private void HandleControlInterruption()
+    {
+        Debug.Log("XR CONTROLLER: " + xrController);
+
+        bool backTriggerPressed = xrController.activateActionValue.action.ReadValue<float>() > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD;
+        if (backTriggerPressed)
+        {
+            isInControl = false;
+        }
+
     }
 
 
