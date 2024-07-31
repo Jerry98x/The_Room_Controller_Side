@@ -158,6 +158,20 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             isInControl = false;
         }
     }
+    
+    
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        {
+            // Check if the trigger is released
+            float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
+            {
+                isInControl = true;
+            }
+        }
+    }
    
     
     

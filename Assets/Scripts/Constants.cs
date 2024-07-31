@@ -57,8 +57,8 @@ public class Constants {
 
 
     // Inversely proportional to the distance
-    public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.3f;
-    public const float NETO_FREQUENCY_DISTANCE_RATE = 10f;
+    public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.45f;
+    public const float NETO_FREQUENCY_DISTANCE_RATE = 12f;
 
 
     public const float PARENT_LINERENDERER_WIDTH_MULTIPLIER = 0.8f;

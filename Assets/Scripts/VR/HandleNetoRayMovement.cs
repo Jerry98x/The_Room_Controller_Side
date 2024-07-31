@@ -31,6 +31,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     private SinewaveRay activeSinewaveRay;
     private float netoMovementMultiplier;
     private bool isInControl = false;
+    private bool hasEmergency = false;
     
     
     
@@ -46,6 +47,7 @@ public class HandleNetoRayMovement : MonoBehaviour
 
     private void Update()
     {
+        
         if (isInControl)
         {
             
@@ -104,6 +106,20 @@ public class HandleNetoRayMovement : MonoBehaviour
             pointer = null;
             interactor = null;
             isInControl = false;
+        }
+    }
+    
+    
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        {
+            // Check if the trigger is released
+            float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
+            {
+                isInControl = true;
+            }
         }
     }
 
@@ -225,6 +241,16 @@ public class HandleNetoRayMovement : MonoBehaviour
         }
 
     }
+
+    /*private void CancelControlInterruption()
+    {
+        Debug.Log("Parigi fuori");
+        if(!isInControl && interactor != null && pointer != null)
+        {
+            Debug.Log("Parigi dentro");
+            isInControl = true;
+        }
+    }*/
 
 
     public bool IsInControl()
