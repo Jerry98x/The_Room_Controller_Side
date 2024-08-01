@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 using CommonUsages = UnityEngine.XR.CommonUsages;
 using InputDevice = UnityEngine.XR.InputDevice;
@@ -13,6 +15,8 @@ public class HandleNetoRayMovement : MonoBehaviour
 
     
     public UnityEvent<SinewaveRay, SinewaveRay, float> onNetoRayDistanceChange;
+    public event Action<bool> OnEmergencyStatusChanged;
+
     
 
     //private InputData inputData;
@@ -21,7 +25,13 @@ public class HandleNetoRayMovement : MonoBehaviour
     [SerializeField] private Transform coreCenter;
     [SerializeField] private Transform rayEndPoint;
     
-    [SerializeField] [ColorUsage(true, true)] private Color initialEmissiveColor;
+    [SerializeField] [ColorUsage(true)] private Color initialActiveBaseColor;
+    [SerializeField] [ColorUsage(true, true)] private Color initialActiveEmissiveColor;
+    [SerializeField] [ColorUsage(true)] private Color emergencyBaseColor;
+    [SerializeField] [ColorUsage(true, true)] private Color emergencyEmissiveColor;
+    
+    [SerializeField] private EmergencyAudioEffect emergencyAudioEffect;
+
     
     private ActionBasedController xrController;
     private XRDirectInteractor interactor;
@@ -29,6 +39,8 @@ public class HandleNetoRayMovement : MonoBehaviour
     
     private SinewaveRay inactiveSinewaveRay;
     private SinewaveRay activeSinewaveRay;
+    [ColorUsage(true)] private Color initialInactiveBaseColor;
+    [ColorUsage(true, true)] private Color initialInactiveEmissiveColor;
     private float netoMovementMultiplier;
     private bool isInControl = false;
     private bool hasEmergency = false;
@@ -39,14 +51,41 @@ public class HandleNetoRayMovement : MonoBehaviour
     {
         //inputData = GetComponent<InputData>();
         
+        inactiveSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>();
+        initialInactiveBaseColor = inactiveSinewaveRay.GetComponent<Renderer>().material.GetColor(Constants.BASE_COLOR_ID);
+        initialInactiveEmissiveColor = inactiveSinewaveRay.GetComponent<Renderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID);
+        netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
+
+        
         
         // Listeners
         onNetoRayDistanceChange.AddListener(UpdateLineRenderers);
     }
 
+    private void HandledEvents()
+    {
+        // If I press the E key, I start the emergency mode
+        if (!hasEmergency && Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Starting emergency mode");
+            StartEmergencyMode();
+        }
+        if(hasEmergency && Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Stopping emergency mode");
+            StopEmergencyMode();
+        }
+    }
+
 
     private void Update()
     {
+        HandledEvents();
+        
+        if(hasEmergency)
+        {
+            return;
+        }
         
         if (isInControl)
         {
@@ -82,13 +121,9 @@ public class HandleNetoRayMovement : MonoBehaviour
         pointer = other.gameObject.GetComponent<Pointer>();
         xrController = interactor.GetComponentInParent<ActionBasedController>();
         
-        if (interactor != null || pointer != null)
+        if ((interactor != null || pointer != null) && !hasEmergency)
         {
-            
-            inactiveSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>();
             activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
-            netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
-            
             isInControl = true;
         }
         
@@ -99,8 +134,15 @@ public class HandleNetoRayMovement : MonoBehaviour
     {
         if (other.GetComponent<XRDirectInteractor>() == interactor)
         {
+            // Reset the active ray material to its initial color to avoid color artifacts in the
+            // specific case where the emergency mode was started with the hand already inside the collider
+            // and then ended while the hand was already outside the collider
+            /*Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            if (rayRenderer != null && hasEmergency)
+            {
+                SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
+            }*/
             
-            inactiveSinewaveRay = null;
             activeSinewaveRay = null;
 
             pointer = null;
@@ -116,7 +158,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         {
             // Check if the trigger is released
             float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
-            if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
+            if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD && !hasEmergency)
             {
                 isInControl = true;
             }
@@ -212,7 +254,7 @@ public class HandleNetoRayMovement : MonoBehaviour
                 //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
                 Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
                 
-                rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
+                SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
             }
 
         }
@@ -221,9 +263,10 @@ public class HandleNetoRayMovement : MonoBehaviour
             Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
             if (rayRenderer != null)
             {
-                Color newEmissiveColor = initialEmissiveColor;
+                Color newEmissiveColor = initialActiveEmissiveColor;
                 
-                rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, newEmissiveColor);
+                SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                
             }
         }
     }
@@ -235,29 +278,81 @@ public class HandleNetoRayMovement : MonoBehaviour
 
         Debug.Log("TRIGGER VALUE: " + xrController.activateActionValue.action.ReadValue<float>());
         float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
-        if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
+        if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD && !hasEmergency)
         {
             isInControl = false;
         }
 
     }
 
-    /*private void CancelControlInterruption()
+    
+    
+    private void StartEmergencyMode()
     {
-        Debug.Log("Parigi fuori");
-        if(!isInControl && interactor != null && pointer != null)
-        {
-            Debug.Log("Parigi dentro");
-            isInControl = true;
-        }
-    }*/
+        hasEmergency = true;
+        isInControl = false;
+        
+        OnEmergencyStatusChanged?.Invoke(hasEmergency);
 
+        
+        // Change the color of the ray to red
+    
+        Renderer inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+        if (inactiveRayRenderer != null)
+        {
+            SetMaterialColor(inactiveRayRenderer, emergencyBaseColor, emergencyEmissiveColor);
+        }
+        if (activeSinewaveRay != null)
+        {
+            Renderer activeRayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            SetMaterialColor(activeRayRenderer, emergencyBaseColor, emergencyEmissiveColor);
+        }
+        
+        emergencyAudioEffect.onEmergencyStart.Invoke();
+
+        
+    }
+
+    public void StopEmergencyMode()
+    {
+        hasEmergency = false;
+        
+        OnEmergencyStatusChanged?.Invoke(hasEmergency);
+
+        
+        // Change the color of the ray back to its initial color
+        Renderer inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+        if (inactiveRayRenderer != null)
+        {
+            SetMaterialColor(inactiveRayRenderer, initialInactiveBaseColor, initialInactiveEmissiveColor);
+        }
+        if (activeSinewaveRay != null)
+        {
+            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
+        }
+        
+    }
+    
+    
+    public void SetMaterialColor(Renderer rayRenderer, Color baseColor, Color emissiveColor)
+    {
+        rayRenderer.material.SetColor(Constants.BASE_COLOR_ID, baseColor);
+        rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, emissiveColor);
+    }
+    
+    
+    
 
     public bool IsInControl()
     {
         return isInControl;
     }
     
+    public bool HasEmergency()
+    {
+        return hasEmergency;
+    }
     
     
 }

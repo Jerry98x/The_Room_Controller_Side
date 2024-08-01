@@ -18,11 +18,15 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     [SerializeField] private float threshold = 0.1f;
     [SerializeField] private float smoothingSpeed = 5f;
     
+    [SerializeField]private HandleNetoRayMovement handleNetoRayMovement;
+    
     private float targetSize;
     
     
     private ParticleSystem partSystem;
     private Vector3 particleDirection;
+    
+    private bool emergencyActive = false;
 
 
 
@@ -32,6 +36,8 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
         SetParticleSystemDirection();
         
         targetSize = partSystem.main.startSize.constant;
+        
+        handleNetoRayMovement.OnEmergencyStatusChanged += UpdateEmergencyStatus;
     }
     
     
@@ -44,11 +50,29 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
             loudness = 0;
         }
         
+        // To account for when after the emergency mode is interrupted
+        //TODO: fix a bug here
+        if(!partSystem.isPlaying)
+        {
+            partSystem.Play();
+        }
+        
         if (partSystem != null && partSystem.isPlaying)
         {
             // Change the particles' size based on the loudness
             ChangeParticleSize(loudness);
         }
+    }
+    
+    
+    private void OnDestroy()
+    {
+        handleNetoRayMovement.OnEmergencyStatusChanged -= UpdateEmergencyStatus;
+    }
+
+    private void UpdateEmergencyStatus(bool hasEmergency)
+    {
+        emergencyActive = hasEmergency;
     }
     
     
@@ -60,12 +84,19 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     
     private void ChangeParticleSize(float loudness)
     {
-        ParticleSystem.MainModule main = partSystem.main;
-        
-        targetSize = Mathf.Lerp(minSize, maxSize, loudness);
-        
-        // Lerping the size based on the loudness
-        main.startSize = Mathf.Lerp(main.startSize.constant, targetSize, Time.deltaTime * smoothingSpeed);
+        if(!emergencyActive)
+        {
+            ParticleSystem.MainModule main = partSystem.main;
+                    
+            targetSize = Mathf.Lerp(minSize, maxSize, loudness);
+            
+            // Lerping the size based on the loudness
+            main.startSize = Mathf.Lerp(main.startSize.constant, targetSize, Time.deltaTime * smoothingSpeed);
+        }
+        else
+        {
+            partSystem.Stop();
+        }
 
     }
     

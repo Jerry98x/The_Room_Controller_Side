@@ -28,7 +28,6 @@ public class SinewaveRay : BaseRay
     [SerializeField] private bool isInward = false;
 
     //private Renderer renderer;
-    private Color initialColor;
     //private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
     
@@ -52,7 +51,6 @@ public class SinewaveRay : BaseRay
     {
         /*renderer = GetComponent<Renderer>();*/
         lineRenderer.GetComponent<LineRenderer>();
-        initialColor = GetComponent<LineRenderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID);
     }
     
     /// <summary>
@@ -87,8 +85,6 @@ public class SinewaveRay : BaseRay
             netoPositionChangeEvent.Invoke(depth.ToString());
         }*/
         
-        
-        HandleEvents();
         DrawLine();
         
         Debug.Log("Distanza attuale: " + Vector3.Distance(GetEndPoint().position, startPoint.position));
@@ -152,59 +148,8 @@ public class SinewaveRay : BaseRay
         }
 
     }
-    
 
 
-    /// <summary>
-    /// Handles the events related to the sinewave such as changing its amplitude, frequency, and color
-    /// </summary>
-    private void HandleEvents()
-    {
-        // TODO: Remove test events
-        
-        // Sinewave amplitude
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            
-            if (!this.amplitude.Equals(1f))
-            {
-                this.amplitude = 1f;
-            }
-            else
-            {
-                this.amplitude = 0.5f;
-            }
-        }
-        // Sinewave frequency
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (!this.frequency.Equals(4f))
-            {
-                this.frequency = 4f;
-            }
-            else
-            {
-                this.frequency = 2f;
-            }
-        }
-        // Sinewave color
-        if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (GetComponent<Renderer>() != null && GetComponent<Renderer>().material != null)
-            {
-                if(GetComponent<Renderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID) == initialColor)
-                {
-                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, Color.red);
-                }
-                else
-                {
-                    GetComponent<Renderer>().material.SetColor(Constants.EMISSIVE_COLOR_ID, initialColor);
-                }
-            }
-        }
-        
-    }
-    
     #endregion
     
     

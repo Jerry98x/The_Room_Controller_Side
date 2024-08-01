@@ -91,6 +91,7 @@ public class Constants {
 
     #region Shader properties
 
+    public static int BASE_COLOR_ID = Shader.PropertyToID("_BaseColor");
     public static int EMISSIVE_COLOR_ID = Shader.PropertyToID("_EmissiveColor");
     public static int EMISSIVE_INTENSITY_ID = Shader.PropertyToID("_EmissiveIntensity");
 
