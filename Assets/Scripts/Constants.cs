@@ -49,7 +49,7 @@ public class Constants {
 
     public const float POINTER_REACH_DISTANCE_Z_AXIS = 0.8f;
     public const float ENDPOINT_REACH_DISTANCE_Z_AXIS = 8f;
-    public const float ENDPOINT_REACH_Z_MIN = 2f;
+    public const float ENDPOINT_REACH_Z_MIN = 1f;
     public const float ENDPOINT_REACH_Z_MAX = 12f;
     
     public const float CAPPED_MIN_EMISSION_INTENSITY = 2f;

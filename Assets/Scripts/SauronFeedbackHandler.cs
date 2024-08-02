@@ -61,7 +61,7 @@ public class SauronFeedbackHandler : MonoBehaviour
                 attractor.position = rayEndPoint.transform.position;
                 SetAttractorDirection();
                 
-                effect.SendEvent("SauronPlay");
+                effect.SendEvent("VinesEffectPlay");
                 shouldMove = true;
             }
             
