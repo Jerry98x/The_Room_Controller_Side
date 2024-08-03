@@ -52,11 +52,12 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
         
         // To account for when after the emergency mode is interrupted
         //TODO: fix a bug here
-        if(!partSystem.isPlaying)
+        if(partSystem != null && !partSystem.isPlaying && !emergencyActive && handleNetoRayMovement.IsInControl())
         {
             partSystem.Play();
         }
         
+        Debug.Log("IL PARTICLE SYSTEM STA SUONANDO? " + partSystem.isPlaying);
         if (partSystem != null && partSystem.isPlaying)
         {
             // Change the particles' size based on the loudness
@@ -86,6 +87,11 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     {
         if(!emergencyActive)
         {
+            if(handleNetoRayMovement.IsInControl() && !partSystem.isPlaying)
+            {
+                partSystem.Play();
+            }
+            
             ParticleSystem.MainModule main = partSystem.main;
                     
             targetSize = Mathf.Lerp(minSize, maxSize, loudness);

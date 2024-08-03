@@ -25,10 +25,10 @@ public class HandleNetoRayMovement : MonoBehaviour
     [SerializeField] private Transform coreCenter;
     [SerializeField] private Transform rayEndPoint;
     
-    [SerializeField] [ColorUsage(true)] private Color initialActiveBaseColor;
-    [SerializeField] [ColorUsage(true, true)] private Color initialActiveEmissiveColor;
-    [SerializeField] [ColorUsage(true)] private Color emergencyBaseColor;
-    [SerializeField] [ColorUsage(true, true)] private Color emergencyEmissiveColor;
+    [SerializeField] [ColorUsage(true)] public Color initialActiveBaseColor;
+    [SerializeField] [ColorUsage(true, true)] public Color initialActiveEmissiveColor;
+    [SerializeField] [ColorUsage(true)] public Color emergencyBaseColor;
+    [SerializeField] [ColorUsage(true, true)] public Color emergencyEmissiveColor;
     
     [SerializeField] private EmergencyAudioEffect emergencyAudioEffect;
 
@@ -302,6 +302,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         {
             SetMaterialColor(inactiveRayRenderer, emergencyBaseColor, emergencyEmissiveColor);
         }
+        
         if (activeSinewaveRay != null)
         {
             Renderer activeRayRenderer = activeSinewaveRay.GetComponent<Renderer>();
@@ -326,10 +327,31 @@ public class HandleNetoRayMovement : MonoBehaviour
         {
             SetMaterialColor(inactiveRayRenderer, initialInactiveBaseColor, initialInactiveEmissiveColor);
         }
+        else
+        {
+            // Handle the specific case in which the emergency mode was started when in control of the ray and ended
+            // when the hand controller had already exited the interactable
+            inactiveSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>();
+            inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+            SetMaterialColor(inactiveRayRenderer, initialInactiveBaseColor, initialInactiveEmissiveColor);
+            inactiveSinewaveRay = null;
+            
+        }
+        
+        
         if (activeSinewaveRay != null)
         {
             Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
             SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
+        }
+        else
+        {
+            // Handle the specific case in which the emergency mode was started when in control of the ray and ended
+            // when the hand controller had already exited the interactable
+            activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
+            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+            SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
+            activeSinewaveRay = null;
         }
         
     }

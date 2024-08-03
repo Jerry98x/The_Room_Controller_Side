@@ -6304,7 +6304,7 @@ GameObject:
   - component: {fileID: 8995263390548998829}
   - component: {fileID: 1656135322964586104}
   - component: {fileID: 7602445079065193162}
-  - component: {fileID: 5915916175005159039}
+  - component: {fileID: 9074184675287548443}
   - component: {fileID: 3978101346030517390}
   - component: {fileID: 8417884586524173821}
   - component: {fileID: 7194748530324878290}
@@ -6457,7 +6457,7 @@ MonoBehaviour:
   m_Property:
     m_Name: Attractor
   Target: {fileID: 8590883237882906656}
---- !u!114 &5915916175005159039
+--- !u!114 &9074184675287548443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6466,12 +6466,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5670885495418439791}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af52856b3771364479da438204196e7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a051098149680045950337db202e0a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleEndpointPosition: {fileID: 0}
+  particleEndpointPosition: {fileID: 3335911367956742061}
   attractor: {fileID: 8590883237882906656}
-  rayEndPoint: {fileID: 0}
+  spawnPoint: {fileID: 8187247447299442567}
+  handleNetoRayMovement: {fileID: 1497156735151521217}
 --- !u!120 &3978101346030517390
 LineRenderer:
   serializedVersion: 2

@@ -49,18 +49,5 @@ public class ConditionalHoverEvents : MonoBehaviour
             // Execute actions if the condition is true
             onHoverExitedActions.Invoke();
         }
-        /*else
-        {
-            SinewaveRay activeSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>().GetComponentInChildren<SinewaveRay>();
-            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-            if(activeSinewaveRay != null && rayRenderer != null)
-            {
-                rayRenderer.material.SetColor("_BaseColor", Color.blue);
-                rayRenderer.material.SetColor("_EmissiveColor", Color.blue);
-            }
-          
-            // Execute actions if the condition is true
-            onHoverExitedActions.Invoke();
-        }*/
     }
 }

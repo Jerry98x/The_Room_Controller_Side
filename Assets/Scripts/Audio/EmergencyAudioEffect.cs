@@ -22,11 +22,21 @@ public class EmergencyAudioEffect : MonoBehaviour
     private float emergencyParticleSize;
     private bool emergencyActive = false;
     
+    private float soundSpeed;
+    
+    private bool shouldMove = false;
+    private Vector3 initialPosition;
+    
     
     private void Start()
     {
+        
+        soundSpeed = partSystem.main.startSpeed.constant;
+        
         emergencyParticleSize = partSystem.main.startSize.constant;
         SetParticleSystemDirection();
+        
+        initialPosition = source.transform.position;
         
         onEmergencyStart.AddListener(StartEmergencyAudio);
         handleNetoRayMovement.OnEmergencyStatusChanged += UpdateEmergencyStatus;
@@ -36,6 +46,8 @@ public class EmergencyAudioEffect : MonoBehaviour
 
     private void Update()
     {
+        
+        //MoveAudioSource();
         
     }
     
@@ -48,6 +60,7 @@ public class EmergencyAudioEffect : MonoBehaviour
     private void UpdateEmergencyStatus(bool hasEmergency)
     {
         emergencyActive = hasEmergency;
+        shouldMove = hasEmergency;
     }
     
     
@@ -92,7 +105,31 @@ public class EmergencyAudioEffect : MonoBehaviour
         particleDirection = particleEndpointPosition.position - transform.position;
         transform.rotation = Quaternion.LookRotation(particleDirection);
     }
-    
+
+
+
+    private void MoveAudioSource()
+    {
+
+        if (shouldMove)
+        {
+            // Normalize the direction vector
+            Vector3 normalizedDirection = particleDirection.normalized;
+            
+            source.transform.Translate(soundSpeed  * Time.deltaTime * normalizedDirection, Space.World);
+
+            
+            float offset = 3f;
+            if ((Vector3.Distance(source.transform.position, particleEndpointPosition.position) >= offset) && (Vector3.Distance(initialPosition, source.transform.position) >=
+                    Vector3.Distance(initialPosition, particleEndpointPosition.position) + offset))
+            {
+                source.transform.position = initialPosition;
+            }
+
+            
+        }
+        
+    }
     
     
     

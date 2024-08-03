@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class AudioLoudnessDetection : MonoBehaviour
 {
@@ -14,13 +15,13 @@ public class AudioLoudnessDetection : MonoBehaviour
     {
         MicrophoneToAudioClip();
     }
-
     
     
     public void MicrophoneToAudioClip()
     {
         // Get first microphone
         string microphoneName = Microphone.devices[0];
+        Debug.Log("Using microphone: " + microphoneName);
         microphoneClip = Microphone.Start(microphoneName, true, 20, AudioSettings.outputSampleRate);
     }
 
@@ -49,7 +50,8 @@ public class AudioLoudnessDetection : MonoBehaviour
             totalLoudness += Mathf.Abs(waveData[i]);
         }
         
-        return totalLoudness / sampleWindow;
+        float averageLoudness = totalLoudness / sampleWindow;
+        return averageLoudness;
     }
     
     
@@ -57,6 +59,22 @@ public class AudioLoudnessDetection : MonoBehaviour
     {
         int clipPosition = Microphone.GetPosition(Microphone.devices[0]);
         return GetLoudnessFromAudioClip(clipPosition, microphoneClip);
+    }
+    
+    
+    
+    public static bool IsPresent()
+    {
+        var xrDisplaySubsystems = new List<XRDisplaySubsystem>();
+        SubsystemManager.GetInstances<XRDisplaySubsystem>(xrDisplaySubsystems);
+        foreach (var xrDisplay in xrDisplaySubsystems)
+        {
+            if (xrDisplay.running)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     
