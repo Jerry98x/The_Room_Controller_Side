@@ -164,7 +164,7 @@ public class HandleSauronRayMovement : MonoBehaviour
     
     
     
-    public void HandleRayEndpointMovement()
+    private void HandleRayEndpointMovement()
     {
         
         Vector3 currentPointerPosition = pointer.transform.position;

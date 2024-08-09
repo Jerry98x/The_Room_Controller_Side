@@ -167,7 +167,7 @@ public class HandleNetoRayMovement : MonoBehaviour
 
 
 
-    public void HandleRayEndpointMovement(out float finalNewDistance)
+    private void HandleRayEndpointMovement(out float finalNewDistance)
     {
         
         // Calculate the direction from coreCenter to the ray's endpoint
@@ -314,7 +314,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         
     }
 
-    public void StopEmergencyMode()
+    private void StopEmergencyMode()
     {
         hasEmergency = false;
         
@@ -357,7 +357,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
     
     
-    public void SetMaterialColor(Renderer rayRenderer, Color baseColor, Color emissiveColor)
+    private void SetMaterialColor(Renderer rayRenderer, Color baseColor, Color emissiveColor)
     {
         rayRenderer.material.SetColor(Constants.BASE_COLOR_ID, baseColor);
         rayRenderer.material.SetColor(Constants.EMISSIVE_COLOR_ID, emissiveColor);

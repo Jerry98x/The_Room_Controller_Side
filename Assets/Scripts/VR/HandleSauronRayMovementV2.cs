@@ -20,11 +20,14 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
     //[SerializeField] private Collider portalMeshCollider;
     [SerializeField] private GameObject portal;
+    [SerializeField] private GameObject portalSimplified;
     
     
-    private MeshCollider portalMeshCollider;
+    //private MeshCollider portalMeshCollider;
     private BoxCollider portalBoxCollider;
     private MeshCollider[] portalSupportColliders;
+    private Collider[] portalColliders;
+    
     private SphereCollider sphereCollider;
     private Rigidbody rayEndPointRb;
     
@@ -51,8 +54,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private bool isInControl = false;
     
     
-    bool insideAnyCollider = false;
+    private bool insideAnyCollider = false;
     
+    private float colliderHapticFeedbackAmplitude = 0.5f;
+    private float colliderHapticFeedbackDuration = 0.5f;
     
     
     private void Start()
@@ -69,8 +74,11 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         }
         
         //portalMeshCollider = portal.GetComponent<MeshCollider>();
+        
         portalBoxCollider = portal.GetComponent<BoxCollider>();
         portalSupportColliders = portal.GetComponents<MeshCollider>();
+        
+        portalColliders = portalSimplified.GetComponentsInChildren<Collider>();
         
         
         sphereCollider = rayEndPoint.GetComponent<SphereCollider>();
@@ -192,7 +200,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         
         // Smooth the movement vector
         smoothedMovement = Vector3.Lerp(smoothedMovement, scaledMovement, smoothTime);
-        Debug.Log($"Smoothed Movement Vector: {smoothedMovement}");
+        Debug.Log($"DIO: Smoothed Movement Vector: {smoothedMovement}");
 
         // Calculate new potential position of the ray's endpoint
         Vector3 newEndPointPosition = rayEndPoint.position + smoothedMovement;
@@ -274,7 +282,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
     
-    public void HandleRayEndpointMovement(out float finalNewDistance)
+    private void HandleRayEndpointMovement(out float finalNewDistance)
     {
         
         Vector3 currentPointerPosition = pointer.transform.position;
@@ -290,33 +298,37 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         
         // Smooth the movement vector
         smoothedMovement = Vector3.Lerp(smoothedMovement, scaledMovement, smoothTime);
-        Debug.Log($"Smoothed Movement Vector: {smoothedMovement}");
+        Debug.Log($"DIO: Smoothed Movement Vector: {smoothedMovement}");
 
         // Calculate new potential position of the ray's endpoint
         Vector3 newEndPointPosition = rayEndPoint.position + smoothedMovement;
         Debug.Log($"DIO: Target Position: {newEndPointPosition}");
         
         
+        Vector3 adjustedPosition = CalculateSlidePosition(rayEndPoint.position, smoothedMovement);
+
+        
+        
         
         
         // Check for collision
+        
+        //if (!IsCollidingSimplified(newEndPointPosition))
         if (!IsColliding(newEndPointPosition))
         {
-            Debug.Log("NON COLLIDE: DIO TULIPANO APPASSITO");
             previousPosition = rayEndPoint.position;
             rayEndPointRb.MovePosition(newEndPointPosition);
             Debug.Log($"DIO: Sphere moved to: {newEndPointPosition}");
         }
         else
         {
-            Debug.Log("COLLIDE: DIO PANTEGANA");
-            // Collision detected, revert to previous position
+            /*Collision detected, revert to previous position
             rayEndPointRb.MovePosition(previousPosition);
-            Debug.Log("DIO: Collision detected, movement blocked.");
+            Debug.Log("DIO: Collision detected, movement blocked.");*/
             
             
             // Send haptic feedback to the hand controller
-            ProvideHapticFeedback(0.5f, 1f);
+            ProvideHapticFeedback(colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
         }
         
         
@@ -387,32 +399,35 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         return false;*/
         
         
+        
         Collider[] colliders = Physics.OverlapSphere(targetPos, sphereCollider.radius);
         foreach (var coll in colliders)
         {
-            // Check on the box collider
-            if(portalBoxCollider == coll)
+            if (coll == portalBoxCollider || System.Array.Exists(portalSupportColliders, c => c == coll))
             {
-                Debug.Log("Toccato il box collider, dio serpente!");
                 return true;
-            }
-            
-            // Checks on the mesh colliders
-            foreach (var portalCollider in portalSupportColliders)
-            {
-                if(portalCollider == coll)
-                {
-                    Debug.Log("Toccato uno dei mesh collider, dio sanguisuga!");
-                    return true;
-                }
             }
         }
         return false;
     }
     
+    bool IsCollidingSimplified(Vector3 targetPos)
+    {
+        Collider[] colliders = Physics.OverlapSphere(targetPos, sphereCollider.radius);
+        foreach (var coll in colliders)
+        {
+            if (System.Array.Exists(portalColliders, c => c == coll))
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
     
     
-    bool IsPositionInsideColliders(Vector3 position)
+    
+    /*bool IsPositionInsideColliders(Vector3 position)
     {
         foreach (var coll in portalSupportColliders)
         {
@@ -428,7 +443,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         }
 
         return false;
-    }
+    }*/
     
     
     
@@ -464,6 +479,13 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
         // Trigger the haptic feedback on the controller
         xrController.SendHapticImpulse(amplitude, duration);
+    }
+    
+    
+    
+    public bool IsInControl()
+    {
+        return isInControl;
     }
 
 

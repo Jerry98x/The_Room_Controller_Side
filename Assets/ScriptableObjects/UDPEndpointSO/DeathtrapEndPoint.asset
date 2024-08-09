@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DeathtrapEndPoint
   m_EditorClassIdentifier: 
   stringIP: 
-  port: 0
+  port: 4210
   uiName: DeathtrapEndPoint

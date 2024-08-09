@@ -19,6 +19,7 @@ public class NetoEmergencyVFXHandler : MonoBehaviour
     private bool shouldMove = false; // To control when the Attractor object should start moving
     private Vector3 particleDirection;
     private float attractorSpeed = 15f;
+    private Vector3 spawnPosition;
 
     private bool emergencyActive = false;
     
@@ -27,6 +28,7 @@ public class NetoEmergencyVFXHandler : MonoBehaviour
     {
         effect = GetComponent<VisualEffect>();
         stripsLifetime = effect.GetFloat("StripsLifetime");
+        spawnPosition = spawnPoint.transform.position;
         
         /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
         attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
@@ -110,10 +112,14 @@ public class NetoEmergencyVFXHandler : MonoBehaviour
             
             attractor.Translate(attractorSpeed * Time.deltaTime * normalizedDirection, Space.World);
             
+            float offset = 0.1f;
+            
             // When the Attractor object has reached the particleEndPointPosition, stops its translation without resetting its position
-            if (Vector3.Distance(attractor.position, particleEndpointPosition.position) <= 0.1f)
+            if (Vector3.Distance(spawnPosition, particleEndpointPosition.position) <=
+                Vector3.Distance(spawnPosition, attractor.position) + offset)
             {
                 shouldMove = false;
+                attractor.position = particleEndpointPosition.position;
             }
         
             

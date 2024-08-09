@@ -5809,6 +5809,7 @@ MonoBehaviour:
   roomElement: {fileID: 1730159053930928556}
   roomCore: {fileID: 0}
   rayEndPoint: {fileID: 7954295430979137745}
+  netoRayMovementHandler: {fileID: 0}
   netoPositionChangeEvent: {fileID: 11400000, guid: 547ee07fa9c825f4fa5084d4eba8685d,
     type: 2}
   netoFeedbackHandler: {fileID: 2046878902427935858}
@@ -6886,7 +6887,8 @@ GameObject:
   - component: {fileID: 2480049443726668450}
   - component: {fileID: 1497156735151521217}
   - component: {fileID: 1997478912204020246}
-  m_Layer: 7
+  - component: {fileID: 8861413050428922249}
+  m_Layer: 10
   m_Name: ProximityColliderObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7197,6 +7199,98 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8861413050428922249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334666338621001467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9451c373127c354d8ee2def59fda54f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: {fileID: 1997478912204020246}
+  handleNetoRayMovement: {fileID: 1497156735151521217}
+  onHoverEnteredActions:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 965939153272460123}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1833623610483008787}
+        m_TargetAssemblyTypeName: UnityEngine.LineRenderer, UnityEngine
+        m_MethodName: set_widthMultiplier
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6214038473859831171}
+        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  onHoverExitedActions:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 965939153272460123}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1833623610483008787}
+        m_TargetAssemblyTypeName: UnityEngine.LineRenderer, UnityEngine
+        m_MethodName: set_widthMultiplier
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.8
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6214038473859831171}
+        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &722163024607200344
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7486,6 +7580,12 @@ PrefabInstance:
 --- !u!4 &1852699529387201372 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1419688409752540932, guid: b601e460cb2c8944180157a740b6e5c8,
+    type: 3}
+  m_PrefabInstance: {fileID: 722163024607200344}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6214038473859831171 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6645360731151978971, guid: b601e460cb2c8944180157a740b6e5c8,
     type: 3}
   m_PrefabInstance: {fileID: 722163024607200344}
   m_PrefabAsset: {fileID: 0}
