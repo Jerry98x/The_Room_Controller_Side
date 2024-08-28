@@ -6,7 +6,6 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
 {
     
     
-    // Events
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private Transform roomCore;
     [SerializeField] private Transform rayEndPoint;
@@ -14,12 +13,14 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField] private SauronFeedbackHandler sauronFeedbackHandler;
     
     
-    
         
     // TODO: Remove these as soon as I've figured out a mapping between the position of the Sauron ray endpoint and the two servo angles values
     [SerializeField, Range(0, 180)] private int rotationServoAngleSauron;
     [SerializeField, Range(0, 60)] private int inclinationServoAngleSauron;
 
+    
+    private int rotationAlphaAngleSauron;
+    private int elevationBetaAngleSauron;
     
     
     //private RayEndPoint rayEndPointObject;
@@ -122,8 +123,11 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     private void BuildByteArrayMessage()
     {
         
-        Debug.Log("SENDING SAURON VALUE rotation servo angle: " + rotationServoAngleSauron);
-        Debug.Log("SENDING SAURON VALUE inclination servo angle: " + inclinationServoAngleSauron);
+        rotationAlphaAngleSauron = (int)sauronRayMovementHandler.GetAlphaRotationAngle();
+        elevationBetaAngleSauron = (int)sauronRayMovementHandler.GetBetaElevationAngle();
+        
+        Debug.Log("SENDING SAURON VALUE rotation servo angle: " + rotationAlphaAngleSauron);
+        Debug.Log("SENDING SAURON VALUE inclination servo angle: " + elevationBetaAngleSauron);
         
         // Convert each parameter into bytes
         byte rotationServoAngleByteSauron = (byte)rotationServoAngleSauron;

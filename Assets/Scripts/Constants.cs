@@ -127,6 +127,7 @@ public class Constants {
     
     public const float SAURON_INCLINATION_SERVO_ANGLE_HIGH = 0f;
     public const float SAURON_INCLINATION_SERVO_ANGLE_LOW = 60f;
+    public const float SAURON_OFFSET_INCLINATION_SERVO_ANGLE = 90f - SAURON_INCLINATION_SERVO_ANGLE_LOW;
     
     public const string TERMINATION_CHARACTER = "\0";
     

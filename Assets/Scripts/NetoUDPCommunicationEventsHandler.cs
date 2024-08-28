@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetoUDPCommunicationEventsHandler : MonoBehaviour
 {
-    // Events
+    
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private Transform roomCore;
     [SerializeField] private Transform rayEndPoint;

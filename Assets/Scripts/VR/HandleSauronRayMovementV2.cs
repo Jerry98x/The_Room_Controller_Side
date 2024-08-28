@@ -23,6 +23,25 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     [SerializeField] private GameObject portalSimplified;
     
     
+    
+    
+    // Cone properties
+    
+    [SerializeField] private Transform coneBaseCenter;
+    [SerializeField] private Transform coneTip;
+    [SerializeField] private Transform coneBaseExtremity;
+    
+    private Vector3 coneHorizontalAxis; // If Z is the vertical axis, then the horizontal axis can either be X or Y
+    private Vector3 coneVerticalAxis;
+    
+    private float alphaRotationAngle; // The angle of the rotation around the vertical axis
+    private float betaElevationAngle; // The angle of the elevation from the horizontal plane
+    
+    
+    
+    
+    // Colliders properties
+    
     //private MeshCollider portalMeshCollider;
     private BoxCollider portalBoxCollider;
     private MeshCollider[] portalSupportColliders;
@@ -32,6 +51,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private Rigidbody rayEndPointRb;
     
     private Vector3 previousPosition;
+    
+    
+    
+    // Movement properties
     
     private ActionBasedController xrController;
     private XRDirectInteractor interactor;
@@ -308,7 +331,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         Vector3 adjustedPosition = CalculateSlidePosition(rayEndPoint.position, smoothedMovement);
 
         
-        
+        // Update alpha and beta angles of the cone, so that the values based on them to be sent to the
+        // physical Sauron can be computed
+        UpdateConeAngles(newEndPointPosition);
         
         
         // Check for collision
@@ -483,9 +508,84 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
     
+    
+    private void UpdateConeAngles(Vector3 newEndPointPosition)
+    {
+        
+        Vector3 endPointVector = newEndPointPosition - coreCenter.position;
+        
+        // Calculate the horizontal and vertical axes of the cone
+        coneVerticalAxis = coneTip.position - coneBaseCenter.position;
+        coneHorizontalAxis = coneBaseExtremity.position - coneBaseCenter.position; // coneBaseExtremity is positioned in the editor so that the chosen axis is X
+        
+        
+        // Alpha rotation angle is computed by finding the angle between coneHorizontalAxis and the projection of
+        // endPointVector on the horizontal plane
+        Vector3 endPointVectorProjection = Vector3.ProjectOnPlane(endPointVector, coneVerticalAxis);
+        alphaRotationAngle = Vector3.Angle(coneHorizontalAxis, endPointVectorProjection);
+        
+        
+        // Beta elevation angle is computed by finding the angle between the projection of endPointVector on
+        // the horizontal plane and endPointVector itself, and then subtracting it from 90 degrees or 180 degrees.
+        // Since on the physical Sauron the angle has a range of [0, 60] with 30° being the central value
+        // (when the endPointVector is vertical), the previously computed Alpha rotation angle is used to check
+        // whether the endPointVector was on the left side or right side. If it was on the left side, the angle is
+        // subtracted from 90 degrees. If it was on the right side, the angle is subtracted from 180 degrees and an
+        // 60 degrees angle is subtracted, since the physical Sauron counts the angel starting from the lowest inclination
+        // on the left.
+        // Finally, the angle is capped between 0 and 60 degrees, if necessary.
+        float betaRotationInnerAngle;
+        float clampedAngle = Mathf.Clamp(Vector3.Angle(endPointVectorProjection, endPointVector), Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE, 90.0f); 
+        if(alphaRotationAngle > 90.0f)
+        {
+            betaRotationInnerAngle = 180.0f - clampedAngle - Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE;
+        }
+        else
+        {
+            betaRotationInnerAngle = clampedAngle - Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE;
+        }
+        
+        betaElevationAngle = Mathf.Clamp(betaRotationInnerAngle, 0, 60);
+        
+        
+        
+        // Beta elevation angle is computed by finding the angle between the projection of endPointVector on
+        // the horizontal plane and conVerticalAxis, capping the value between 0 and 60 degrees;
+        // It may be necessary to add an offset to the angle
+        /*Vector3 endPointVectorProjectionHorizontal = Vector3.ProjectOnPlane(endPointVector, coneHorizontalAxis);
+        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVectorProjectionHorizontal, coneHorizontalAxis);
+        betaElevationAngle = Mathf.Clamp(betaElevationAngle, 0, 60);*/
+        
+        
+        
+        
+        
+        
+        
+        
+        // Calculate the angles
+        /*alphaRotationAngle = Vector3.SignedAngle(coneHorizontalAxis, endPointVector, coneVerticalAxis);
+        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVector, coneHorizontalAxis);*/
+        
+    }
+    
+    
+    
+    
     public bool IsInControl()
     {
         return isInControl;
+    }
+    
+    
+    public float GetAlphaRotationAngle()
+    {
+        return alphaRotationAngle;
+    }
+    
+    public float GetBetaElevationAngle()
+    {
+        return betaElevationAngle;
     }
 
 
