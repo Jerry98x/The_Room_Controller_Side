@@ -27,16 +27,19 @@ public class RoomSauronElement : RoomBasicElement
     protected override void ExecuteMessageResponse(string message)
     {
         // Executed when the message is specifically related to the Sauron element
+        Debug.Log("Received following string message: " + message);
     }
     
     protected override void ExecuteMessageResponse(byte[] message)
     {
         // Executed when the message is specifically related to the Sauron element
+        Debug.Log("Received following byte array message: " + message);
     }
     
     protected override void ExecuteMessageResponse(char[] message)
     {
         // Executed when the message is specifically related to the Sauron element
+        Debug.Log("Received following char array message: " + message);
     }
     
     

@@ -36,6 +36,11 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private float alphaRotationAngle; // The angle of the rotation around the vertical axis
     private float betaElevationAngle; // The angle of the elevation from the horizontal plane
+
+    // Since beta is not computed thanks to a precise mathematical rule but it's approximated (the angle isn't actually
+    // the same as the physical Sauron), use a scale factor that needs to be fine-tuned
+    private float scale = 0.35f;
+    
     
     
     
@@ -186,7 +191,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
             pointer = null;
             interactor = null;
+            
             isInControl = false;
+            
         }
     }
     
@@ -505,11 +512,54 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         // Trigger the haptic feedback on the controller
         xrController.SendHapticImpulse(amplitude, duration);
     }
-    
-    
-    
-    
+
+
+
+
     private void UpdateConeAngles(Vector3 newEndPointPosition)
+    {
+        
+        Vector3 endPointVector = newEndPointPosition - coreCenter.position;
+        
+        Vector3 newCoordinateEndPointPosition = coneBaseCenter.InverseTransformPoint(newEndPointPosition);
+        
+        // Calculate the horizontal and vertical axes of the cone
+        coneVerticalAxis = coneTip.position - coneBaseCenter.position;
+        coneHorizontalAxis = coneBaseExtremity.position - coneBaseCenter.position; // coneBaseExtremity is positioned in the editor so that the chosen axis is X
+
+        
+        alphaRotationAngle = Mathf.Atan2(newCoordinateEndPointPosition.y, newCoordinateEndPointPosition.x) * Mathf.Rad2Deg;
+
+
+        float radius = Mathf.Sqrt(Mathf.Pow(newCoordinateEndPointPosition.x, 2f) + Mathf.Pow(newCoordinateEndPointPosition.y, 2f));
+
+        float betaOffset = 30f; // To avoid negative values becoming positive in the following checks
+        betaElevationAngle = scale * Mathf.Atan2(radius, newCoordinateEndPointPosition.z) * Mathf.Rad2Deg;
+        
+        if (alphaRotationAngle < 0)
+        {
+            alphaRotationAngle = -alphaRotationAngle;
+            betaElevationAngle = -betaElevationAngle;
+        }
+        
+        // Bring the beta angle to the range [0, 60]
+        betaElevationAngle += betaOffset;
+        
+        /*if (alphaRotationAngle > 180.0f)
+        {
+            alphaRotationAngle -= 180.0f;
+        }*/
+        
+        
+        
+        
+
+    }
+    
+    
+    
+    
+    /*private void UpdateConeAngles(Vector3 newEndPointPosition)
     {
         
         Vector3 endPointVector = newEndPointPosition - coreCenter.position;
@@ -544,30 +594,31 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         {
             betaRotationInnerAngle = clampedAngle - Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE;
         }
-        
-        betaElevationAngle = Mathf.Clamp(betaRotationInnerAngle, 0, 60);
-        
-        
-        
+
+        betaElevationAngle = betaRotationInnerAngle;
+        //betaElevationAngle = Mathf.Clamp(betaRotationInnerAngle, 0, 60);
+
+
+
         // Beta elevation angle is computed by finding the angle between the projection of endPointVector on
         // the horizontal plane and conVerticalAxis, capping the value between 0 and 60 degrees;
         // It may be necessary to add an offset to the angle
         /*Vector3 endPointVectorProjectionHorizontal = Vector3.ProjectOnPlane(endPointVector, coneHorizontalAxis);
         betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVectorProjectionHorizontal, coneHorizontalAxis);
-        betaElevationAngle = Mathf.Clamp(betaElevationAngle, 0, 60);*/
-        
-        
-        
-        
-        
-        
-        
-        
+        betaElevationAngle = Mathf.Clamp(betaElevationAngle, 0, 60);#1#
+
+
+
+
+
+
+
+
         // Calculate the angles
         /*alphaRotationAngle = Vector3.SignedAngle(coneHorizontalAxis, endPointVector, coneVerticalAxis);
-        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVector, coneHorizontalAxis);*/
-        
-    }
+        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVector, coneHorizontalAxis);#1#
+
+    }*/
     
     
     

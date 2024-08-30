@@ -130,8 +130,8 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         Debug.Log("SENDING SAURON VALUE inclination servo angle: " + elevationBetaAngleSauron);
         
         // Convert each parameter into bytes
-        byte rotationServoAngleByteSauron = (byte)rotationServoAngleSauron;
-        byte inclinationServoAngleByteSauron = (byte)inclinationServoAngleSauron;
+        byte rotationServoAngleByteSauron = (byte)rotationAlphaAngleSauron;
+        byte inclinationServoAngleByteSauron = (byte)elevationBetaAngleSauron;
         
         Debug.Log("SENDING SAURON BYTE rotation servo angle: " + rotationServoAngleByteSauron);
         Debug.Log("SENDING SAURON BYTE inclination servo angle: " + inclinationServoAngleByteSauron);
