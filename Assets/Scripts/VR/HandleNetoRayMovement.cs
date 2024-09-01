@@ -43,6 +43,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     [ColorUsage(true, true)] private Color initialInactiveEmissiveColor;
     private float netoMovementMultiplier;
     private bool isInControl = false;
+    private bool isSupposedToResetEmissiveIntensity = false;
     private bool hasEmergency = false;
     
     
@@ -125,6 +126,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         {
             activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
             isInControl = true;
+            isSupposedToResetEmissiveIntensity = false;
         }
         
         
@@ -143,6 +145,7 @@ public class HandleNetoRayMovement : MonoBehaviour
                 SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
             }*/
             
+            isSupposedToResetEmissiveIntensity = false;
             activeSinewaveRay = null;
 
             pointer = null;
@@ -234,41 +237,84 @@ public class HandleNetoRayMovement : MonoBehaviour
     
     private void HandleEmissiveIntensityBasedOnTrigger()
     {
-        Debug.Log("XR CONTROLLER: " + xrController);
-        
-        //bool isGripping = xrController.selectAction.action.ReadValue<float>().Equals(1.0f);
-        //Debug.Log("GRIPPING: " + isGripping);
-        float gripValue = xrController.selectActionValue.action.ReadValue<float>();
-        if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
-        {
-            Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
-            // Map the grip value to the capped emissive intensity range defined in the Constants class
-            float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
-                Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
-            Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
-            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-            if (rayRenderer != null)
-            {
-                Color currentEmissiveColor = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
-                //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
-                Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
-                
-                SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
-            }
 
+        if (isSupposedToResetEmissiveIntensity)
+        {
+            // Case in which I end up as soon as I press the lateral trigger for the first time after gaining
+            // control of the Neto. All the following times I press the lateral trigger, I will stay here.
+            // The boolean gets reset to false when I loose control of the Neto.
+            
+            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
+            {
+                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
+            
+                // Map the grip value to the capped emissive intensity range defined in the Constants class
+                float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
+                    Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
+                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+                if (rayRenderer != null)
+                {
+                    Color currentEmissiveColor = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                    //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
+                    Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
+                
+                    SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                }
+
+            }
+            else
+            {
+                // Branch needed to reset the emissive intensity when I let the lateral trigger go (since it
+                // could not detect the grip values smoothly)
+                
+                Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+                if (rayRenderer != null)
+                {
+                    Color newEmissiveColor = initialActiveEmissiveColor;
+                
+                    SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                
+                }
+            }
         }
         else
         {
-            Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-            if (rayRenderer != null)
+            // Case in which I end up as soon as I gain control of the Neto. I will stay here until I press the
+            // lateral trigger. I want a possible emissivity different from the initial one to be maintained when I lose
+            // control and then I regain it, because the physical Neto need to illuminate the Room.
+            // The ELSE branch of the inner IF statement placed in the IF branch of the outer if statement prevents
+            // this from happening, but is needed to properly reset the emissive intensity when I let the lateral
+            // trigger go (since it could not detect the grip values smoothly).
+            
+            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Color newEmissiveColor = initialActiveEmissiveColor;
+                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
+            
+                // Map the grip value to the capped emissive intensity range defined in the Constants class
+                float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
+                    Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
+                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+                if (rayRenderer != null)
+                {
+                    Color currentEmissiveColor = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                    //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
+                    Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
                 
-                SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
-                
+                    SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                }
+
+                // Set the boolean to true so that as soon as I press the lateral trigger, I end up in the other
+                // branch of the if statement
+                isSupposedToResetEmissiveIntensity = true;
             }
+            
         }
+        
+        
     }
 
 

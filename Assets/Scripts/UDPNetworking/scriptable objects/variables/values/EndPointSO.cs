@@ -24,6 +24,12 @@ public class EndPointSO : ScriptableObject
                 _endPoint = UDPMessenger.GetIPEndPoint(IP, Port);
             return _endPoint;
         }
+        set
+        {
+            _endPoint = value;
+            _ip = value.Address;
+            port = value.Port;
+        }
     }
         
     public IPAddress IP

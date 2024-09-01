@@ -82,6 +82,7 @@ public class Constants {
     public const float XR_CONTROLLER_MIN_GRIP_VALUE = 0.0f;
     public const float XR_CONTROLLER_MAX_GRIP_VALUE = 1.0f;
     public const float XR_CONTROLLER_GRIP_VALUE_THRESHOLD = 0.1f;
+    public const float XR_CONTROLLER_GRIP_DELTA_VALUE = 0.3f;
     public const float XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD = 0.1f;
 
     #endregion
@@ -112,7 +113,7 @@ public class Constants {
     public const float NETO_SOUND_VOLUME_MAX = 30f;
     
     public const float NETO_SERVO_ANGLE_HIGH = 0f;
-    public const float NETO_SERVO_ANGLE_LOW = 120f;
+    public const float NETO_SERVO_ANGLE_LOW = 105f;
     
     // Radius may be a misleading name, but it's the amount of leds
     // that should be turned on in the ESP32 of the Neto module along its height

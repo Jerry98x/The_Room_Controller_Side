@@ -143,15 +143,28 @@ public class UDPManager : Monosingleton<UDPManager>
     
     private void ReceiveMessages()
     {
+        Debug.Log("RICEZIONE: inizio");
         if (_udpMessenger.UnreadMsgsPresent)
         {
+            Debug.Log("RICEZIONE: ci sono messaggi non letti");
             var messages = _udpMessenger.UnreadUdpMessages;
 
             foreach (var message in messages)
             {
+                
+                // Create an instance of EndPointSO using ScriptableObject.CreateInstance
+                var endPointSO = ScriptableObject.CreateInstance<EndPointSO>();
+                endPointSO.EndPoint = message.Sender;
+                Debug.Log("RICEZIONE: istanziato un nuovo EndPointSO con IP: " + endPointSO.EndPoint.Address);
+
+                // Invoke the event with the message's raw data and the EndPointSO instance
+                onMessageReceived.Invoke(message.RawMsg, endPointSO);
+
+                
+                
                 //TODO: not using key-value messages anymore
                 // Upon receiving a message, call an event passing message and endpoint
-                onMessageReceived.Invoke(message.RawMsg, _defaultEndpoint);
+                //onMessageReceived.Invoke(message.RawMsg, _defaultEndpoint);
                 //onMessageReceived.Invoke(message.Msg.ToCharArray(), _defaultEndpoint);
                 
                 
