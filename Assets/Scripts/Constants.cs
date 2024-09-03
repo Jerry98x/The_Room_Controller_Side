@@ -71,6 +71,8 @@ public class Constants {
     #region Effects values
 
     public const bool PASSIVE_AUDIO_NETO = true;
+    public const float MAX_LOUDNESS = 1.5f;
+    public const float MICROPHONE_LOUDNESS_CAP_FOR_NETO = MAX_LOUDNESS;
 
     #endregion
 
@@ -113,7 +115,7 @@ public class Constants {
     public const float NETO_SOUND_VOLUME_MAX = 30f;
     
     public const float NETO_SERVO_ANGLE_HIGH = 0f;
-    public const float NETO_SERVO_ANGLE_LOW = 105f;
+    public const float NETO_SERVO_ANGLE_LOW = 80f; //Ideally 120f in AirLab and 180f when we have a bigger space
     
     // Radius may be a misleading name, but it's the amount of leds
     // that should be turned on in the ESP32 of the Neto module along its height

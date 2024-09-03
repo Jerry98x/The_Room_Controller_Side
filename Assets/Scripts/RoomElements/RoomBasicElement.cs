@@ -1,43 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public abstract class RoomBasicElement : MonoBehaviour
 {
     
     [SerializeField] protected EndPointSO endPointSO;
-    [SerializeField] protected UDPManager udpManager;
+    //[SerializeField] protected UDPManager udpManager;
 
     
     private void Start()
     {
-        udpManager.onMessageReceived.AddListener(OnMessageReceived);
+        UDPManager.Instance.onMessageReceived.AddListener(OnMessageReceived);
     }
     
     private void OnDestroy()
     {
-        udpManager.onMessageReceived.RemoveListener(OnMessageReceived);
+        UDPManager.Instance.onMessageReceived.RemoveListener(OnMessageReceived);
     }
     
-    public void OnMessageReceived(string message, EndPointSO endPointSO)
+    public void OnMessageReceived(string message, IPEndPoint endPointSo)
     {
-        if (endPointSO == this.endPointSO)
+        if (endPointSo.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
     }
     
-    public void OnMessageReceived(char[] message, EndPointSO endPointSO)
+    public void OnMessageReceived(char[] message, IPEndPoint endPointSo)
     {
-        if (endPointSO == this.endPointSO)
+        if (endPointSo.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
     }
     
-    public void OnMessageReceived(byte[] message, EndPointSO endPointSO)
+    public void OnMessageReceived(byte[] message, IPEndPoint endPointSo)
     {
-        if (endPointSO == this.endPointSO)
+        if (endPointSo.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
@@ -56,9 +57,9 @@ public abstract class RoomBasicElement : MonoBehaviour
         return endPointSO;
     }
     
-    public UDPManager GetUDPManager()
+    /*public UDPManager GetUDPManager()
     {
         return udpManager;
-    }
+    }*/
 
 }

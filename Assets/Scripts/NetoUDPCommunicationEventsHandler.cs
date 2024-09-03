@@ -15,11 +15,13 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField] private NetoFeedbackHandler netoFeedbackHandler;
     
     
+    
 
     //private RayEndPoint rayEndPointObject;
     private ParticleSystem partSystem;
     private AudioSource audioSource;
     private Renderer rayRenderer;
+    private ScaleParticleSystemFromMicrophone loudnessDetector;
     
     
     // The messages are the bytes that will be sent to the ESP32 via UDP. It won't use
@@ -55,6 +57,9 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         // First particle system in the hierarchy, don't move!
         partSystem = netoFeedbackHandler.GetComponent<ParticleSystem>();
         audioSource = netoFeedbackHandler.GetHandledAudioSource();
+        loudnessDetector = roomElement.GetComponentInChildren<RayStartPoint>()
+            .GetComponentInChildren<ScaleParticleSystemFromMicrophone>();
+        
 
         SinewaveRay deselectedSinewaveRay = roomElement.GetComponentInChildren<SinewaveRay>();
         
@@ -113,8 +118,24 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         // Sound parameters
         soundTypeNeto = Constants.NETO_SOUND_TYPE_1;
         // Sound volume in Unity is from 0 to 1
-        soundVolumeNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(audioSource.volume, 1, 0,
+        /*soundVolumeNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(audioSource.volume, 1, 0,
+            Constants.NETO_SOUND_VOLUME_MAX, Constants.NETO_SOUND_VOLUME_MIN));*/
+        float loudnessThreshold = loudnessDetector.GetLoudnessThreshold();
+        float loudnessSensibility = loudnessDetector.GetLoudnessSensibility();
+        float loudness = loudnessDetector.GetAudioLoudness() * loudnessSensibility;
+        if(loudness < loudnessThreshold)
+        {
+            loudness = 0;
+        }
+        if(loudness > Constants.MICROPHONE_LOUDNESS_CAP_FOR_NETO)
+        {
+            loudness = Constants.MICROPHONE_LOUDNESS_CAP_FOR_NETO;
+        }
+
+        float targetLoudness = Mathf.Lerp(0, Constants.MICROPHONE_LOUDNESS_CAP_FOR_NETO, loudness);
+        soundVolumeNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(targetLoudness, Constants.MICROPHONE_LOUDNESS_CAP_FOR_NETO, 0,
             Constants.NETO_SOUND_VOLUME_MAX, Constants.NETO_SOUND_VOLUME_MIN));
+        
         
         
         // Position parameters

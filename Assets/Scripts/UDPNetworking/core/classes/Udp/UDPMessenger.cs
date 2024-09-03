@@ -116,7 +116,7 @@ public class UDPMessenger
                 try
                 {
                     OnMessageReceived();
-                    OnMessageReceived();
+                    //OnMessageReceived();
                     // OnMessageReceived();
                     // OnMessageReceived();
                     // OnMessageReceived();
@@ -138,7 +138,7 @@ public class UDPMessenger
             byte[] data = _client.Receive(ref anyIP);
             string text = Encoding.UTF8.GetString(data);
 
-            // Debug.Log($"uffa: {data.Length} - text: {text} - from ip: {anyIP.Address}");
+            Debug.Log($"uffa: {data.Length} - text: {text} - from ip: {anyIP.Address}");
             
             // add message to unread list and save it as Latest
             LatestUdpMsg = new UdpMessage(data, text, anyIP);

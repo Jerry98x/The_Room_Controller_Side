@@ -6,8 +6,8 @@ using UnityEngine;
 public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 {
     
-    public event Action<bool> OnPetalsOpeningChanged;
-    public event Action<bool> OnBadSmellEmittingChanged;
+    public event Action<int> OnPetalsOpeningChanged;
+    public event Action<int> OnBadSmellEmittingChanged;
 
     
 
@@ -19,14 +19,16 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // key-value pairs, to use as little memory as possible.
     
     // Deathtrap module parameters
-    // The message is a concatenation of the following values:
-    // 1) A boolean representing both the action of the Deathtrap petals (true = opening, false = closing)
-    // and the action of the LEDs (true = turning on, false = turning off)
-    // 2) A boolean representing the action of the Deathtrap bad smell emission (true = emitting, false = not emitting)
+    // The message is a concatenation of the following values (for simplicity I shouldn't use booleans):
+    // 1) An integer representing the action of the deathtrap of spraying (0 = not spraying, 1 = spraying)
+    // 2) An integer representing both the action of the Deathtrap petals (0 = closing, 1 = opening)
+    // and the action of the LEDs (0 = turning off 1 = turning on)
+    // 2) An integer representing the action of the Deathtrap bad smell emission (0 = not emitting, 1 = emitting)
 
 
-    [SerializeField] private bool petalsOpening;
-    [SerializeField] private bool badSmellEmitting;
+    //[SerializeField] private int spraying;
+    [SerializeField] private int petalsOpening;
+    [SerializeField] private int badSmellEmitting;
     
     
     private string message;
@@ -108,7 +110,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         
         
         // Concatenate the values to be sent in the byte array
-        messageBytes = new byte[3];
+        messageBytes = new byte[4];
         messageBytes[0] = petalsOpeningByte;
         messageBytes[1] = badSmellEmittingByte;
         
@@ -127,7 +129,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     
     
-    public bool PetalsOpening
+    public int PetalsOpening
     {
         get => petalsOpening;
         set
@@ -140,7 +142,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         }
     }
 
-    public bool BadSmellEmitting
+    public int BadSmellEmitting
     {
         get => badSmellEmitting;
         set

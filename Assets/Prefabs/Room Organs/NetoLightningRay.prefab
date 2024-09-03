@@ -7645,7 +7645,7 @@ MonoBehaviour:
   maxSize: 1
   loudnessDetector: {fileID: 0}
   loudnessSensibility: 50
-  threshold: 0.3
+  threshold: 0.5
   smoothingSpeed: 6
   handleNetoRayMovement: {fileID: 0}
 --- !u!114 &642468374734599224

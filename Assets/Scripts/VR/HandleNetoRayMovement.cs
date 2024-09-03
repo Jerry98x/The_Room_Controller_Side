@@ -39,7 +39,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     
     private SinewaveRay inactiveSinewaveRay;
     private SinewaveRay activeSinewaveRay;
-    [ColorUsage(true)] private Color initialInactiveBaseColor;
+    [ColorUsage(true, true)] private Color initialInactiveBaseColor;
     [ColorUsage(true, true)] private Color initialInactiveEmissiveColor;
     private float netoMovementMultiplier;
     private bool isInControl = false;
@@ -253,14 +253,24 @@ public class HandleNetoRayMovement : MonoBehaviour
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
                 Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
-                Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-                if (rayRenderer != null)
+                Renderer activeRayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+                if (activeRayRenderer != null)
                 {
-                    Color currentEmissiveColor = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                    Color currentEmissiveColor = activeRayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
                     //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
                     Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
                 
-                    SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                    SetMaterialColor(activeRayRenderer, activeRayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                }
+                
+                Renderer inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+                if (inactiveRayRenderer != null)
+                {
+                    Color currentInactiveEmissiveColor = inactiveRayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                    //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
+                    Color newInactiveEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentInactiveEmissiveColor, cappedEmissiveIntensity);
+                
+                    SetMaterialColor(inactiveRayRenderer, inactiveRayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newInactiveEmissiveColor);
                 }
 
             }
@@ -269,14 +279,25 @@ public class HandleNetoRayMovement : MonoBehaviour
                 // Branch needed to reset the emissive intensity when I let the lateral trigger go (since it
                 // could not detect the grip values smoothly)
                 
-                Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-                if (rayRenderer != null)
+                Renderer activeRayRenderer = activeSinewaveRay.GetComponent<Renderer>();
+                if (activeRayRenderer != null)
                 {
                     Color newEmissiveColor = initialActiveEmissiveColor;
                 
-                    SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                    SetMaterialColor(activeRayRenderer, activeRayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
                 
                 }
+                
+                Renderer inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+                if (inactiveRayRenderer != null)
+                {
+                    Color newInactiveEmissiveColor = initialInactiveEmissiveColor;
+                
+                    SetMaterialColor(inactiveRayRenderer, inactiveRayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newInactiveEmissiveColor);
+                
+                }
+                
+                
             }
         }
         else
@@ -305,6 +326,17 @@ public class HandleNetoRayMovement : MonoBehaviour
                     Color newEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissiveColor, cappedEmissiveIntensity);
                 
                     SetMaterialColor(rayRenderer, rayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newEmissiveColor);
+                }
+                
+                
+                Renderer inactiveRayRenderer = inactiveSinewaveRay.GetComponent<Renderer>();
+                if (inactiveRayRenderer != null)
+                {
+                    Color currentInactiveEmissiveColor = inactiveRayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
+                    //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
+                    Color newInactiveEmissiveColor = GetHDRIntensity.AdjustEmissiveIntensity(currentInactiveEmissiveColor, cappedEmissiveIntensity);
+                
+                    SetMaterialColor(inactiveRayRenderer, inactiveRayRenderer.material.GetColor(Constants.BASE_COLOR_ID), newInactiveEmissiveColor);
                 }
 
                 // Set the boolean to true so that as soon as I press the lateral trigger, I end up in the other

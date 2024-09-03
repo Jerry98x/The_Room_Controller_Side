@@ -6646,6 +6646,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 52398361206816220, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
+      propertyPath: threshold
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 52398361206816220, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
       propertyPath: loudnessDetector
       value: 
       objectReference: {fileID: 1664482167}
@@ -15168,7 +15173,7 @@ PrefabInstance:
         type: 3}
       propertyPath: endPointSO
       value: 
-      objectReference: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0,
+      objectReference: {fileID: 11400000, guid: 5594b9e3bb866ee44899cbc04c72dbd0,
         type: 2}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}

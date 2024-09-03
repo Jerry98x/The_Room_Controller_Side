@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 
 [System.Serializable]
-public class MessageReceivedEvent : UnityEvent<byte[], EndPointSO> {}
+public class MessageReceivedEvent : UnityEvent<byte[], IPEndPoint> {}
 
 public class UDPManager : Monosingleton<UDPManager>
 {
@@ -152,13 +152,15 @@ public class UDPManager : Monosingleton<UDPManager>
             foreach (var message in messages)
             {
                 
+                /*
                 // Create an instance of EndPointSO using ScriptableObject.CreateInstance
                 var endPointSO = ScriptableObject.CreateInstance<EndPointSO>();
                 endPointSO.EndPoint = message.Sender;
                 Debug.Log("RICEZIONE: istanziato un nuovo EndPointSO con IP: " + endPointSO.EndPoint.Address);
+                */
 
                 // Invoke the event with the message's raw data and the EndPointSO instance
-                onMessageReceived.Invoke(message.RawMsg, endPointSO);
+                onMessageReceived.Invoke(message.RawMsg, message.Sender);
 
                 
                 
