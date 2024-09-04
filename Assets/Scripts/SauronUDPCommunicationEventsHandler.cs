@@ -44,7 +44,8 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     
     private string message;
     private byte[] messageBytes;
-    private int[] messageInt;
+    
+    private int[] lastMessage;
     
     
     private EndPointSO endPointSO;
@@ -65,6 +66,12 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
             Debug.Log("Renderer: " + rayRenderer);
         
             endPointSO = roomElement.GetEndPointSO();
+        }
+        
+        lastMessage = new int[2];
+        for (int i = 0; i < lastMessage.Length; i++)
+        {
+            lastMessage[i] = 0;
         }
         
         
@@ -119,6 +126,15 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     
     private void BuildByteArrayMessage()
     {
+
+        if (lastMessage[0] == rotationAlphaAngleSauron && lastMessage[1] == elevationBetaAngleSauron)
+        {
+            return;
+        }
+        
+        lastMessage[0] = rotationAlphaAngleSauron;
+        lastMessage[1] = elevationBetaAngleSauron;
+        
         
         rotationAlphaAngleSauron = (int)sauronRayMovementHandler.GetAlphaRotationAngle();
         elevationBetaAngleSauron = (int)sauronRayMovementHandler.GetBetaElevationAngle();

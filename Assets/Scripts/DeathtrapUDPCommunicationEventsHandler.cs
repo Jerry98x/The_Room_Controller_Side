@@ -34,7 +34,8 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     private string message;
     private byte[] messageBytes;
-    private int[] messageInt;
+    
+    private int[] lastMessage;
     
     
     private EndPointSO endPointSO;
@@ -56,6 +57,13 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     {
         
         endPointSO = roomElement.GetEndPointSO();
+
+        lastMessage = new int[3];
+        for (int i = 0; i < lastMessage.Length; i++)
+        {
+            lastMessage[i] = 0;
+        }
+        
         
         
         // Event subscription
@@ -95,6 +103,15 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 
     private void BuildByteArrayMessage()
     {
+        if(lastMessage[0] == liquidSpraying && lastMessage[1] == petalsOpening && lastMessage[2] == badSmellEmitting)
+        {
+            return;
+        }
+        
+        lastMessage[0] = liquidSpraying;
+        lastMessage[1] = petalsOpening;
+        lastMessage[2] = badSmellEmitting;
+        
         
         // Print the values to be sent in the byte array
         Debug.Log("SENDING DEATHTRAP VALUE liquid spraying: " + liquidSpraying);

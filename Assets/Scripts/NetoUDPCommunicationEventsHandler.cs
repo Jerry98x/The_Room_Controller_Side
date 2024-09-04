@@ -45,7 +45,8 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         
     private string message;
     private byte[] messageBytes;
-    private int[] messageInt;
+    
+    private int[] lastMessage;
     
     
     private EndPointSO endPointSO;
@@ -72,6 +73,12 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         Debug.Log("Renderer: " + rayRenderer);
         
         endPointSO = roomElement.GetEndPointSO();
+        
+        lastMessage = new int[5];
+        for (int i = 0; i < lastMessage.Length; i++)
+        {
+            lastMessage[i] = 0;
+        }
         
 
     }
@@ -174,6 +181,19 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
 
     private void BuildByteArrayMessage()
     {
+
+        if (lastMessage[0] == soundTypeNeto && lastMessage[1] == soundVolumeNeto && lastMessage[2] == servoAngleNeto &&
+            lastMessage[3] == radiusNeto && lastMessage[4] == brightnessNeto)
+        {
+            return;
+        }
+        
+        lastMessage[0] = soundTypeNeto;
+        lastMessage[1] = soundVolumeNeto;
+        lastMessage[2] = servoAngleNeto;
+        lastMessage[3] = radiusNeto;
+        lastMessage[4] = brightnessNeto;
+        
         
         // Print the values to be sent in the byte array
         Debug.Log("SENDING NETO VALUE sound type: " + soundTypeNeto);
@@ -211,39 +231,6 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         
         string result = System.Text.Encoding.ASCII.GetString(messageBytes);
         Debug.Log("Neto byte array: " + result);
-        
-    }
-
-    
-
-
-    
-    
-    
-    
-    
-    private void BuildStringMessage()
-    {
-        message = "";
-        message += soundTypeNeto.ToString();
-        message += soundVolumeNeto.ToString();
-        message += servoAngleNeto.ToString();
-        message += radiusNeto.ToString();
-        message += brightnessNeto.ToString();
-        message += Constants.TERMINATION_CHARACTER;
-        
-    }
-
-
-    private void BuildIntMessage()
-    {
-        messageInt = new int[5];
-        messageInt[0] = soundTypeNeto;
-        messageInt[1] = soundVolumeNeto;
-        messageInt[2] = servoAngleNeto;
-        messageInt[3] = radiusNeto;
-        messageInt[4] = brightnessNeto;
-        
         
     }
     
