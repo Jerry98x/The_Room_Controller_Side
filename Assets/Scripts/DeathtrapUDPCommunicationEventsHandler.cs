@@ -27,8 +27,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 
 
     //[SerializeField] private int spraying;
-    [SerializeField] private int petalsOpening;
-    [SerializeField] private int badSmellEmitting;
+    [SerializeField, Range(0,1)] private int liquidSpraying;
+    [SerializeField, Range(60,105)] private int petalsOpening;
+    [SerializeField, Range(0,1)] private int badSmellEmitting;
     
     
     private string message;
@@ -90,29 +91,31 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     {
         
         
-        
-        
     }
 
     private void BuildByteArrayMessage()
     {
         
         // Print the values to be sent in the byte array
+        Debug.Log("SENDING DEATHTRAP VALUE liquid spraying: " + liquidSpraying);
         Debug.Log("SENDING DEATHTRAP VALUE petals opening: " + petalsOpening);
         Debug.Log("SENDING DEATHTRAP VALUE bad smell emitting: " + badSmellEmitting);
         
         // Convert each parameter into bytes
+        byte liquidSprayingByte = System.Convert.ToByte(liquidSpraying);
         byte petalsOpeningByte = System.Convert.ToByte(petalsOpening);
         byte badSmellEmittingByte = System.Convert.ToByte(badSmellEmitting);
         
-        Debug.Log("SENDING DEATHTRAP VALUE petals opening byte: " + petalsOpeningByte);
-        Debug.Log("SENDING DEATHTRAP VALUE bad smell emitting byte: " + badSmellEmittingByte);
+        Debug.Log("SENDING DEATHTRAP BYTE liquid spraying: " + liquidSprayingByte);
+        Debug.Log("SENDING DEATHTRAP BYTE petals opening byte: " + petalsOpeningByte);
+        Debug.Log("SENDING DEATHTRAP BYTE bad smell emitting byte: " + badSmellEmittingByte);
         
         
         // Concatenate the values to be sent in the byte array
         messageBytes = new byte[4];
-        messageBytes[0] = petalsOpeningByte;
-        messageBytes[1] = badSmellEmittingByte;
+        messageBytes[0] = liquidSprayingByte;
+        messageBytes[1] = petalsOpeningByte;
+        messageBytes[2] = badSmellEmittingByte;
         
         // Add the termination character
         messageBytes[messageBytes.Length - 1] = 0;
@@ -129,6 +132,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     
     
+    /*
     public int PetalsOpening
     {
         get => petalsOpening;
@@ -154,6 +158,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
             }
         }
     }
+    */
     
     
     private void OnValidate()

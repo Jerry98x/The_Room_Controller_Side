@@ -47,8 +47,8 @@ Material:
     - _QueueOffset: 0
     - _Transparency: 1
     m_Colors:
-    - _BaseColor: {r: 0.72156864, g: 0.69803923, b: 0.4627451, a: 1}
-    - _EmissiveColor: {r: 0.65882355, g: 0.6313726, b: 0.3372549, a: 1}
+    - _BaseColor: {r: 0.509434, g: 0.50148225, b: 0.42196515, a: 1}
+    - _EmissiveColor: {r: 0.5622641, g: 0.5569209, b: 0.4996724, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &4076770329741338337
 MonoBehaviour:

@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 
 [System.Serializable]
-public class MessageReceivedEvent : UnityEvent<byte[], IPEndPoint> {}
+public class MessageReceivedEvent : UnityEvent<string, IPEndPoint> {}
 
 public class UDPManager : Monosingleton<UDPManager>
 {
@@ -22,7 +22,7 @@ public class UDPManager : Monosingleton<UDPManager>
     [Header("Network setup")]
     
     [SerializeField] private EndPointSO _defaultEndpoint;
-    public int myPort = 12345; // UDP port to listen on
+    public int myPort = 4210; // UDP port to listen on
     
     [Tooltip("Max life of unread udp messages, in MINUTES")]
     [SerializeField] private int maxUdpAge = 2;
@@ -151,16 +151,9 @@ public class UDPManager : Monosingleton<UDPManager>
 
             foreach (var message in messages)
             {
-                
-                /*
-                // Create an instance of EndPointSO using ScriptableObject.CreateInstance
-                var endPointSO = ScriptableObject.CreateInstance<EndPointSO>();
-                endPointSO.EndPoint = message.Sender;
-                Debug.Log("RICEZIONE: istanziato un nuovo EndPointSO con IP: " + endPointSO.EndPoint.Address);
-                */
 
                 // Invoke the event with the message's raw data and the EndPointSO instance
-                onMessageReceived.Invoke(message.RawMsg, message.Sender);
+                onMessageReceived.Invoke(message.Msg, message.Sender);
 
                 
                 

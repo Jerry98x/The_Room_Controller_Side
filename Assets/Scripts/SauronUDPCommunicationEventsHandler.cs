@@ -81,9 +81,6 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         // big amount of messages can be handled on the other side. No need to just send them
         // when some characteristics change!
         
-        
-        // TODO: If I am not controlling this Sauron module, I don't need to send messages to the ESP32
-        
         if(sauronRayMovementHandler.IsInControl())
         {
             Debug.Log("In control of Sauron " + roomElement.GetEndPointSO().IP);

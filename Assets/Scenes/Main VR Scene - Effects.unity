@@ -13244,6 +13244,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3123108827883396612, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: ccccfc51b1a77b84ea2825c6a4d6da88,
+        type: 2}
+    - target: {fileID: 3123108827883396612, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
@@ -14012,7 +14018,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 862586957}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ae618807559904a498a6cba9a5a033d0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -14034,7 +14040,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 862586957}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ae618807559904a498a6cba9a5a033d0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -15173,7 +15179,7 @@ PrefabInstance:
         type: 3}
       propertyPath: endPointSO
       value: 
-      objectReference: {fileID: 11400000, guid: 5594b9e3bb866ee44899cbc04c72dbd0,
+      objectReference: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0,
         type: 2}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
@@ -36718,6 +36724,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Core
       objectReference: {fileID: 0}
+    - target: {fileID: 1127943539506734331, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3387715038534802579, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -36786,6 +36797,11 @@ PrefabInstance:
     - target: {fileID: 5105707597584721560, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: petalsOpening
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5105707597584721560, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
+      propertyPath: liquidSpraying
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5105707597584721560, guid: 151b461e8d2410040adc38bcfdab965c,
@@ -36817,7 +36833,7 @@ PrefabInstance:
     - target: {fileID: 8150312431860468983, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9062516067201222533, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}

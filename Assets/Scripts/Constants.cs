@@ -55,6 +55,9 @@ public class Constants {
     public const float CAPPED_MIN_EMISSION_INTENSITY = 2f;
     public const float CAPPED_MAX_EMISSION_INTENSITY = 5f;
 
+    // Probably not useful; to use only if there is the need to cap the distance between two subsequent positions
+    public const float SAURON_ENDPOINT_MAX_DISTANCE_BETWEEN_POSITIONS = 0.5f;
+
 
     // Inversely proportional to the distance
     public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.45f;

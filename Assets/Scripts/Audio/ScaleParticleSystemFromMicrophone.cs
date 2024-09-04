@@ -21,6 +21,7 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     [SerializeField]private HandleNetoRayMovement handleNetoRayMovement;
     
     private float targetSize;
+    private float lastSize;
     
     
     private ParticleSystem partSystem;
@@ -36,6 +37,7 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
         SetParticleSystemDirection();
         
         targetSize = partSystem.main.startSize.constant;
+        lastSize = 0;
         
         handleNetoRayMovement.OnEmergencyStatusChanged += UpdateEmergencyStatus;
     }
@@ -58,7 +60,7 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
         }
         
         Debug.Log("IL PARTICLE SYSTEM STA SUONANDO? " + partSystem.isPlaying);
-        if (partSystem != null && partSystem.isPlaying)
+        if (partSystem != null && partSystem.isPlaying && handleNetoRayMovement.IsInControl())
         {
             // Change the particles' size based on the loudness
             if(loudness > Constants.MAX_LOUDNESS)
@@ -68,6 +70,16 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
             Debug.Log("The loudness is: " + loudness);
             ChangeParticleSize(loudness);
         }
+        else if(partSystem != null && !handleNetoRayMovement.IsInControl() && !emergencyActive)
+        {
+            // Maintain the last useful size of the particles to be played when I'm not in control of the Neto anymore,
+            // to give a sense of "leaving the Neto in that state" (until I will act on it again)
+            partSystem.Stop();
+            ParticleSystem.MainModule main = partSystem.main;
+            main.startSize = lastSize;
+            partSystem.Play();
+        }
+        
     }
     
     
@@ -102,12 +114,15 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
             targetSize = Mathf.Lerp(minSize, maxSize, loudness);
             
             // Lerping the size based on the loudness
-            main.startSize = Mathf.Lerp(main.startSize.constant, targetSize, Time.deltaTime * smoothingSpeed);
+            float newSize = Mathf.Lerp(main.startSize.constant, targetSize, Time.deltaTime * smoothingSpeed);
+            main.startSize = newSize;
+            lastSize = newSize;
         }
         else
         {
             partSystem.Stop();
         }
+
 
     }
     
