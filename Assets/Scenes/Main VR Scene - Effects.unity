@@ -37829,7 +37829,7 @@ PrefabInstance:
         type: 3}
       propertyPath: endPointSO
       value: 
-      objectReference: {fileID: 11400000, guid: 569bd516b8ce4fe49a3c96195efef3c3,
+      objectReference: {fileID: 11400000, guid: f35f7c8c3a6af0f4eacf8da866d2150a,
         type: 2}
     - target: {fileID: 5311516320021352312, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
