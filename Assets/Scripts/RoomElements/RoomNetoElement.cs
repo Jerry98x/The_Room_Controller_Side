@@ -16,9 +16,12 @@ public class RoomNetoElement : RoomBasicElement
     /// <summary>
     /// Initializes the initial position of the Neto element
     /// </summary>
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         initialPosition = transform.position;
+        Debug.Log("PORCODIO: " + endPointSO.EndPoint);
     }
     
     

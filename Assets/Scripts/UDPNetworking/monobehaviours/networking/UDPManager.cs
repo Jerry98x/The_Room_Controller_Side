@@ -152,7 +152,7 @@ public class UDPManager : Monosingleton<UDPManager>
             foreach (var message in messages)
             {
 
-                // Invoke the event with the message's raw data and the EndPointSO instance
+                // Invoke the event with the message's string and the EndPointSO instance
                 onMessageReceived.Invoke(message.Msg, message.Sender);
 
                 

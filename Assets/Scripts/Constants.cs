@@ -55,14 +55,18 @@ public class Constants {
     public const float CAPPED_MIN_EMISSION_INTENSITY = 2f;
     public const float CAPPED_MAX_EMISSION_INTENSITY = 5f;
 
-    // Probably not useful; to use only if there is the need to cap the distance between two subsequent positions
-    public const float SAURON_ENDPOINT_MAX_DISTANCE_BETWEEN_POSITIONS = 0.5f;
-
-
     // Inversely proportional to the distance
     public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.45f;
     public const float NETO_FREQUENCY_DISTANCE_RATE = 12f;
+    
+    
+    // Probably not useful; to use only if there is the need to cap the distance between two subsequent positions
+    public const float SAURON_ENDPOINT_MAX_DISTANCE_BETWEEN_POSITIONS = 0.5f;
 
+    public const float SAURON_MIN_RADIUS = 0.05f;
+    public const float SAURON_MAX_RADIUS = 0.2f;
+
+    
 
     public const float PARENT_LINERENDERER_WIDTH_MULTIPLIER = 0.8f;
     public const float CHILD_LINERENDERER_WIDTH_MUKTIPLIER = 1f;
@@ -97,9 +101,13 @@ public class Constants {
 
     #region Shader properties
 
+    // For custom emissive materials
     public static int BASE_COLOR_ID = Shader.PropertyToID("_BaseColor");
     public static int EMISSIVE_COLOR_ID = Shader.PropertyToID("_EmissiveColor");
     public static int EMISSIVE_INTENSITY_ID = Shader.PropertyToID("_EmissiveIntensity");
+    
+    // Universal Render Pipeline / Lit
+    public static int EMISSION_COLOR_ID = Shader.PropertyToID("_EmissionColor");
 
     #endregion
     
@@ -115,7 +123,7 @@ public class Constants {
     public const int NETO_SOUND_TYPE_2 = 2;
     
     public const float NETO_SOUND_VOLUME_MIN = 0f;
-    public const float NETO_SOUND_VOLUME_MAX = 30f;
+    public const float NETO_SOUND_VOLUME_MAX = 100f;
     
     public const float NETO_SERVO_ANGLE_HIGH = 0f;
     public const float NETO_SERVO_ANGLE_LOW = 80f; //Ideally 120f in AirLab and 180f when we have a bigger space
@@ -131,9 +139,17 @@ public class Constants {
     public const float SAURON_ROTATION_SERVO_ANGLE_HIGH = 0f;
     public const float SAURON_ROTATION_SERVO_ANGLE_LOW = 180f;
     
+    public const float SAURON_INCLINATION_SYMMETRIC_SERVO_ANGLE_HIGH = 0f;
+    public const float SAURON_INCLINATION_SYMMETRIC_SERVO_ANGLE_LOW = 30f;
     public const float SAURON_INCLINATION_SERVO_ANGLE_HIGH = 0f;
     public const float SAURON_INCLINATION_SERVO_ANGLE_LOW = 60f;
     public const float SAURON_OFFSET_INCLINATION_SERVO_ANGLE = 90f - SAURON_INCLINATION_SERVO_ANGLE_LOW;
+
+    public const float DEATHTRAP_PETALS_OPENING_MAX = 40f;
+    public const float DEATHTRAP_PETALS_OPENING_MIN = 90f;
+    
+    public const float DEATHTRAP_BRIGHTNESS_MIN = 0f;
+    public const float DEATHTRAP_BRIGHTNESS_MAX = 255f;
     
     public const string TERMINATION_CHARACTER = "\0";
     

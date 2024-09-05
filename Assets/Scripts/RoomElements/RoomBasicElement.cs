@@ -10,8 +10,9 @@ public abstract class RoomBasicElement : MonoBehaviour
     //[SerializeField] protected UDPManager udpManager;
 
     
-    private void Start()
+    protected virtual void Start()
     {
+        Debug.Log("PORCODIO basic: " + endPointSO.EndPoint);;
         UDPManager.Instance.onMessageReceived.AddListener(OnMessageReceived);
     }
     
@@ -20,25 +21,26 @@ public abstract class RoomBasicElement : MonoBehaviour
         UDPManager.Instance.onMessageReceived.RemoveListener(OnMessageReceived);
     }
     
-    public void OnMessageReceived(string message, IPEndPoint endPointSo)
+    public void OnMessageReceived(string message, IPEndPoint ipAddress)
     {
-        if (endPointSo.Equals(endPointSO.EndPoint))
+        Debug.Log("End point: " + ipAddress + " ma mio endpoint: " + endPointSO.EndPoint);
+        if (ipAddress.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
     }
     
-    public void OnMessageReceived(char[] message, IPEndPoint endPointSo)
+    public void OnMessageReceived(char[] message, IPEndPoint ipAddress)
     {
-        if (endPointSo.Equals(endPointSO.EndPoint))
+        if (ipAddress.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
     }
     
-    public void OnMessageReceived(byte[] message, IPEndPoint endPointSo)
+    public void OnMessageReceived(byte[] message, IPEndPoint ipAddress)
     {
-        if (endPointSo.Equals(endPointSO.EndPoint))
+        if (ipAddress.Equals(endPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }

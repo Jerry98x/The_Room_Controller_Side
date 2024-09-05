@@ -17,9 +17,12 @@ public class RoomSauronElement : RoomBasicElement
     /// <summary>
     /// Initializes the initial position of the Sauron element
     /// </summary>
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         initialPosition = transform.position;
+        Debug.Log("PORCODIO: " + endPointSO.EndPoint);
     }
     
     
@@ -27,19 +30,19 @@ public class RoomSauronElement : RoomBasicElement
     protected override void ExecuteMessageResponse(string message)
     {
         // Executed when the message is specifically related to the Sauron element
-        Debug.Log("Received following string message: " + message);
+        Debug.Log("Sauron element received message: " + message);
     }
     
     protected override void ExecuteMessageResponse(byte[] message)
     {
         // Executed when the message is specifically related to the Sauron element
-        Debug.Log("Received following byte array message: " + message);
+        Debug.Log("Sauron element received message: " + message);
     }
     
     protected override void ExecuteMessageResponse(char[] message)
     {
         // Executed when the message is specifically related to the Sauron element
-        Debug.Log("Received following char array message: " + message);
+        Debug.Log("Sauron element received message: " + message);
     }
     
     

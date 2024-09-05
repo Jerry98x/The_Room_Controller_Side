@@ -126,6 +126,9 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     
     private void BuildByteArrayMessage()
     {
+        
+        rotationAlphaAngleSauron = (int)sauronRayMovementHandler.GetAlphaRotationAngle();
+        elevationBetaAngleSauron = (int)sauronRayMovementHandler.GetBetaElevationAngle();
 
         if (lastMessage[0] == rotationAlphaAngleSauron && lastMessage[1] == elevationBetaAngleSauron)
         {
@@ -134,10 +137,6 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         
         lastMessage[0] = rotationAlphaAngleSauron;
         lastMessage[1] = elevationBetaAngleSauron;
-        
-        
-        rotationAlphaAngleSauron = (int)sauronRayMovementHandler.GetAlphaRotationAngle();
-        elevationBetaAngleSauron = (int)sauronRayMovementHandler.GetBetaElevationAngle();
         
         Debug.Log("SENDING SAURON VALUE rotation servo angle: " + rotationAlphaAngleSauron);
         Debug.Log("SENDING SAURON VALUE inclination servo angle: " + elevationBetaAngleSauron);

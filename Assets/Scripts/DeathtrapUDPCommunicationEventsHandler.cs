@@ -20,16 +20,17 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     // Deathtrap module parameters
     // The message is a concatenation of the following values (for simplicity I shouldn't use booleans):
-    // 1) An integer representing the action of the deathtrap of spraying (0 = not spraying, 1 = spraying)
-    // 2) An integer representing both the action of the Deathtrap petals (0 = closing, 1 = opening)
-    // and the action of the LEDs (0 = turning off 1 = turning on)
-    // 2) An integer representing the action of the Deathtrap bad smell emission (0 = not emitting, 1 = emitting)
+    // 1) An integer representing the spraying action of the Deathtrap (0 = not spraying, 1 = spraying)
+    // 2) An integer representing the opening action of the Deathtrap's petals (0 = closing, 1 = opening)
+    // 3) An integer representing the bad smell emission action of the Deathtrap (0 = not emitting, 1 = emitting)
+    // 4) An integer representing the brightness emission action of the LEDs (0 = off 255 = maximum brightness)
 
 
     //[SerializeField] private int spraying;
     [SerializeField, Range(0,1)] private int liquidSpraying;
-    [SerializeField, Range(60,105)] private int petalsOpening;
+    [SerializeField, Range(40,90)] private int petalsOpening;
     [SerializeField, Range(0,1)] private int badSmellEmitting;
+    [SerializeField, Range(0,255)] private int ledsBrightness;
     
     
     private string message;
@@ -58,7 +59,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         
         endPointSO = roomElement.GetEndPointSO();
 
-        lastMessage = new int[3];
+        lastMessage = new int[4];
         for (int i = 0; i < lastMessage.Length; i++)
         {
             lastMessage[i] = 0;
@@ -103,7 +104,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 
     private void BuildByteArrayMessage()
     {
-        if(lastMessage[0] == liquidSpraying && lastMessage[1] == petalsOpening && lastMessage[2] == badSmellEmitting)
+        if(lastMessage[0] == liquidSpraying && lastMessage[1] == petalsOpening && lastMessage[2] == badSmellEmitting && lastMessage[3] == ledsBrightness)
         {
             return;
         }
@@ -111,21 +112,24 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         lastMessage[0] = liquidSpraying;
         lastMessage[1] = petalsOpening;
         lastMessage[2] = badSmellEmitting;
+        lastMessage[3] = ledsBrightness;
         
         
         // Print the values to be sent in the byte array
         Debug.Log("SENDING DEATHTRAP VALUE liquid spraying: " + liquidSpraying);
         Debug.Log("SENDING DEATHTRAP VALUE petals opening: " + petalsOpening);
         Debug.Log("SENDING DEATHTRAP VALUE bad smell emitting: " + badSmellEmitting);
+        Debug.Log("SENDING DEATHTRAP VALUE LEDs brightness: " + ledsBrightness);
         
         // Convert each parameter into bytes
         byte liquidSprayingByte = System.Convert.ToByte(liquidSpraying);
         byte petalsOpeningByte = System.Convert.ToByte(petalsOpening);
         byte badSmellEmittingByte = System.Convert.ToByte(badSmellEmitting);
+        byte ledsBrightnessByte = System.Convert.ToByte(ledsBrightness);
         
         Debug.Log("SENDING DEATHTRAP BYTE liquid spraying: " + liquidSprayingByte);
         Debug.Log("SENDING DEATHTRAP BYTE petals opening byte: " + petalsOpeningByte);
-        Debug.Log("SENDING DEATHTRAP BYTE bad smell emitting byte: " + badSmellEmittingByte);
+        Debug.Log("SENDING DEATHTRAP BYTE LEDs brightness: " + ledsBrightnessByte);
         
         
         // Concatenate the values to be sent in the byte array
@@ -133,6 +137,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         messageBytes[0] = liquidSprayingByte;
         messageBytes[1] = petalsOpeningByte;
         messageBytes[2] = badSmellEmittingByte;
+        messageBytes[3] = ledsBrightnessByte;
         
         // Add the termination character
         messageBytes[messageBytes.Length - 1] = 0;

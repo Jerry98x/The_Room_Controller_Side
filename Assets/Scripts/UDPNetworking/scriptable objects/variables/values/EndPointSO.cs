@@ -21,15 +21,11 @@ public class EndPointSO : ScriptableObject
         {
             if (_endPoint == null)
                 // if not initialized, initialize it
+                Debug.Log("Indirizzo IP da sottoclasse IP: " + IP);
                 _endPoint = UDPMessenger.GetIPEndPoint(IP, Port);
+                Debug.Log("Indirizzo IP dopo costruttore da variabile _endPoint: " + _endPoint);
             return _endPoint;
         }
-        /*set
-        {
-            _endPoint = value;
-            _ip = value.Address;
-            port = value.Port;
-        }*/
     }
         
     public IPAddress IP
@@ -38,7 +34,9 @@ public class EndPointSO : ScriptableObject
         {
             if (_ip == null)
                 // if not initialized, initialize it
+                Debug.Log("Indirizzo IP da SerializeField: " + stringIP);
                 _ip = System.Net.IPAddress.Parse(stringIP);
+                Debug.Log("Indirizzo IP da variabile _ip: " + _ip);
             return _ip;
         }
     }

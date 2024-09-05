@@ -5312,7 +5312,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endPointSO: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0, type: 2}
-  udpManager: {fileID: 0}
 --- !u!1 &2359166916280231782
 GameObject:
   m_ObjectHideFlags: 0
@@ -5950,7 +5949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointMovementMultiplier: 0
+  endpointMovementMultiplier: 20
   minEndpointDistance: 2
   maxEndpointDistance: 10
 --- !u!1 &3990104191708799246

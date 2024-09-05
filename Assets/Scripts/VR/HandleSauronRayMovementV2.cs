@@ -144,8 +144,8 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
             
                     
-            // Invoke the event that will notify the Neto module of the distance change
-            //onSauronRayDistanceChange?.Invoke(inactiveSpiralwaveRay, activeSpiralwaveRay, finalNewDistance);
+            // Invoke the event that will notify the Sauron module of the distance change
+            onSauronRayDistanceChange?.Invoke(inactiveSpiralwaveRay, activeSpiralwaveRay, finalNewDistance);
             
             
             // Handle control interruption
@@ -336,7 +336,27 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         
         
         Vector3 adjustedPosition = CalculateSlidePosition(rayEndPoint.position, smoothedMovement);
-
+        
+        
+        
+        
+        // Calculate maxDistance
+        float maxDistance = 0f;
+        Vector3 direction = newEndPointPosition - previousPosition;
+        RaycastHit hit;
+        if (Physics.Raycast(previousPosition, direction, out hit))
+        {
+            maxDistance = hit.distance;
+        }
+        Debug.Log($"DIO: Max Distance: {maxDistance}");
+        
+        
+        if(direction.magnitude > maxDistance)
+        {
+            direction = direction.normalized * maxDistance;
+        }
+        newEndPointPosition = previousPosition + direction;
+        
         
         // Update alpha and beta angles of the cone, so that the values based on them to be sent to the
         // physical Sauron can be computed
@@ -484,10 +504,16 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private void UpdateLineRenderers(SpiralwaveRay inactiveSpiralwaveRayToChange, SpiralwaveRay activeSpiralwaveRayToChange, float finalNewDistance)
     {
         
-        
-            
-            
-            
+        // Update the linerenderers' radius with the beta angle
+        float betaOffset = 30f;
+        float symmetricBetaElevationAngle = Mathf.Abs(betaElevationAngle - betaOffset);
+        float newRadius = RangeRemappingHelper.Remap(symmetricBetaElevationAngle, Constants.SAURON_INCLINATION_SYMMETRIC_SERVO_ANGLE_LOW, 
+            Constants.SAURON_INCLINATION_SYMMETRIC_SERVO_ANGLE_HIGH, Constants.SAURON_MAX_RADIUS, Constants.SAURON_MIN_RADIUS);
+
+        inactiveSpiralwaveRayToChange.SetRadius(newRadius);
+        activeSpiralwaveRayToChange.SetRadius(newRadius);
+
+
     }
     
     

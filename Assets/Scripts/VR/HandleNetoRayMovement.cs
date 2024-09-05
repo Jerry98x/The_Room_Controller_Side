@@ -25,10 +25,10 @@ public class HandleNetoRayMovement : MonoBehaviour
     [SerializeField] private Transform coreCenter;
     [SerializeField] private Transform rayEndPoint;
     
-    [SerializeField] [ColorUsage(true)] public Color initialActiveBaseColor;
-    [SerializeField] [ColorUsage(true, true)] public Color initialActiveEmissiveColor;
-    [SerializeField] [ColorUsage(true)] public Color emergencyBaseColor;
-    [SerializeField] [ColorUsage(true, true)] public Color emergencyEmissiveColor;
+    [SerializeField] [ColorUsage(true)] private Color initialActiveBaseColor;
+    [SerializeField] [ColorUsage(true, true)] private Color initialActiveEmissiveColor;
+    [SerializeField] [ColorUsage(true)] private Color emergencyBaseColor;
+    [SerializeField] [ColorUsage(true, true)] private Color emergencyEmissiveColor;
     
     [SerializeField] private EmergencyAudioEffect emergencyAudioEffect;
 
@@ -218,8 +218,8 @@ public class HandleNetoRayMovement : MonoBehaviour
         Debug.Log("Active sinewave ray: " + activeSinewaveRayToChange);
         Debug.Log("Final new distance: " + finalNewDistance);
         
-        // Update the linerenderers amplitude and frequency, so that when the ray is shorter
-        // the sinewave has a higher frequency and amplite (like it's more compressed),
+        // Update the linerenderers' amplitude and frequency, so that when the ray is shorter
+        // the sinewave has a higher frequency and amplitude (like it's more compressed),
         // and when the ray is longer the sinewave has a lower frequency and amplitude (like it's more stretched)
         
         // Calculate the new amplitude and frequency and assign them to both sinewave rays
