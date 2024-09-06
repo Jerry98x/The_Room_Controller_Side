@@ -58,7 +58,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774384389812018901}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -192,6 +192,9 @@ MonoBehaviour:
   rayEndPoint: {fileID: 3066118131402179863}
   portal: {fileID: 5812390795198349282}
   portalSimplified: {fileID: 0}
+  coneBaseCenter: {fileID: 0}
+  coneTip: {fileID: 0}
+  coneBaseExtremity: {fileID: 0}
 --- !u!114 &7718129239821687201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,7 +563,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endPointSO: {fileID: 0}
-  udpManager: {fileID: 0}
 --- !u!1 &2588002641553000832
 GameObject:
   m_ObjectHideFlags: 0

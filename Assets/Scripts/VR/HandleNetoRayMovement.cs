@@ -112,6 +112,7 @@ public class HandleNetoRayMovement : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
 
+        if(interactor.hasSelection)
         if(interactor != null || pointer != null)
         {
             Debug.Log("INTERACTOR NOT NULL: " + interactor);
