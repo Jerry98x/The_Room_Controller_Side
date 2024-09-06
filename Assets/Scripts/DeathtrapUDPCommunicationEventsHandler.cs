@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 {
@@ -13,6 +14,15 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private Transform testingSphere;
+
+    private SphereCollider testingSphereCollider;
+
+    private bool isInControl = false;
+    
+    private int liquidSprayingTest;
+    private int petalsOpeningTest;
+    private int badSmellEmittingTest;
+    private int ledsBrightnessTest;
     
     
     // The messages are the bytes that will be sent to the ESP32 via UDP. It won't use
@@ -40,6 +50,11 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     
     private EndPointSO endPointSO;
+    
+    
+    private ActionBasedController xrController;
+    private XRDirectInteractor interactor;
+    private Pointer pointer;
 
 
     // Testing the UDP communication with the Deathtrap module
@@ -56,6 +71,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // TODO: implement the actual operations to do at start time with the Deathtrap module
     private void Start()
     {
+        testingSphereCollider = testingSphere.GetComponent<SphereCollider>();
         
         endPointSO = roomElement.GetEndPointSO();
 
