@@ -14,10 +14,15 @@ using UnityEngine;
 public class NetoFeedbackHandler : MonoBehaviour
 {
     
+    //TODO: remove the dependency from HandleNetoRayMovement; now it's only for testing purposes
+    private HandleNetoRayMovement netoMovementHandler;
+    
     private ParticleSystem partSystem;
 
     [SerializeField] private Transform particleEndpointPosition;
     [SerializeField] private AudioSource[] audioSource;
+    [SerializeField] private float minParticleSize;
+    [SerializeField] private float maxParticleSize;
     
 
     private Vector3 particleDirection;
@@ -47,6 +52,9 @@ public class NetoFeedbackHandler : MonoBehaviour
         initialPosition = audioSource[0].transform.position;
         audioSource[0].loop = true;
         
+        
+        
+        netoMovementHandler = transform.parent.parent.GetComponentInChildren<HandleNetoRayMovement>();
         
         
         // Add event listeners to the ParticleSystem component
@@ -131,13 +139,31 @@ public class NetoFeedbackHandler : MonoBehaviour
     /// </summary>
     private void HandledEvents()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && netoMovementHandler.IsInControl())
         {
             partSystem.Play();
             shouldMove = true;
             audioSource[0].Play();
         }
     }
+
+
+
+
+    public void AudioEffectStarted(float vol)
+    {
+        
+        ParticleSystem.MainModule main = partSystem.main;
+        main.startSize = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, maxParticleSize, minParticleSize);
+        partSystem.Play();
+        shouldMove = true;
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, 0, 1);
+        audioSource[0].Play();
+        
+    }
+    
+    
+    
     
     
     /// <summary>

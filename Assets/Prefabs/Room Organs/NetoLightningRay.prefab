@@ -5311,7 +5311,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0b7138bca742cf4896802d10e407be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endPointSO: {fileID: 11400000, guid: 5eab3e82b86970949b45d2d04ab5c5d0, type: 2}
+  sendingEndPointSO: {fileID: 0}
+  receivingEndPointSO: {fileID: 0}
+  netoFeedbackHandler: {fileID: 0}
+  emergencyModeHandler: {fileID: 0}
 --- !u!1 &2359166916280231782
 GameObject:
   m_ObjectHideFlags: 0
@@ -5487,13 +5490,13 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300001, guid: 03d4f07283ae4307b8c7a2ea7ad08068,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 911d3e8f423b77e42b27fa48cd447127, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 570c633b9aeef964da819d1b6ca2efc8, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
-  Spatialize: 0
+  Spatialize: 1
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
@@ -7732,7 +7735,7 @@ PrefabInstance:
     - target: {fileID: 6645360731151978971, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
       propertyPath: looping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6645360731151978971, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
@@ -7919,6 +7922,8 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 0}
   audioSource:
   - {fileID: 2951934718892148241}
+  minParticleSize: 0.3
+  maxParticleSize: 0.8
 --- !u!1001 &4863037131624106165
 PrefabInstance:
   m_ObjectHideFlags: 0

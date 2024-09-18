@@ -365,7 +365,7 @@ public class HandleNetoRayMovement : MonoBehaviour
 
     
     
-    private void StartEmergencyMode()
+    public void StartEmergencyMode()
     {
         hasEmergency = true;
         isInControl = false;
@@ -392,7 +392,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         
     }
 
-    private void StopEmergencyMode()
+    public void StopEmergencyMode()
     {
         hasEmergency = false;
         

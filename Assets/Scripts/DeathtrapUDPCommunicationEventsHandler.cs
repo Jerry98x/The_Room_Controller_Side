@@ -13,16 +13,11 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
 
     [SerializeField] private RoomBasicElement roomElement;
-    [SerializeField] private Transform testingSphere;
+    [SerializeField] private FeedbackSphere testingSphere;
 
     private SphereCollider testingSphereCollider;
 
     private bool isInControl = false;
-    
-    private int liquidSprayingTest;
-    private int petalsOpeningTest;
-    private int badSmellEmittingTest;
-    private int ledsBrightnessTest;
     
     
     // The messages are the bytes that will be sent to the ESP32 via UDP. It won't use
@@ -43,6 +38,12 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField, Range(0,255)] private int ledsBrightness;
     
     
+    private int liquidSprayingTest;
+    private int petalsOpeningTest;
+    private int badSmellEmittingTest;
+    private int ledsBrightnessTest;
+    
+    
     private string message;
     private byte[] messageBytes;
     
@@ -50,11 +51,6 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     
     private EndPointSO endPointSO;
-    
-    
-    private ActionBasedController xrController;
-    private XRDirectInteractor interactor;
-    private Pointer pointer;
 
 
     // Testing the UDP communication with the Deathtrap module
@@ -93,55 +89,76 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     private void Update()
     {
         Debug.Log("About to send a message to the ESP32!");
+
+
+        if (testingSphere.IsInControl())
+        {
+         
+            // It's easier to send messages to the ESP32 at every frame, since a relatively
+            // big amount of messages can be handled on the other side. No need to just send them
+            // when some characteristics change!
         
         
-        // It's easier to send messages to the ESP32 at every frame, since a relatively
-        // big amount of messages can be handled on the other side. No need to just send them
-        // when some characteristics change!
+            HandleValuesToSend();
         
         
-        HandleValuesToSend();
-        
-        
-        BuildByteArrayMessage();
-        Debug.Log("Byte message to be sent: " + messageBytes);
-        UDPManager.Instance.SendByteArrayUdp(messageBytes, endPointSO.EndPoint);
+            BuildByteArrayMessage();
+            Debug.Log("Byte message to be sent: " + messageBytes);
+            UDPManager.Instance.SendByteArrayUdp(messageBytes, endPointSO.EndPoint);
         
        
-        Debug.Log("Message sent!");
+            Debug.Log("Message sent!");
+            
+        }
+        
+        
     }
+    
+    
+    
 
 
     private void HandleValuesToSend()
     {
+        
+        // Momentarily used to get the buttons and triggers values to send to the ESP32
+        liquidSprayingTest = testingSphere.GetLiquidSprayingTest();
+        petalsOpeningTest = testingSphere.GetPetalsOpeningTest();
+        badSmellEmittingTest = testingSphere.GetBadSmellEmittingTest();
+        ledsBrightnessTest = testingSphere.GetLedsBrightnessTest();
         
         
     }
 
     private void BuildByteArrayMessage()
     {
-        if(lastMessage[0] == liquidSpraying && lastMessage[1] == petalsOpening && lastMessage[2] == badSmellEmitting && lastMessage[3] == ledsBrightness)
+        if(lastMessage[0] == liquidSprayingTest && lastMessage[1] == petalsOpeningTest && lastMessage[2] == badSmellEmittingTest && lastMessage[3] == ledsBrightnessTest)
         {
             return;
         }
         
-        lastMessage[0] = liquidSpraying;
+        /*lastMessage[0] = liquidSpraying;
         lastMessage[1] = petalsOpening;
         lastMessage[2] = badSmellEmitting;
-        lastMessage[3] = ledsBrightness;
+        lastMessage[3] = ledsBrightness;*/
+
+        lastMessage[0] = liquidSprayingTest;
+        lastMessage[1] = petalsOpeningTest;
+        lastMessage[2] = badSmellEmittingTest;
+        lastMessage[3] = ledsBrightnessTest;
         
         
         // Print the values to be sent in the byte array
-        Debug.Log("SENDING DEATHTRAP VALUE liquid spraying: " + liquidSpraying);
-        Debug.Log("SENDING DEATHTRAP VALUE petals opening: " + petalsOpening);
-        Debug.Log("SENDING DEATHTRAP VALUE bad smell emitting: " + badSmellEmitting);
-        Debug.Log("SENDING DEATHTRAP VALUE LEDs brightness: " + ledsBrightness);
+        Debug.Log("SENDING DEATHTRAP VALUE liquid spraying: " + liquidSprayingTest);
+        Debug.Log("SENDING DEATHTRAP VALUE petals opening: " + petalsOpeningTest);
+        Debug.Log("SENDING DEATHTRAP VALUE bad smell emitting: " + badSmellEmittingTest);
+        Debug.Log("SENDING DEATHTRAP VALUE LEDs brightness: " + ledsBrightnessTest);
         
         // Convert each parameter into bytes
-        byte liquidSprayingByte = System.Convert.ToByte(liquidSpraying);
-        byte petalsOpeningByte = System.Convert.ToByte(petalsOpening);
-        byte badSmellEmittingByte = System.Convert.ToByte(badSmellEmitting);
-        byte ledsBrightnessByte = System.Convert.ToByte(ledsBrightness);
+        byte liquidSprayingByte = System.Convert.ToByte(liquidSprayingTest);
+        byte petalsOpeningByte = System.Convert.ToByte(petalsOpeningTest);
+        byte badSmellEmittingByte = System.Convert.ToByte(badSmellEmittingTest);
+        byte ledsBrightnessByte = System.Convert.ToByte(ledsBrightnessTest);
         
         Debug.Log("SENDING DEATHTRAP BYTE liquid spraying: " + liquidSprayingByte);
         Debug.Log("SENDING DEATHTRAP BYTE petals opening byte: " + petalsOpeningByte);
@@ -149,7 +166,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         
         
         // Concatenate the values to be sent in the byte array
-        messageBytes = new byte[4];
+        messageBytes = new byte[5];
         messageBytes[0] = liquidSprayingByte;
         messageBytes[1] = petalsOpeningByte;
         messageBytes[2] = badSmellEmittingByte;
@@ -164,6 +181,43 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         
     }
     
+    
+    
+    
+    
+    
+    private void SendFinalMessage()
+    {
+        // Define initial values
+        int initialLiquidSpraying = 0;
+        int initialPetalsOpening = 90;
+        int initialBadSmellEmitting = 0;
+        int initialLedsBrightness = 0;
+
+        // Convert each parameter into bytes
+        byte liquidSprayingByte = System.Convert.ToByte(initialLiquidSpraying);
+        byte petalsOpeningByte = System.Convert.ToByte(initialPetalsOpening);
+        byte badSmellEmittingByte = System.Convert.ToByte(initialBadSmellEmitting);
+        byte ledsBrightnessByte = System.Convert.ToByte(initialLedsBrightness);
+
+        // Concatenate the values to be sent in the byte array
+        byte[] finalMessageBytes = new byte[5];
+        finalMessageBytes[0] = liquidSprayingByte;
+        finalMessageBytes[1] = petalsOpeningByte;
+        finalMessageBytes[2] = badSmellEmittingByte;
+        finalMessageBytes[3] = ledsBrightnessByte;
+
+        // Add the termination character
+        finalMessageBytes[finalMessageBytes.Length - 1] = 0;
+
+        // Send the final message
+        UDPManager.Instance.SendByteArrayUdp(finalMessageBytes, endPointSO.EndPoint);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SendFinalMessage();
+    }
     
     
     

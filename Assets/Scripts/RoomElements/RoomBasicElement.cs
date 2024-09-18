@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class RoomBasicElement : MonoBehaviour
 {
     
-    [SerializeField] protected EndPointSO endPointSO;
+    [SerializeField] protected EndPointSO sendingEndPointSO;
+    [SerializeField] protected EndPointSO receivingEndPointSO;
     //[SerializeField] protected UDPManager udpManager;
-
+    
+    
+    protected int[] messageContent;
+    protected int[] lastMessage;
+    protected string separator = ":";
     
     protected virtual void Start()
     {
-        Debug.Log("PORCODIO basic: " + endPointSO.EndPoint);;
+        Debug.Log("PORCODIO basic: " + receivingEndPointSO.EndPoint);;
         UDPManager.Instance.onMessageReceived.AddListener(OnMessageReceived);
     }
     
@@ -23,16 +29,17 @@ public abstract class RoomBasicElement : MonoBehaviour
     
     public void OnMessageReceived(string message, IPEndPoint ipAddress)
     {
-        Debug.Log("End point: " + ipAddress + " ma mio endpoint: " + endPointSO.EndPoint);
-        if (ipAddress.Equals(endPointSO.EndPoint))
+        Debug.Log("End point: " + ipAddress + " ma mio endpoint: " + receivingEndPointSO.EndPoint);
+        if (ipAddress.Equals(receivingEndPointSO.EndPoint))
         {
+            Debug.Log("Eseguiamo azione dopo messaggio da " + ipAddress);
             ExecuteMessageResponse(message);
         }
     }
     
     public void OnMessageReceived(char[] message, IPEndPoint ipAddress)
     {
-        if (ipAddress.Equals(endPointSO.EndPoint))
+        if (ipAddress.Equals(receivingEndPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
@@ -40,7 +47,7 @@ public abstract class RoomBasicElement : MonoBehaviour
     
     public void OnMessageReceived(byte[] message, IPEndPoint ipAddress)
     {
-        if (ipAddress.Equals(endPointSO.EndPoint))
+        if (ipAddress.Equals(receivingEndPointSO.EndPoint))
         {
             ExecuteMessageResponse(message);
         }
@@ -56,7 +63,7 @@ public abstract class RoomBasicElement : MonoBehaviour
     
     public EndPointSO GetEndPointSO()
     {
-        return endPointSO;
+        return sendingEndPointSO;
     }
     
     /*public UDPManager GetUDPManager()

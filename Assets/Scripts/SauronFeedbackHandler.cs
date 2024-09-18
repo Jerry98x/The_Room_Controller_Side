@@ -47,27 +47,33 @@ public class SauronFeedbackHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            if(attractor.position != rayEndPoint.transform.position)
-            {
-                ResetInitialPosition();
-            }
+            VinesEffectStarted();
+        }
+    }
+
+
+
+    // TODO: improve effect by considering the duration of touch
+    public void VinesEffectStarted()
+    {
+        if(attractor.position != rayEndPoint.transform.position)
+        {
+            ResetInitialPosition();
+        }
             
-            else
-            {
-                // Clear the particles emitted by the VisualEffect object
-                effect.Stop();
-                //effect.SetFloat("StripsLifetime", stripsLifetime);
-                effect.Reinit();
+        else
+        {
+            // Clear the particles emitted by the VisualEffect object
+            effect.Stop();
+            //effect.SetFloat("StripsLifetime", stripsLifetime);
+            effect.Reinit();
                 
-                effect.SetVector3("SpawnPosition", rayEndPoint.transform.position);
-                attractor.position = rayEndPoint.transform.position;
-                SetAttractorDirection();
+            effect.SetVector3("SpawnPosition", rayEndPoint.transform.position);
+            attractor.position = rayEndPoint.transform.position;
+            SetAttractorDirection();
                 
-                effect.SendEvent("VinesEffectPlay");
-                shouldMove = true;
-            }
-            
-            
+            effect.SendEvent("VinesEffectPlay");
+            shouldMove = true;
         }
     }
     

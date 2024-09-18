@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2823719829193506279}
   - component: {fileID: 6964154562765539748}
   - component: {fileID: 254887525616533065}
-  - component: {fileID: 7766580602897422428}
   - component: {fileID: 879123012115483905}
   - component: {fileID: 7718129239821687201}
   m_Layer: 10
@@ -155,24 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rayOrigin: {fileID: 0}
   rayEndpoint: {fileID: 3066118131402179863}
---- !u!114 &7766580602897422428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774384389812018901}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d678f46d1ad2e4cb9675ddf986ece7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onSauronRayDistanceChange:
-    m_PersistentCalls:
-      m_Calls: []
-  coreCenter: {fileID: 0}
-  rayEndPoint: {fileID: 3066118131402179863}
-  portal: {fileID: 5812390795198349282}
 --- !u!114 &879123012115483905
 MonoBehaviour:
   m_ObjectHideFlags: 0

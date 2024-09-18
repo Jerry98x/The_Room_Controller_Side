@@ -81,6 +81,8 @@ public class Constants {
     public const float MAX_LOUDNESS = 1.5f;
     public const float MICROPHONE_LOUDNESS_CAP_FOR_NETO = MAX_LOUDNESS;
 
+    public const float NETO_EMERGENCY_MODE_DURATION = 3f;
+
     #endregion
 
 
@@ -92,6 +94,8 @@ public class Constants {
     public const float XR_CONTROLLER_MAX_GRIP_VALUE = 1.0f;
     public const float XR_CONTROLLER_GRIP_VALUE_THRESHOLD = 0.1f;
     public const float XR_CONTROLLER_GRIP_DELTA_VALUE = 0.3f;
+    public const float XR_CONTROLLER_MIN_TRIGGER_VALUE = 0.0f;
+    public const float XR_CONTROLLER_MAX_TRIGGER_VALUE = 1.0f; // TODO: Dovrebbe essere 1.0f, rimetterlo dopo
     public const float XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD = 0.1f;
 
     #endregion
@@ -153,7 +157,19 @@ public class Constants {
     
     public const string TERMINATION_CHARACTER = "\0";
     
-    #endregion
     
+    public const float NETO_MIC_VOLUME_MIN = 0f;
+    public const float NETO_MIC_VOLUME_MAX = 4095f;
+    public const float NETO_MIC_VOLUME_THRESHOLD = 1900f;
+    
+    
+    
+    public const float DEATHTRAP_SONAR_DISTANCE_MIN = 5000f;
+    public const float DEATHTRAP_SONAR_DISTANCE_MAX = 14000f;
+    public const float DEATHTRAP_SONAR_DISTANCE_DIVISOR = 100f * 100f; // 1000 for the conversion, 100 because parsing ignores the decimal part
+    
+
+    #endregion
+
 
 }

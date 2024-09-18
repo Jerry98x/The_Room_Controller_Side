@@ -162,4 +162,34 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     
     
     
+    
+    private void SendFinalMessage()
+    {
+        // Define initial values
+        int initialRotationServoAngle = 90;
+        int initialInclinationServoAngle = 30;
+
+        // Convert each parameter into bytes
+        byte rotationServoAngleByte = (byte)initialRotationServoAngle;
+        byte inclinationServoAngleByte = (byte)initialInclinationServoAngle;
+
+        // Concatenate the values to be sent in the byte array
+        byte[] finalMessageBytes = new byte[3];
+        finalMessageBytes[0] = rotationServoAngleByte;
+        finalMessageBytes[1] = inclinationServoAngleByte;
+
+        // Add the termination character
+        finalMessageBytes[finalMessageBytes.Length - 1] = 0;
+
+        // Send the final message
+        UDPManager.Instance.SendByteArrayUdp(finalMessageBytes, endPointSO.EndPoint);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SendFinalMessage();
+    }
+    
+    
+    
 }

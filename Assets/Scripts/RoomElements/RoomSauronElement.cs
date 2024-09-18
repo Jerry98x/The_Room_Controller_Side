@@ -12,6 +12,8 @@ using UnityEngine;
 public class RoomSauronElement : RoomBasicElement
 {
 
+    [SerializeField] private SauronFeedbackHandler sauronFeedbackHandler;
+
     private Vector3 initialPosition;
     
     /// <summary>
@@ -22,7 +24,14 @@ public class RoomSauronElement : RoomBasicElement
         base.Start();
         
         initialPosition = transform.position;
-        Debug.Log("PORCODIO: " + endPointSO.EndPoint);
+        Debug.Log("PORCODIO: " + receivingEndPointSO.EndPoint);
+        
+        
+        lastMessage = new int[2];
+        for (int i = 0; i < lastMessage.Length; i++)
+        {
+            lastMessage[i] = 0;
+        }
     }
     
     
@@ -31,6 +40,52 @@ public class RoomSauronElement : RoomBasicElement
     {
         // Executed when the message is specifically related to the Sauron element
         Debug.Log("Sauron element received message: " + message);
+        
+        
+        // Split the message string by the colon separator
+        string[] parts = message.Split(separator);
+        
+        
+        
+        
+        for(int i = 0; i < parts.Length; i++)
+        {
+            Debug.Log("SAURON MESSAGE PART " + i + ": " + parts[i]);
+        }
+        
+        
+        
+        
+
+        // Initialize the message array with the same length as parts, excluding the first two
+        // (the sender type and the specific sender, which are not needed)
+        this.messageContent = new int[parts.Length - 2];
+
+        // Convert each part to an integer and store it in the message array
+        for (int i = 2; i < parts.Length; i++)
+        {
+            this.messageContent[i-2] = int.Parse(parts[i]);
+            Debug.Log("SAURON MESSAGE CONTENT " + (i-2) + ": " + messageContent[i-2]);
+        }
+
+        if (lastMessage[0] != messageContent[0])
+        {
+            TriggerVinesEffect(messageContent[0]);
+        }
+        
+        lastMessage[0] = messageContent[0];
+        lastMessage[1] = messageContent[1];
+        
+        
+        /*if(lastMessage[0] == messageContent[0] && lastMessage[1] == messageContent[1])
+        {
+            return;
+        }
+        
+        
+        // Apply actions
+        TriggerVinesEffect(messageContent[0]);*/
+        
     }
     
     protected override void ExecuteMessageResponse(byte[] message)
@@ -43,6 +98,18 @@ public class RoomSauronElement : RoomBasicElement
     {
         // Executed when the message is specifically related to the Sauron element
         Debug.Log("Sauron element received message: " + message);
+    }
+    
+    
+    
+    private void TriggerVinesEffect(int touchIntensity)
+    {
+
+        if (touchIntensity > 0)
+        {
+            sauronFeedbackHandler.VinesEffectStarted();
+        }
+        
     }
     
     

@@ -235,4 +235,45 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
+    
+    
+    private void SendFinalMessage()
+    {
+        // Define initial values
+        int initialSoundType = 1;
+        int initialSoundVolume = 0;
+        int initialServoAngle = 0;
+        int initialRadius = 0;
+        int initialBrightness = 0;
+
+        // Convert each parameter into bytes
+        byte soundTypeByte = (byte)initialSoundType;
+        byte soundVolumeByte = (byte)initialSoundVolume;
+        byte servoAngleByte = (byte)initialServoAngle;
+        byte radiusByte = (byte)initialRadius;
+        byte brightnessByte = (byte)initialBrightness;
+
+        // Concatenate the values to be sent in the byte array
+        byte[] finalMessageBytes = new byte[6];
+        finalMessageBytes[0] = soundTypeByte;
+        finalMessageBytes[1] = soundVolumeByte;
+        finalMessageBytes[2] = servoAngleByte;
+        finalMessageBytes[3] = radiusByte;
+        finalMessageBytes[4] = brightnessByte;
+
+        // Add the termination character
+        finalMessageBytes[finalMessageBytes.Length - 1] = 0;
+
+        // Send the final message
+        UDPManager.Instance.SendByteArrayUdp(finalMessageBytes, endPointSO.EndPoint);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SendFinalMessage();
+    }
+    
+    
+    
+    
 }
