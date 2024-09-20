@@ -107,7 +107,8 @@ public class FeedbackSphere : MonoBehaviour
     private void HandleSprayingBasedOnButton()
     {
 
-        if(xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0)
+        if((xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0) &&
+           !(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0))
         {
             Debug.Log("BUTTON X OR A PRESSED!");
             
@@ -115,11 +116,13 @@ public class FeedbackSphere : MonoBehaviour
             
             if(sphereRenderer != null)
             {
+                Debug.Log("SETTING COLOR TO TESTING COLOR 1");
                 sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, testingColor1);
             }
             
         }
-        else if(xButtonAction.action.ReadValue<float>() == 0 && aButtonAction.action.ReadValue<float>() == 0)
+        else if((xButtonAction.action.ReadValue<float>() == 0 && aButtonAction.action.ReadValue<float>() == 0) &&
+                !(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0))
         {
             liquidSprayingTest = 0;
             
@@ -152,10 +155,6 @@ public class FeedbackSphere : MonoBehaviour
     
     private void HandlePetalsOpeningBasedOnTrigger()
     {
-
-        
-        float minTestingScale = 0.65f;
-        float maxTestingScale = 1.0f;
         float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
         if (triggerValue > 0)
         {
@@ -171,7 +170,7 @@ public class FeedbackSphere : MonoBehaviour
                 Constants.DEATHTRAP_PETALS_OPENING_MAX, Constants.DEATHTRAP_PETALS_OPENING_MIN);
             Debug.Log("TRIGGER PRESSED! Petals opening: " + petalsOpeningTest);
             float newScale = RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
-                maxTestingScale, minTestingScale);
+                Constants.DEATHTRAP_CORE_MAX_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
             Debug.Log("TRIGGER PRESSED! Final scale: " + newScale);
             /*float lerpSpeed = 1.0f;
             float newScale = Mathf.Lerp(transform.localScale.x, targetScale, Time.deltaTime * lerpSpeed);*/
@@ -179,7 +178,7 @@ public class FeedbackSphere : MonoBehaviour
         }
         else
         {
-            transform.localScale = new Vector3(minTestingScale, minTestingScale, minTestingScale);
+            transform.localScale = new Vector3(Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
         }
 
         /*
@@ -230,7 +229,8 @@ public class FeedbackSphere : MonoBehaviour
     private void HandleBasSmellEmittingBasedOnButton()
     {
         
-        if(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0)
+        if((yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0) &&
+           !(xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0))
         {
             Debug.Log("BUTTON Y OR B PRESSED!");
             
@@ -243,7 +243,8 @@ public class FeedbackSphere : MonoBehaviour
 
             
         }
-        else if(yButtonAction.action.ReadValue<float>() == 0 && bButtonAction.action.ReadValue<float>() == 0)
+        else if((yButtonAction.action.ReadValue<float>() == 0 && bButtonAction.action.ReadValue<float>() == 0) &&
+                !(xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0))
         {
             badSmellEmittingTest = 0;
             

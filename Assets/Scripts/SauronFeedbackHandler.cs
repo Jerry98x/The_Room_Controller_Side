@@ -12,6 +12,8 @@ public class SauronFeedbackHandler : MonoBehaviour
     [SerializeField] private Transform attractor;
     [SerializeField] private Transform rayEndPoint;
     
+    private Vector3 particleEffectStopPosition;
+    
     private VisualEffect effect;
     private float stripsLifetime;
     
@@ -37,6 +39,12 @@ public class SauronFeedbackHandler : MonoBehaviour
 
     private void Update()
     {
+        
+        // Particles effect needs to stop at 2/3 the distance between the spawn position and the particle endpoint position
+        // Basically the "Lerp" function
+        particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
+        
+        
         HandledEvents();
         MoveAttractor();
     }
@@ -118,11 +126,11 @@ public class SauronFeedbackHandler : MonoBehaviour
             float offset = 0.1f;
             
             // When the Attractor object has reached the particleEndPointPosition, stops its translation without resetting its position
-            if (Vector3.Distance(spawnPosition, particleEndpointPosition.position) <=
+            if (Vector3.Distance(spawnPosition, particleEffectStopPosition) <=
                 Vector3.Distance(spawnPosition, attractor.position) + offset)
             {
                 shouldMove = false;
-                attractor.position = particleEndpointPosition.position;
+                attractor.position = particleEffectStopPosition;
             }
             
             

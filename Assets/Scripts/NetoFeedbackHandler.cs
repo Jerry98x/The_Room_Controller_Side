@@ -246,6 +246,23 @@ public class NetoFeedbackHandler : MonoBehaviour
     {
         OnSpeedChanged?.Invoke(this, EventArgs.Empty);
     }
+    
+    
+    
+    public bool IsAnyAudioSourcePlaying()
+    {
+        foreach (AudioSource source in audioSource)
+        {
+            if (source.isPlaying)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
 
 
     public AudioSource GetHandledAudioSource()

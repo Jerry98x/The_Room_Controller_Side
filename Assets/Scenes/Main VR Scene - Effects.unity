@@ -15694,7 +15694,7 @@ PrefabInstance:
         type: 3}
       propertyPath: particleEndpointPosition
       value: 
-      objectReference: {fileID: 774730178}
+      objectReference: {fileID: 2106698161}
     - target: {fileID: 3676330449224829651, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: _divisionUnitLength
@@ -38638,7 +38638,7 @@ PrefabInstance:
         type: 3}
       propertyPath: particleEndpointPosition
       value: 
-      objectReference: {fileID: 774730178}
+      objectReference: {fileID: 2106698161}
     - target: {fileID: 3676330449224829651, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: _divisionUnitLength
@@ -42569,7 +42569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2070245240
 Transform:
   m_ObjectHideFlags: 0
@@ -49215,6 +49215,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4768229725078990110, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4808570848020339358, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: m_IsActive
@@ -49394,6 +49399,11 @@ PrefabInstance:
       propertyPath: initialActiveBaseColor.r
       value: 0.103009835
       objectReference: {fileID: 0}
+    - target: {fileID: 7888138721443379648, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 1834020229}
     - target: {fileID: 8150312431860468983, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: m_IsActive

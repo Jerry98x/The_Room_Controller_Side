@@ -186,6 +186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff27a668a1466294b95de66d2618593e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendingEndPointSO: {fileID: 0}
+  receivingEndPointSO: {fileID: 0}
+  initialColor: {r: 0, g: 0, b: 0, a: 0}
+  softTouchColor: {r: 0, g: 0, b: 0, a: 0}
+  mediumTouchColor: {r: 0, g: 0, b: 0, a: 0}
+  hardTouchColor: {r: 0, g: 0, b: 0, a: 0}
+  humanSilhouette: {fileID: 0}
 --- !u!1 &1948014554787566953
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +202,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6655586562404902812}
-  - component: {fileID: 7399664442627407416}
   m_Layer: 9
   m_Name: CoreCenter
   m_TagString: Untagged
@@ -218,33 +224,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 563583018987333260}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &7399664442627407416
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1948014554787566953}
-  serializedVersion: 4
-  m_Mass: 0.1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &4808570848020339358
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,8 +341,11 @@ GameObject:
   - component: {fileID: 5509410940233745926}
   - component: {fileID: 2490595387390826772}
   - component: {fileID: 5069835103471495761}
-  m_Layer: 9
-  m_Name: CoreVisual
+  - component: {fileID: 4768229725078990110}
+  - component: {fileID: 5595155852625806754}
+  - component: {fileID: 7888138721443379648}
+  m_Layer: 10
+  m_Name: CoreSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -456,6 +438,159 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4768229725078990110
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759488754486621419}
+  serializedVersion: 4
+  m_Mass: 0.1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &5595155852625806754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759488754486621419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdccd568517f335479ca1c0323053345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aButtonAction: {fileID: 4315690758106756877, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  bButtonAction: {fileID: 1861163245014032088, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  xButtonAction: {fileID: -5461687381335132470, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  yButtonAction: {fileID: 5222650556366038809, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  initialEmissionColor: {r: 0.15431276, g: 1.4980391, b: 0.12153891, a: 1}
+  testingColor1: {r: 0.12549016, g: 1.1756902, b: 1.4980391, a: 1}
+  testingColor2: {r: 1.4980391, g: 0.12549016, b: 1.3548481, a: 1}
+--- !u!114 &7888138721443379648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759488754486621419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a35f6cfbfba9b548aaa00d52cfe8a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InteractionManager: {fileID: 0}
+  m_Colliders:
+  - {fileID: 5069835103471495761}
+  m_InteractionLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_InteractionLayers:
+    m_Bits: 1
+  m_DistanceCalculationMode: 1
+  m_SelectMode: 0
+  m_FocusMode: 1
+  m_CustomReticle: {fileID: 0}
+  m_AllowGazeInteraction: 0
+  m_AllowGazeSelect: 0
+  m_OverrideGazeTimeToSelect: 0
+  m_GazeTimeToSelect: 0.5
+  m_OverrideTimeToAutoDeselectGaze: 0
+  m_TimeToAutoDeselectGaze: 3
+  m_AllowGazeAssistance: 0
+  m_FirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstFocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastFocusExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FocusExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+  m_StartingInteractionStrengthFilters: []
+  m_OnFirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnLastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnDeactivate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8150312431860468983
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,6 +638,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomElement: {fileID: 0}
   testingSphere: {fileID: 5159955729255004661}
+  liquidSpraying: 0
+  petalsOpening: 40
+  badSmellEmitting: 0
+  ledsBrightness: 0
 --- !u!114 &6685111768113177950
 MonoBehaviour:
   m_ObjectHideFlags: 0
