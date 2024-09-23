@@ -17,12 +17,21 @@ public class RoomDeathtrapElement : RoomBasicElement
     [SerializeField] [ColorUsage(true, true)] private Color mediumTouchColor;
     [SerializeField] [ColorUsage(true, true)] private Color hardTouchColor;
     [SerializeField] GameObject humanSilhouette;
+    [SerializeField] Transform deathtrapPortal;
+    [SerializeField] DeathtrapTouchFeedbackHandler deathtrapTouchFeedbackHandler;
 
     [ColorUsage(true, true)] private Color currentColor;
 
     private Material deathtrapMaterial;
     private Color deathtrapColor;
     private Vector3 lastSilhouettePosition;
+    
+    
+    private Coroutine colorChangeCoroutine;
+    private Coroutine silhouetteMoveCoroutine;
+    private Coroutine silhouetteFadeInCoroutine;
+    private Coroutine silhouetteFadeOutCoroutine;
+    
     
 
     protected override void Start()
@@ -83,15 +92,25 @@ public class RoomDeathtrapElement : RoomBasicElement
         
         
         
-        
-        if(lastMessage[0] != messageContent[0])
-        {
-            ChangeDeathtrapEmissionColor(messageContent[0]);
-        }
         if(lastMessage[1] != messageContent[1])
         {
             PresenceDetected(messageContent[1]);
         }
+        
+        if(lastMessage[0] != messageContent[0])
+        {
+            GrowVinesEffect(messageContent[0]);
+            ChangeDeathtrapEmissionColor(messageContent[0]);
+        }
+        else
+        {
+            if (deathtrapTouchFeedbackHandler.IsEffectPlaying())
+            {
+                float deltaTimeToAdd = 0.035f;
+                deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
+            }
+        }
+        
         
         
         lastMessage[0] = messageContent[0];
@@ -138,6 +157,24 @@ public class RoomDeathtrapElement : RoomBasicElement
         Debug.Log("Deathtrap element received message: " + message);
         Debug.Log("message[0]: " + message[0]);
     }
+    
+    
+    
+    
+    private void GrowVinesEffect(int touchIntensity)
+    {
+        Debug.Log("Growing vines with touch intensity: " + touchIntensity);
+        if(humanSilhouette.activeSelf && touchIntensity > 0)
+        {
+            // First set the spawn position to the current position of the silhouette
+            deathtrapTouchFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
+            deathtrapTouchFeedbackHandler.VinesEffectStarted();
+        }
+    }
+    
+    
+    
+    
     
     
     
@@ -191,30 +228,52 @@ public class RoomDeathtrapElement : RoomBasicElement
         Debug.Log("Changing silhouette at distance: " + detected);
         if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN && detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
         {
-            Debug.Log("Changing silhouette: ON");
-            Vector3 newPosition = this.transform.position + new Vector3(0f, 1f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
-        
-            /*if (humanSilhouette.activeSelf)
-            {
-                StopAllCoroutines();
-                StartCoroutine(MoveAndFadeSilhouette(lastSilhouettePosition, newPosition));
-            }
-            else*/
-            if(!humanSilhouette.activeSelf)
-            {
-                humanSilhouette.SetActive(true);
-                StartCoroutine(FadeInSilhouette(0.2f));
-                StartCoroutine(MoveAndFadeSilhouette(lastSilhouettePosition, newPosition));
-            }
 
-            lastSilhouettePosition = newPosition;
+            // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
+            // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
+            // the Deathtrap sphere and the effect is playing.
+            if (!deathtrapTouchFeedbackHandler.IsEffectPlaying())
+            {
+                //Vector3 newPosition = this.transform.position + new Vector3(0f, 1f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+                Vector3 newPosition = deathtrapPortal.position + new Vector3(0f, 0f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+            
+                if(humanSilhouette.activeSelf)
+                {
+                    StopCoroutine(silhouetteMoveCoroutine);
+                    silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+                }
+                else
+                {
+                    float fadeInDuration = 0.2f;
+                    humanSilhouette.SetActive(true);
+                    StopCoroutine(silhouetteFadeInCoroutine);
+                    StopCoroutine(silhouetteMoveCoroutine);
+                    silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
+                    silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+                }
+
+                lastSilhouettePosition = newPosition;
+            }
+            
+            
+            
+        }
+        else
+        {
+            if(humanSilhouette.activeSelf)
+            {
+                float fadeOutDuration = 0.3f;
+                StopCoroutine(silhouetteFadeOutCoroutine);
+                silhouetteFadeOutCoroutine = StartCoroutine(FadeOutSilhouette(fadeOutDuration));
+            }
         }
         
     }
     
-    private IEnumerator MoveAndFadeSilhouette(Vector3 fromPosition, Vector3 toPosition)
+    
+    private IEnumerator MoveSilhouette(Vector3 fromPosition, Vector3 toPosition)
     {
-        float duration = 1.0f; // Duration of the movement
+        float duration = 0.5f; // Duration of the movement
         float elapsed = 0.0f;
 
         while (elapsed < duration)
@@ -225,6 +284,11 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
 
         humanSilhouette.transform.position = toPosition;
+    }
+    
+    private IEnumerator MoveAndFadeSilhouette(Vector3 fromPosition, Vector3 toPosition)
+    {
+        StartCoroutine(MoveSilhouette(fromPosition, toPosition));
         yield return new WaitForSeconds(1.0f);
         StartCoroutine(FadeOutSilhouette(0.3f));
     }

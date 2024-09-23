@@ -1,49 +1,50 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class SauronFeedbackHandler : MonoBehaviour
+public class DeathtrapTouchFeedbackHandler : MonoBehaviour
 {
     
     [SerializeField] private Transform particleEndpointPosition;
     [SerializeField] private Transform attractor;
-    [SerializeField] private Transform rayEndPoint;
     
-    private Vector3 particleEffectStopPosition;
+    //private Vector3 particleEffectStopPosition;
     
     private VisualEffect effect;
     private float stripsLifetime;
     
     private bool shouldMove = false; // To control when the Attractor object should start moving
     private Vector3 particleDirection;
-    private float attractorSpeed = 15f;
+    private float attractorSpeed = 10f;
     private Vector3 spawnPosition;
     
-    //private float yOffset = -0.5f;
-
-
+    
     private void Start()
     {
+        
+        // Translate the VFX object to the origin of the scene, because in all the other instances
+        // of the vines effect, the VFX object is placed at the origin of the scene, while in this case
+        // it is place in the origin of the Deathtrap object (which is not the origin of the scene),
+        // and the effect works properly only when the VFX object is placed at the origin of the scene
+        transform.position -= transform.position;
+        
+        
         effect = GetComponent<VisualEffect>();
         stripsLifetime = effect.GetFloat("StripsLifetime");
-        spawnPosition = effect.GetVector3("SpawnPosition");
+        //spawnPosition = effect.GetVector3("SpawnPosition");
+        spawnPosition = attractor.transform.position;
+        
+        
         
         /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
         attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
         
     }
-
-
+    
+    
     private void Update()
     {
-        
-        // Particles effect needs to stop at 2/3 the distance between the spawn position and the particle endpoint position
-        // Basically the "Lerp" function
-        particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
-        
         
         HandledEvents();
         MoveAttractor();
@@ -51,9 +52,11 @@ public class SauronFeedbackHandler : MonoBehaviour
     
     
     
+    
+    
     private void HandledEvents()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             VinesEffectStarted();
         }
@@ -64,7 +67,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     // TODO: improve effect by considering the duration of touch
     public void VinesEffectStarted()
     {
-        if(attractor.position != rayEndPoint.transform.position)
+        if(attractor.position != spawnPosition)
         {
             ResetInitialPosition();
         }
@@ -75,9 +78,9 @@ public class SauronFeedbackHandler : MonoBehaviour
             effect.Stop();
             //effect.SetFloat("StripsLifetime", stripsLifetime);
             effect.Reinit();
-                
-            effect.SetVector3("SpawnPosition", rayEndPoint.transform.position);
-            attractor.position = rayEndPoint.transform.position;
+
+            effect.SetVector3("SpawnPosition", spawnPosition);
+            attractor.position = spawnPosition;
             SetAttractorDirection();
                 
             effect.SendEvent("VinesEffectPlay");
@@ -95,9 +98,9 @@ public class SauronFeedbackHandler : MonoBehaviour
 
     private void SetDirectionAndPosition()
     {
-        gameObject.transform.position = rayEndPoint.transform.position;
+        gameObject.transform.position = spawnPosition;
         gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
-        attractor.position = rayEndPoint.transform.position;
+        attractor.position = spawnPosition;
         attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);
         
         
@@ -108,7 +111,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     private void ResetInitialPosition()
     {
         //effect.SetFloat("StripsLifetime", 0f);
-        attractor.position = rayEndPoint.transform.position;
+        attractor.position = spawnPosition;
         shouldMove = false;
     }
     
@@ -126,14 +129,13 @@ public class SauronFeedbackHandler : MonoBehaviour
             float offset = 0.1f;
             
             // When the Attractor object has reached the particleEndPointPosition, stops its translation without resetting its position
-            if (Vector3.Distance(spawnPosition, particleEffectStopPosition) <=
+            if (Vector3.Distance(spawnPosition, particleEndpointPosition.position) <=
                 Vector3.Distance(spawnPosition, attractor.position) + offset)
             {
                 shouldMove = false;
-                attractor.position = particleEffectStopPosition;
+                attractor.position = particleEndpointPosition.position;
             }
             
-        
             
         }
     }
@@ -161,6 +163,5 @@ public class SauronFeedbackHandler : MonoBehaviour
         return false;
     }
     
-    
-}
 
+}
