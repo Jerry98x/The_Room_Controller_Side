@@ -72,6 +72,14 @@ public class RoomSauronElement : RoomBasicElement
         {
             TriggerVinesEffect(messageContent[0]);
         }
+        else
+        {
+            if (sauronFeedbackHandler.IsEffectPlaying())
+            {
+                float deltaTimeToAdd = 0.3f;
+                sauronFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
+            }
+        }
         
         lastMessage[0] = messageContent[0];
         lastMessage[1] = messageContent[1];
@@ -107,7 +115,7 @@ public class RoomSauronElement : RoomBasicElement
 
         if (touchIntensity > 0)
         {
-            sauronFeedbackHandler.VinesEffectStarted();
+            sauronFeedbackHandler.HandleSilhouetteAndVinesEffects();
         }
         
     }

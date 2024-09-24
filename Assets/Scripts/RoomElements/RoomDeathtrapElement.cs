@@ -234,6 +234,9 @@ public class RoomDeathtrapElement : RoomBasicElement
         Debug.Log("Changing silhouette at distance: " + detected);
         if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN && detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
         {
+            /*// Make the silhouette look at the core center
+            humanSilhouette.transform.LookAt(transform.position);*/
+            
 
             // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
             // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
@@ -253,7 +256,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 }
                 else
                 {
-                    float fadeInDuration = 0.2f;
+                    float fadeInDuration = 0.4f;
                     humanSilhouette.SetActive(true);
                     
                     if (silhouetteFadeInCoroutine != null)
@@ -320,7 +323,6 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private IEnumerator FadeInSilhouette(float duration)
     {
-
         float elapsed = 0.0f;
         while (elapsed < duration)
         {
@@ -380,6 +382,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         silhouetteRenderer.material.color = color;
         humanSilhouette.SetActive(false);*/
     }
+    
 
     
     

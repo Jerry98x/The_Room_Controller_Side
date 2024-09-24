@@ -6631,6 +6631,7 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 2106698161}
   attractor: {fileID: 839305178}
   rayEndPoint: {fileID: 2145346292}
+  humanSilhouette: {fileID: 5689714433570583652}
 --- !u!114 &512815732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10913,6 +10914,7 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 774730178}
   attractor: {fileID: 2050078085}
   rayEndPoint: {fileID: 1838816547}
+  humanSilhouette: {fileID: 0}
 --- !u!114 &718539873
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -15594,6 +15596,18 @@ MonoBehaviour:
   m_Bindings:
   - {fileID: 841863633}
   m_VisualEffect: {fileID: 841863631}
+--- !u!114 &843208016 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5595155852625806754, guid: 151b461e8d2410040adc38bcfdab965c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5689714433570583647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdccd568517f335479ca1c0323053345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &857046336
 GameObject:
   m_ObjectHideFlags: 0
@@ -16132,6 +16146,11 @@ PrefabInstance:
       propertyPath: rayEndPoint
       value: 
       objectReference: {fileID: 1918922246}
+    - target: {fileID: 3637571254395889037, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: humanSilhouette
+      value: 
+      objectReference: {fileID: 862586961}
     - target: {fileID: 3637571254395889037, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: particleEndpointPosition
@@ -16945,6 +16964,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 862586956}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &862586961 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 837529841271527512, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 862586956}
+  m_PrefabAsset: {fileID: 0}
 --- !u!64 &862586975
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -17289,6 +17314,7 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 774730178}
   attractor: {fileID: 387667918}
   rayEndPoint: {fileID: 2017853283}
+  humanSilhouette: {fileID: 0}
 --- !u!114 &899209564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38756,7 +38782,7 @@ PrefabInstance:
     - target: {fileID: 859624796098997508, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 879123012115483905, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -38977,7 +39003,7 @@ PrefabInstance:
     - target: {fileID: 2276730796652484773, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -39022,6 +39048,11 @@ PrefabInstance:
     - target: {fileID: 2656440522344846478, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2852325715694758139, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2909234668659291264, guid: ce02e72fd9ce33849a97abd6330a3d3a,
@@ -39154,6 +39185,11 @@ PrefabInstance:
       propertyPath: rayEndPoint
       value: 
       objectReference: {fileID: 2145346292}
+    - target: {fileID: 3637571254395889037, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: humanSilhouette
+      value: 
+      objectReference: {fileID: 1874214995}
     - target: {fileID: 3637571254395889037, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: particleEndpointPosition
@@ -39923,6 +39959,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2145346293}
   m_SourcePrefab: {fileID: 100100000, guid: ce02e72fd9ce33849a97abd6330a3d3a, type: 3}
+--- !u!1 &1874214995 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 837529841271527512, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1874214994}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1885145450
 GameObject:
   m_ObjectHideFlags: 0
@@ -49858,6 +49900,11 @@ PrefabInstance:
       objectReference: {fileID: 2070245242}
     - target: {fileID: 5105707597584721560, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
+      propertyPath: feedbackSphere
+      value: 
+      objectReference: {fileID: 843208016}
+    - target: {fileID: 5105707597584721560, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
       propertyPath: ledsBrightness
       value: 0
       objectReference: {fileID: 0}
@@ -49921,7 +49968,7 @@ PrefabInstance:
         type: 3}
       propertyPath: humanSilhouette
       value: 
-      objectReference: {fileID: 1043104737}
+      objectReference: {fileID: 5689714433570583652}
     - target: {fileID: 5311516320021352312, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: hardTouchColor.a
@@ -50140,6 +50187,12 @@ SphereCollider:
 --- !u!4 &5689714433570583651 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8246247063137539664, guid: 151b461e8d2410040adc38bcfdab965c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5689714433570583647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5689714433570583652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1144524761201868718, guid: 151b461e8d2410040adc38bcfdab965c,
     type: 3}
   m_PrefabInstance: {fileID: 5689714433570583647}
   m_PrefabAsset: {fileID: 0}
