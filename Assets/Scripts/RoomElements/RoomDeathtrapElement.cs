@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 /// <summary>
 /// Represents a virtual Deathtrap element in the room
@@ -21,6 +22,8 @@ public class RoomDeathtrapElement : RoomBasicElement
     [SerializeField] DeathtrapTouchFeedbackHandler deathtrapTouchFeedbackHandler;
 
     [ColorUsage(true, true)] private Color currentColor;
+    
+    private VisualEffect silhouetteEffect;
 
     private Material deathtrapMaterial;
     private Color deathtrapColor;
@@ -41,6 +44,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         Debug.Log("PORCODIO: " + receivingEndPointSO.EndPoint);
         deathtrapMaterial = GetComponentInChildren<Renderer>().material;
         deathtrapColor = deathtrapMaterial.GetColor(Constants.EMISSION_COLOR_ID);
+        silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
         
         lastMessage = new int[2];
         for (int i = 0; i < lastMessage.Length; i++)
@@ -100,13 +104,13 @@ public class RoomDeathtrapElement : RoomBasicElement
         if(lastMessage[0] != messageContent[0])
         {
             GrowVinesEffect(messageContent[0]);
-            ChangeDeathtrapEmissionColor(messageContent[0]);
+            //ChangeDeathtrapEmissionColor(messageContent[0]);
         }
         else
         {
             if (deathtrapTouchFeedbackHandler.IsEffectPlaying())
             {
-                float deltaTimeToAdd = 0.035f;
+                float deltaTimeToAdd = 0.03f;
                 deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
             }
         }
@@ -168,6 +172,8 @@ public class RoomDeathtrapElement : RoomBasicElement
         {
             // First set the spawn position to the current position of the silhouette
             deathtrapTouchFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
+            //deathtrapTouchFeedbackHandler.SetAttractorPosition(humanSilhouette.transform.position);
+            deathtrapTouchFeedbackHandler.ResetInitialPosition();
             deathtrapTouchFeedbackHandler.VinesEffectStarted();
         }
     }
@@ -239,15 +245,27 @@ public class RoomDeathtrapElement : RoomBasicElement
             
                 if(humanSilhouette.activeSelf)
                 {
-                    StopCoroutine(silhouetteMoveCoroutine);
+                    if (silhouetteMoveCoroutine != null)
+                    {
+                        StopCoroutine(silhouetteMoveCoroutine);
+                    }
                     silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
                 }
                 else
                 {
                     float fadeInDuration = 0.2f;
                     humanSilhouette.SetActive(true);
-                    StopCoroutine(silhouetteFadeInCoroutine);
-                    StopCoroutine(silhouetteMoveCoroutine);
+                    
+                    if (silhouetteFadeInCoroutine != null)
+                    {
+                        StopCoroutine(silhouetteFadeInCoroutine);
+                    }
+                    if (silhouetteMoveCoroutine != null)
+                    {
+                        StopCoroutine(silhouetteMoveCoroutine);
+                    }
+                    
+                    
                     silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
                     silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
                 }
@@ -263,7 +281,14 @@ public class RoomDeathtrapElement : RoomBasicElement
             if(humanSilhouette.activeSelf)
             {
                 float fadeOutDuration = 0.3f;
-                StopCoroutine(silhouetteFadeOutCoroutine);
+                if (silhouetteFadeOutCoroutine != null)
+                {
+                    if (silhouetteFadeOutCoroutine != null)
+                    {
+                        StopCoroutine(silhouetteFadeOutCoroutine);
+                    }
+                }
+                
                 silhouetteFadeOutCoroutine = StartCoroutine(FadeOutSilhouette(fadeOutDuration));
             }
         }
@@ -295,7 +320,20 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private IEnumerator FadeInSilhouette(float duration)
     {
-        Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
+
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(0f, 1f, elapsed / duration);
+            silhouetteEffect.SetFloat("Alpha", alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        silhouetteEffect.SetFloat("Alpha", 1f);
+
+
+        /*Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
         Color color = silhouetteRenderer.material.color;
         float elapsed = 0.0f;
 
@@ -308,12 +346,25 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
 
         color.a = 1;
-        silhouetteRenderer.material.color = color;
+        silhouetteRenderer.material.color = color;*/
     }
     
     private IEnumerator FadeOutSilhouette(float duration)
     {
-        Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+            silhouetteEffect.SetFloat("Alpha", alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        silhouetteEffect.SetFloat("Alpha", 0f);
+        humanSilhouette.SetActive(false);
+        
+        
+        /*Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
         Color color = silhouetteRenderer.material.color;
         float elapsed = 0.0f;
 
@@ -327,7 +378,7 @@ public class RoomDeathtrapElement : RoomBasicElement
 
         color.a = 0;
         silhouetteRenderer.material.color = color;
-        humanSilhouette.SetActive(false);
+        humanSilhouette.SetActive(false);*/
     }
 
     

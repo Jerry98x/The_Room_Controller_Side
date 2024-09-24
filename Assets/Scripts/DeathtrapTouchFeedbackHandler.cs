@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -71,7 +72,6 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
         {
             ResetInitialPosition();
         }
-            
         else
         {
             // Clear the particles emitted by the VisualEffect object
@@ -87,10 +87,15 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
             shouldMove = true;
         }
     }
+
+
+    public void SetAttractorPosition(Vector3 position)
+    {
+        attractor.position = position;
+    }
     
     
-    
-    private void SetAttractorDirection()
+    public void SetAttractorDirection()
     {
         particleDirection = particleEndpointPosition.position - attractor.transform.position;
         //effect.transform.rotation = Quaternion.LookRotation(particleDirection);
@@ -108,7 +113,7 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
         
     }
     
-    private void ResetInitialPosition()
+    public void ResetInitialPosition()
     {
         //effect.SetFloat("StripsLifetime", 0f);
         attractor.position = spawnPosition;

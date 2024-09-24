@@ -167,9 +167,9 @@ public class Constants {
     
     
     
-    public const float DEATHTRAP_SONAR_DISTANCE_MIN = 5000f;
+    public const float DEATHTRAP_SONAR_DISTANCE_MIN = 500f; // In theory 5000, but right now it's better to have it lower
     public const float DEATHTRAP_SONAR_DISTANCE_MAX = 14000f;
-    public const float DEATHTRAP_SONAR_DISTANCE_DIVISOR = 100f * 100f; // 1000 for the conversion, 100 because parsing ignores the decimal part
+    public const float DEATHTRAP_SONAR_DISTANCE_DIVISOR = 100f * 100f; // 100 for the conversion, 100 because parsing ignores the decimal part
     
 
     #endregion

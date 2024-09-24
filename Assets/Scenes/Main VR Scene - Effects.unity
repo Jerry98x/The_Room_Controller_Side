@@ -50038,7 +50038,7 @@ PrefabInstance:
     - target: {fileID: 7546672681758918282, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.z
-      value: 14.52
+      value: 17.52
       objectReference: {fileID: 0}
     - target: {fileID: 7888138721443379648, guid: 151b461e8d2410040adc38bcfdab965c,
         type: 3}
@@ -50059,6 +50059,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_InteractionLayers.m_Bits
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9121520528387156956, guid: 151b461e8d2410040adc38bcfdab965c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
