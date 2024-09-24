@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
@@ -13,7 +14,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
 
     [SerializeField] private RoomBasicElement roomElement;
-    [SerializeField] private FeedbackSphere testingSphere;
+    [SerializeField] private FeedbackSphere feedbackSphere;
 
     private SphereCollider testingSphereCollider;
 
@@ -67,7 +68,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // TODO: implement the actual operations to do at start time with the Deathtrap module
     private void Start()
     {
-        testingSphereCollider = testingSphere.GetComponent<SphereCollider>();
+        testingSphereCollider = feedbackSphere.GetComponent<SphereCollider>();
         
         endPointSO = roomElement.GetEndPointSO();
 
@@ -91,7 +92,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         Debug.Log("About to send a message to the ESP32!");
 
 
-        if (testingSphere.IsInControl())
+        if (feedbackSphere.IsInControl())
         {
          
             // It's easier to send messages to the ESP32 at every frame, since a relatively
@@ -122,10 +123,10 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     {
         
         // Momentarily used to get the buttons and triggers values to send to the ESP32
-        liquidSprayingTest = testingSphere.GetLiquidSprayingTest();
-        petalsOpeningTest = testingSphere.GetPetalsOpeningTest();
-        badSmellEmittingTest = testingSphere.GetBadSmellEmittingTest();
-        ledsBrightnessTest = testingSphere.GetLedsBrightnessTest();
+        liquidSprayingTest = feedbackSphere.GetLiquidSprayingTest();
+        petalsOpeningTest = feedbackSphere.GetPetalsOpeningTest();
+        badSmellEmittingTest = feedbackSphere.GetBadSmellEmittingTest();
+        ledsBrightnessTest = feedbackSphere.GetLedsBrightnessTest();
         
         
     }
