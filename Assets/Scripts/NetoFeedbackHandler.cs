@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
 
 /// <summary>
 /// Class that handles the feedback received by the Controller when perceiving the Visitor through a Neto module
@@ -23,13 +24,23 @@ public class NetoFeedbackHandler : MonoBehaviour
     [SerializeField] private AudioSource[] audioSource;
     [SerializeField] private float minParticleSize;
     [SerializeField] private float maxParticleSize;
+    [SerializeField] GameObject humanSilhouette;
     
 
+    private VisualEffect silhouetteEffect;
     private Vector3 particleDirection;
     private float soundSpeed; // Speed of the AudioSource object movement
 
     private bool shouldMove = false; // To control when the AudioSource object should start moving
-    private Vector3 initialPosition;
+    private Vector3 audiosourceInitialPosition;
+    
+    
+    
+    private Coroutine silhouetteGeneralCoroutine;
+    private Coroutine silhouetteMoveCoroutine;
+    private Coroutine silhouetteFadeInCoroutine;
+    private Coroutine silhouetteFadeOutCoroutine;
+    
     
     
     //public delegate void ParticleSystemEventHandler();
@@ -47,9 +58,10 @@ public class NetoFeedbackHandler : MonoBehaviour
         // Get the ParticleSystem component
         partSystem = GetComponent<ParticleSystem>();
         soundSpeed = partSystem.main.startSpeed.constant;
+        silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
 
         // Store the initial position of the AudioSource object
-        initialPosition = audioSource[0].transform.position;
+        audiosourceInitialPosition = audioSource[0].transform.position;
         audioSource[0].loop = true;
         
         
@@ -74,7 +86,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         
         // Redefine the initial position of the AudioSource object to account for eventual
         // cases in which the endpoint of the ray moves
-        initialPosition = partSystem.transform.position;  // Should be the same position as the particle system
+        audiosourceInitialPosition = partSystem.transform.position;  // Should be the same position as the particle system
         
         HandledEvents();
         SetParticleSystemDirection();
@@ -94,7 +106,7 @@ public class NetoFeedbackHandler : MonoBehaviour
             }
 
             // Reposition the AudioSource to its initial position
-            audioSource[0].transform.position = initialPosition;
+            audioSource[0].transform.position = audiosourceInitialPosition;
 
             // Set shouldMove to false
             shouldMove = false;
@@ -185,10 +197,10 @@ public class NetoFeedbackHandler : MonoBehaviour
                 // when the distance between the AudioSource object and the particleEndpointPosition is greater than 3 units
                 // (adjustable offset parameter to allow the Controller to perceive better the spatialization of the sound)
                 float offset = 3f;
-                if ((Vector3.Distance(source.transform.position, particleEndpointPosition.position) >= offset) && (Vector3.Distance(initialPosition, source.transform.position) >=
-                    Vector3.Distance(initialPosition, particleEndpointPosition.position) + offset))
+                if ((Vector3.Distance(source.transform.position, particleEndpointPosition.position) >= offset) && (Vector3.Distance(audiosourceInitialPosition, source.transform.position) >=
+                    Vector3.Distance(audiosourceInitialPosition, particleEndpointPosition.position) + offset))
                 {
-                    source.transform.position = initialPosition;
+                    source.transform.position = audiosourceInitialPosition;
                 }
             
             }
@@ -208,7 +220,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         }
 
         // Reposition the AudioSource to its initial position
-        audioSource[0].transform.position = initialPosition;
+        audioSource[0].transform.position = audiosourceInitialPosition;
 
         // Set shouldMove to false
         shouldMove = false;

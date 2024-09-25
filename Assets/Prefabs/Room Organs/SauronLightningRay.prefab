@@ -980,6 +980,7 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 0}
   attractor: {fileID: 0}
   rayEndPoint: {fileID: 0}
+  humanSilhouette: {fileID: 837529841271527512}
 --- !u!120 &7724527710086524309
 LineRenderer:
   serializedVersion: 2
@@ -1640,6 +1641,7 @@ MonoBehaviour:
   particleEndpointPosition: {fileID: 0}
   attractor: {fileID: 0}
   rayEndPoint: {fileID: 0}
+  humanSilhouette: {fileID: 0}
 --- !u!120 &7652678004559845960
 LineRenderer:
   serializedVersion: 2
@@ -1870,6 +1872,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 791406cc471ac2041a1315cebf7b2e91, type: 3}
+--- !u!1 &837529841271527512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2353274276548898706, guid: 791406cc471ac2041a1315cebf7b2e91,
+    type: 3}
+  m_PrefabInstance: {fileID: 3113960452720539594}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7765382751369727633 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4680133850248198491, guid: 791406cc471ac2041a1315cebf7b2e91,

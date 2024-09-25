@@ -7924,6 +7924,7 @@ MonoBehaviour:
   - {fileID: 2951934718892148241}
   minParticleSize: 0.3
   maxParticleSize: 0.8
+  humanSilhouette: {fileID: 5371688938187070738}
 --- !u!1001 &4863037131624106165
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8362,6 +8363,12 @@ Transform:
 --- !u!4 &3388304457824533747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4680133850248198491, guid: de0562c4743e8c14fb3c3e3800afa64f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8067776534780560808}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5371688938187070738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2700632157727676602, guid: de0562c4743e8c14fb3c3e3800afa64f,
     type: 3}
   m_PrefabInstance: {fileID: 8067776534780560808}
   m_PrefabAsset: {fileID: 0}
