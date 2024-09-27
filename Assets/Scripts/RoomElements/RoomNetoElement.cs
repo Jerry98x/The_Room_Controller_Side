@@ -73,7 +73,7 @@ public class RoomNetoElement : RoomBasicElement
         
         if(lastMessage[0] != messageContent[0])
         {
-            ProduceAudioFeedback(messageContent[0]);
+            TriggerNetoEffects(messageContent[0]);
         }
 
         if (lastMessage != messageContent)
@@ -109,11 +109,11 @@ public class RoomNetoElement : RoomBasicElement
     }
     
     
-    private void ProduceAudioFeedback(int micIntensity)
+    private void TriggerNetoEffects(int micIntensity)
     {
         if (micIntensity > Constants.NETO_MIC_VOLUME_THRESHOLD)
         {
-            netoFeedbackHandler.AudioEffectStarted((float)micIntensity);
+            netoFeedbackHandler.HandleSilhouetteAndAudioEffects((float)micIntensity);
         }
         
         

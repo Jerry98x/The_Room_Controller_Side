@@ -5,7 +5,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class SauronFeedbackHandler : MonoBehaviour
+public class SauronFeedbackHandlerV2 : MonoBehaviour
 {
     
     [SerializeField] private Transform particleEndpointPosition; // Original stop position of the particles effect, it's the core center

@@ -70,7 +70,7 @@ public class RoomSauronElement : RoomBasicElement
 
         if (lastMessage[0] != messageContent[0])
         {
-            TriggerVinesEffect(messageContent[0]);
+            TriggerSauronEffects(messageContent[0]);
         }
         else
         {
@@ -110,7 +110,7 @@ public class RoomSauronElement : RoomBasicElement
     
     
     
-    private void TriggerVinesEffect(int touchIntensity)
+    private void TriggerSauronEffects(int touchIntensity)
     {
 
         if (touchIntensity > 0)

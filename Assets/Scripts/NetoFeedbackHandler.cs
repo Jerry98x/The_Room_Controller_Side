@@ -25,9 +25,12 @@ public class NetoFeedbackHandler : MonoBehaviour
     [SerializeField] private float minParticleSize;
     [SerializeField] private float maxParticleSize;
     [SerializeField] GameObject humanSilhouette;
+
+    private Transform netoEndPoint;
     
 
     private VisualEffect silhouetteEffect;
+    private Vector3 silhouetteOriginalPosition;
     private Vector3 particleDirection;
     private float soundSpeed; // Speed of the AudioSource object movement
 
@@ -55,10 +58,13 @@ public class NetoFeedbackHandler : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        // Get the ParticleSystem component
+        // Get the ParticleSystem and VFX components
         partSystem = GetComponent<ParticleSystem>();
         soundSpeed = partSystem.main.startSpeed.constant;
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
+
+        netoEndPoint = GetComponentInParent<Transform>();
+        Debug.Log("NETO ENDPOINT IS: " + netoEndPoint.position);
 
         // Store the initial position of the AudioSource object
         audiosourceInitialPosition = audioSource[0].transform.position;
@@ -153,22 +159,151 @@ public class NetoFeedbackHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P) && netoMovementHandler.IsInControl())
         {
-            partSystem.Play();
+            float testingVolumeFromPhysicalModule = 3500f;
+            HandleSilhouetteAndAudioEffects(testingVolumeFromPhysicalModule);
+            
+            /*partSystem.Play();
             shouldMove = true;
-            audioSource[0].Play();
+            audioSource[0].Play();*/
         }
     }
 
 
 
 
+    public void HandleSilhouetteAndAudioEffects(float vol)
+    {
+        humanSilhouette.SetActive(true);
+        silhouetteOriginalPosition = humanSilhouette.transform.position;
+        
+        float fadeInDuration = 0.4f;
+        float movementDuration = 1f;
+        bool forward = true;
+        silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
+        //silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(movementDuration));
+        silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(movementDuration, forward, () =>
+        {
+            AudioEffectStarted(vol);
+            StartCoroutine(WaitForAudioEffectToEnd());
+        }));
+        
+        
+        
+        
+    }
+    
+    
+    
+    private IEnumerator MoveSilhouette(float duration, bool isForward, System.Action onComplete = null)
+    {
+        Debug.Log("MADONNA: Human silhouette position: " + humanSilhouette.transform.position);
+        Vector3 initialPosition = humanSilhouette.transform.position;
+        Vector3 movementDirection;
+        float multiplier;
+        Vector3 finalPosition;
+
+
+        if (isForward)
+        {
+            movementDirection = netoEndPoint.position - initialPosition;
+            //multiplier = Vector3.Distance(netoEndPoint.position, initialPosition);
+            multiplier = Mathf.Abs(netoEndPoint.position.z - initialPosition.z);
+            finalPosition = netoEndPoint.position + movementDirection.normalized * multiplier;
+            //Debug.Log("MADONNA: Initial position: " + initialPosition);
+            Debug.Log("MADONNA: Z of Neto endpoint is " + netoEndPoint.position.z + " and Z of initial position is " +
+                      initialPosition.z + " and the difference is " + multiplier);
+            Debug.Log("MADONNA: Neto endpoint position: " + netoEndPoint.position);
+            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(netoEndPoint.position, initialPosition));
+            Debug.Log("MADONNA: Particle endpoint position: " + particleEndpointPosition.position);
+            Debug.Log("MADONNA: Movement direction: " + movementDirection);
+            Debug.Log("MADONNA: Final position: " + finalPosition);
+            
+            /*movementDirection = netoEndPoint.position - initialPosition;
+            multiplier = Mathf.Abs(netoEndPoint.position.z - initialPosition.z);
+            finalPosition = initialPosition + movementDirection.normalized * multiplier;*/
+        }
+        else
+        {
+            movementDirection = silhouetteOriginalPosition - initialPosition;
+            multiplier = Vector3.Distance(silhouetteOriginalPosition, initialPosition);
+            //multiplier = Mathf.Abs(silhouetteOriginalPosition.z - initialPosition.z);
+            finalPosition = silhouetteOriginalPosition;
+        }
+        
+        
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            humanSilhouette.transform.position = Vector3.Lerp(initialPosition, finalPosition, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        humanSilhouette.transform.position = finalPosition;
+        
+        onComplete?.Invoke();
+        //yield return new WaitForSeconds(0.1f);
+        
+    }
+    
+    
+    private IEnumerator FadeInSilhouette(float duration)
+    {
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(0f, 1f, elapsed / duration);
+            silhouetteEffect.SetFloat("Alpha", alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        silhouetteEffect.SetFloat("Alpha", 1f);
+        
+    }
+    
+    
+    private IEnumerator FadeOutSilhouette(float duration)
+    {
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+            silhouetteEffect.SetFloat("Alpha", alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        silhouetteEffect.SetFloat("Alpha", 0f);
+        humanSilhouette.SetActive(false);
+        
+    }
+    
+    
+    private IEnumerator WaitForAudioEffectToEnd()
+    {
+        yield return new WaitUntil( () => !partSystem.IsAlive() );
+        float fadeOutDuration = 0.5f;
+        float movementDuration = 1f;
+        StartCoroutine(MoveSilhouette(movementDuration, false, () =>
+        {
+            StartCoroutine(FadeOutSilhouette(fadeOutDuration));
+        }));
+    }
+    
+    
+
+
+
+
     public void AudioEffectStarted(float vol)
     {
-        
+        partSystem.transform.position = humanSilhouette.transform.position;
         ParticleSystem.MainModule main = partSystem.main;
         main.startSize = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, maxParticleSize, minParticleSize);
         partSystem.Play();
         shouldMove = true;
+        audioSource[0].transform.position = humanSilhouette.transform.position;
         audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, 0, 1);
         audioSource[0].Play();
         
