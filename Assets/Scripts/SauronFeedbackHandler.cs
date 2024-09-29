@@ -81,8 +81,8 @@ public class SauronFeedbackHandler : MonoBehaviour
         attractorOriginalPosition = attractor.transform.localPosition;
         
         
-        float fadeInDuration = 0.4f;
-        float movementDuration = 1f;
+        float fadeInDuration = 0.2f;
+        float movementDuration = 0.8f;
         bool forward = true;
         
         // Start the coroutine to fade in the silhouette, then the coroutine to move the silhouette
@@ -202,8 +202,8 @@ public class SauronFeedbackHandler : MonoBehaviour
         // Wait for the vines effect to end
         yield return new WaitForSeconds(stripsLifetime);
         //yield return new WaitUntil( () => effect.aliveParticleCount.Equals(0) );
-        float fadeOutDuration = 0.5f;
-        float movementDuration = 1f;
+        float fadeOutDuration = 0.3f;
+        float movementDuration = 0.8f;
         
         // Start the coroutine to move the silhouette back to its original position, then the one to fade it out
         StartCoroutine(MoveSilhouette(movementDuration, false, () =>

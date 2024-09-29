@@ -25,8 +25,8 @@ public class NetoFeedbackHandler : MonoBehaviour
     [SerializeField] private float minParticleSize;
     [SerializeField] private float maxParticleSize;
     [SerializeField] GameObject humanSilhouette;
-
-    private Transform netoEndPoint;
+    
+    private Transform netoPortalPosition;
     
 
     private VisualEffect silhouetteEffect;
@@ -63,8 +63,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         soundSpeed = partSystem.main.startSpeed.constant;
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
 
-        netoEndPoint = GetComponentInParent<Transform>();
-        Debug.Log("NETO ENDPOINT IS: " + netoEndPoint.position);
+        netoPortalPosition = humanSilhouette.GetComponentInParent<Transform>();
 
         // Store the initial position of the AudioSource object
         audiosourceInitialPosition = audioSource[0].transform.position;
@@ -176,8 +175,8 @@ public class NetoFeedbackHandler : MonoBehaviour
         humanSilhouette.SetActive(true);
         silhouetteOriginalPosition = humanSilhouette.transform.position;
         
-        float fadeInDuration = 0.4f;
-        float movementDuration = 1f;
+        float fadeInDuration = 0.2f;
+        float movementDuration = 0.8f;
         bool forward = true;
         silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
         //silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(movementDuration));
@@ -205,15 +204,15 @@ public class NetoFeedbackHandler : MonoBehaviour
 
         if (isForward)
         {
-            movementDirection = netoEndPoint.position - initialPosition;
+            movementDirection = netoPortalPosition.position - initialPosition;
             //multiplier = Vector3.Distance(netoEndPoint.position, initialPosition);
-            multiplier = Mathf.Abs(netoEndPoint.position.z - initialPosition.z);
-            finalPosition = netoEndPoint.position + movementDirection.normalized * multiplier;
+            multiplier = Mathf.Abs(netoPortalPosition.position.z - initialPosition.z);
+            finalPosition = netoPortalPosition.position + movementDirection.normalized * multiplier;
             //Debug.Log("MADONNA: Initial position: " + initialPosition);
-            Debug.Log("MADONNA: Z of Neto endpoint is " + netoEndPoint.position.z + " and Z of initial position is " +
+            Debug.Log("MADONNA: Z of Neto endpoint is " + netoPortalPosition.position.z + " and Z of initial position is " +
                       initialPosition.z + " and the difference is " + multiplier);
-            Debug.Log("MADONNA: Neto endpoint position: " + netoEndPoint.position);
-            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(netoEndPoint.position, initialPosition));
+            Debug.Log("MADONNA: Neto endpoint position: " + netoPortalPosition.position);
+            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(netoPortalPosition.position, initialPosition));
             Debug.Log("MADONNA: Particle endpoint position: " + particleEndpointPosition.position);
             Debug.Log("MADONNA: Movement direction: " + movementDirection);
             Debug.Log("MADONNA: Final position: " + finalPosition);
@@ -283,8 +282,8 @@ public class NetoFeedbackHandler : MonoBehaviour
     private IEnumerator WaitForAudioEffectToEnd()
     {
         yield return new WaitUntil( () => !partSystem.IsAlive() );
-        float fadeOutDuration = 0.5f;
-        float movementDuration = 1f;
+        float fadeOutDuration = 0.3f;
+        float movementDuration = 0.8f;
         StartCoroutine(MoveSilhouette(movementDuration, false, () =>
         {
             StartCoroutine(FadeOutSilhouette(fadeOutDuration));
