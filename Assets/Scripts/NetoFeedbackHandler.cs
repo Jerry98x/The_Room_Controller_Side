@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 /// <summary>
@@ -25,8 +26,7 @@ public class NetoFeedbackHandler : MonoBehaviour
     [SerializeField] private float minParticleSize;
     [SerializeField] private float maxParticleSize;
     [SerializeField] GameObject humanSilhouette;
-    
-    private Transform netoPortalPosition;
+    [SerializeField] private Transform audioEmissionPosition;
     
 
     private VisualEffect silhouetteEffect;
@@ -62,8 +62,6 @@ public class NetoFeedbackHandler : MonoBehaviour
         partSystem = GetComponent<ParticleSystem>();
         soundSpeed = partSystem.main.startSpeed.constant;
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
-
-        netoPortalPosition = humanSilhouette.GetComponentInParent<Transform>();
 
         // Store the initial position of the AudioSource object
         audiosourceInitialPosition = audioSource[0].transform.position;
@@ -204,15 +202,15 @@ public class NetoFeedbackHandler : MonoBehaviour
 
         if (isForward)
         {
-            movementDirection = netoPortalPosition.position - initialPosition;
+            movementDirection = audioEmissionPosition.position - initialPosition;
             //multiplier = Vector3.Distance(netoEndPoint.position, initialPosition);
-            multiplier = Mathf.Abs(netoPortalPosition.position.z - initialPosition.z);
-            finalPosition = netoPortalPosition.position + movementDirection.normalized * multiplier;
+            multiplier = Mathf.Abs(audioEmissionPosition.position.z - initialPosition.z);
+            finalPosition = audioEmissionPosition.position + movementDirection.normalized * multiplier;
             //Debug.Log("MADONNA: Initial position: " + initialPosition);
-            Debug.Log("MADONNA: Z of Neto endpoint is " + netoPortalPosition.position.z + " and Z of initial position is " +
+            Debug.Log("MADONNA: Z of Neto endpoint is " + audioEmissionPosition.position.z + " and Z of initial position is " +
                       initialPosition.z + " and the difference is " + multiplier);
-            Debug.Log("MADONNA: Neto endpoint position: " + netoPortalPosition.position);
-            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(netoPortalPosition.position, initialPosition));
+            Debug.Log("MADONNA: Neto endpoint position: " + audioEmissionPosition.position);
+            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(audioEmissionPosition.position, initialPosition));
             Debug.Log("MADONNA: Particle endpoint position: " + particleEndpointPosition.position);
             Debug.Log("MADONNA: Movement direction: " + movementDirection);
             Debug.Log("MADONNA: Final position: " + finalPosition);
