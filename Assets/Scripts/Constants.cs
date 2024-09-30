@@ -121,7 +121,7 @@ public class Constants {
 
     
     
-    #region UDP-ESP communication
+    #region UDP-ESP communication - Sending
     
     // ESP32 need int values, but here most of them are float for the sake of the remapping.
     // They will be casted to int before sending.
@@ -160,7 +160,15 @@ public class Constants {
     
     public const string TERMINATION_CHARACTER = "\0";
     
-    
+
+
+    #endregion
+
+
+
+    #region EDP_ESP communication - Receiving
+
+        
     public const float NETO_MIC_VOLUME_MIN = 0f;
     public const float NETO_MIC_VOLUME_MAX = 4095f;
     public const float NETO_MIC_VOLUME_THRESHOLD = 1900f;
@@ -170,7 +178,14 @@ public class Constants {
     public const float DEATHTRAP_SONAR_DISTANCE_MIN = 500f; // In theory 5000, but right now it's better to have it lower
     public const float DEATHTRAP_SONAR_DISTANCE_MAX = 14000f;
     public const float DEATHTRAP_SONAR_DISTANCE_DIVISOR = 100f * 100f; // 100 for the conversion, 100 because parsing ignores the decimal part
-    
+
+
+
+    public const int DEATHTRAP_NO_TOUCH_INTENSITY = 0;
+    public const int DEATHTRAP_SOFT_TOUCH_INTENSITY = 1;
+    public const int DEATHTRAP_MEDIUM_TOUCH_INTENSITY = 2;
+    public const int DEATHTRAP_HARD_TOUCH_INTENSITY = 3;
+
 
     #endregion
 

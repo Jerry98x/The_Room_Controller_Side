@@ -20,6 +20,9 @@ public class RoomDeathtrapElement : RoomBasicElement
     [SerializeField] GameObject humanSilhouette;
     [SerializeField] Transform deathtrapPortal;
     [SerializeField] DeathtrapTouchFeedbackHandler deathtrapTouchFeedbackHandler;
+    
+    [SerializeField] AudioSource goodTouchSound;
+    [SerializeField] AudioSource badTouchSound;
 
     [ColorUsage(true, true)] private Color currentColor;
     
@@ -103,8 +106,8 @@ public class RoomDeathtrapElement : RoomBasicElement
         
         if(lastMessage[0] != messageContent[0])
         {
-            GrowVinesEffect(messageContent[0]);
-            //ChangeDeathtrapEmissionColor(messageContent[0]);
+            HandleTouchEffect(messageContent[0]);
+            PlayAmbientTouchSound(messageContent[0]);
         }
         else
         {
@@ -164,11 +167,28 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     
     
+    private void HandleTouchEffect(int touchIntensity)
+    {
+        switch (touchIntensity)
+        {
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+                GeneratePositiveParticlesEffect(touchIntensity);
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                GrowVinesEffect(touchIntensity);
+                break;
+        }
+    }
+    
+    
     
     private void GrowVinesEffect(int touchIntensity)
     {
         Debug.Log("Growing vines with touch intensity: " + touchIntensity);
-        if(humanSilhouette.activeSelf && touchIntensity > 0)
+        // Double check
+        if(humanSilhouette.activeSelf && touchIntensity > 1)
         {
             // First set the spawn position to the current position of the silhouette
             deathtrapTouchFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
@@ -176,6 +196,60 @@ public class RoomDeathtrapElement : RoomBasicElement
             deathtrapTouchFeedbackHandler.ResetInitialPosition();
             deathtrapTouchFeedbackHandler.VinesEffectStarted();
         }
+    }
+    
+    private void GeneratePositiveParticlesEffect(int touchIntensity)
+    {
+        // Double check
+        if (humanSilhouette.activeSelf && touchIntensity == 0)
+        {
+            
+        }
+    }
+
+
+
+    private void PlayAmbientTouchSound(int touchIntensity)
+    {
+
+        switch (touchIntensity)
+        {
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                // Stop existing sound, if any
+                if (goodTouchSound.isPlaying)
+                {
+                    goodTouchSound.Stop();
+                }
+
+                if (badTouchSound.isPlaying)
+                {
+                    badTouchSound.Stop();
+                }
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+                // Play the good touch sound
+                if (badTouchSound.isPlaying)
+                {
+                    badTouchSound.Stop();
+                }
+                if (!goodTouchSound.isPlaying)
+                {
+                    goodTouchSound.Play();
+                }
+                break;
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                // Play the bad touch sound
+                if (goodTouchSound.isPlaying)
+                {
+                    goodTouchSound.Stop();
+                }
+                if (!badTouchSound.isPlaying)
+                {
+                    badTouchSound.Play();
+                }
+                break;
+        }
+        
     }
     
     
