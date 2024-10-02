@@ -87,7 +87,40 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
             shouldMove = true;
         }
     }
+    
+    
+    public void StopEffect()
+    {
+        /*effect.Stop();
+        effect.Reinit();*/
+        float quickFadeOutDuration = 0.3f;
+        StartCoroutine(FadeOutEffect(quickFadeOutDuration)); // Adjust the duration as needed
 
+    }
+    
+    private IEnumerator FadeOutEffect(float duration)
+    {
+        float elapsed = 0.0f;
+        float initialLifetime = effect.GetFloat("StripsLifetime");
+
+        while (elapsed < duration)
+        {
+            float newLifetime = Mathf.Lerp(initialLifetime, 0f, elapsed / duration);
+            effect.SetFloat("StripsLifetime", newLifetime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        effect.SetFloat("StripsLifetime", 0f);
+        effect.Stop();
+        effect.Reinit();
+        
+        // TODO: Need to reassign the original one? Not sure...
+        //effect.SetFloat("StripsLifetime", stripsLifetime);
+    }
+
+    
+    
 
     public void SetAttractorPosition(Vector3 position)
     {
@@ -156,6 +189,12 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
     public void SetSpawnPosition(Vector3 position)
     {
         spawnPosition = position;
+    }
+    
+    
+    public float GetStripsLifetime()
+    {
+        return stripsLifetime;
     }
     
     

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class RoomDeathtrapElement : RoomBasicElement
     [SerializeField] GameObject humanSilhouette;
     [SerializeField] Transform deathtrapPortal;
     [SerializeField] DeathtrapTouchFeedbackHandler deathtrapTouchFeedbackHandler;
+    [SerializeField] FullScreenEffectsManager fullScreenEffectsManager;
     
     [SerializeField] AudioSource goodTouchSound;
     [SerializeField] AudioSource badTouchSound;
@@ -55,8 +57,37 @@ public class RoomDeathtrapElement : RoomBasicElement
             lastMessage[i] = 0;
         }
     }
-    
-    
+
+
+    private void Update()
+    {
+        // For testing purposes
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            PresenceDetected(UnityEngine.Random.Range(0, 14000));
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            PresenceDetected(15000);
+        }
+        
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            HandleTouchEffect(2);
+            PlayAmbientTouchSound(2);
+            HandleFullScreenEffect(2);
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            HandleTouchEffect(0);
+            PlayAmbientTouchSound(0);
+            HandleFullScreenEffect(0);
+        }
+        
+    }
+
+
     protected override void ExecuteMessageResponse(string message)
     {
         Debug.Log("Deathtrap element received message: " + message);
@@ -108,10 +139,12 @@ public class RoomDeathtrapElement : RoomBasicElement
         {
             HandleTouchEffect(messageContent[0]);
             PlayAmbientTouchSound(messageContent[0]);
+            HandleFullScreenEffect(messageContent[0]);
+            
         }
         else
         {
-            if (deathtrapTouchFeedbackHandler.IsEffectPlaying())
+            if (deathtrapTouchFeedbackHandler.IsEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
             {
                 float deltaTimeToAdd = 0.03f;
                 deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
@@ -169,17 +202,36 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private void HandleTouchEffect(int touchIntensity)
     {
+        // In case the touch intensity is > 0, the touch feedback effect should be played
+        // However, first we need to check if the human silhouette is active, so if for some reason / error
+        // the silhouette is not active, we are going to activate it before playing the touch feedback effect
+        if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY && !humanSilhouette.activeSelf)
+        {
+            // Play the silhouette effect, positioning it at a reasonable fixed distance in this case
+            PresenceDetected((int)Constants.DEATHTRAP_SONAR_DISTANCE_MIN);
+        }
+        
         switch (touchIntensity)
         {
             case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                deathtrapTouchFeedbackHandler.StopEffect();
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+                
                 GeneratePositiveParticlesEffect(touchIntensity);
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 GrowVinesEffect(touchIntensity);
                 break;
         }
+    }
+
+
+    private void HandleFullScreenEffect(int touchIntensity)
+    {
+
+        int duration = (int)deathtrapTouchFeedbackHandler.GetStripsLifetime();
+        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration);
     }
     
     
@@ -278,6 +330,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 break;
         }
     }
+
     
     
     private IEnumerator ChangeEmissionColorGradually(Color targetColor)
@@ -306,7 +359,7 @@ public class RoomDeathtrapElement : RoomBasicElement
     private void PresenceDetected(int detected)
     {
         Debug.Log("Changing silhouette at distance: " + detected);
-        if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN && detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
+        if (detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
         {
             /*// Make the silhouette look at the core center
             humanSilhouette.transform.LookAt(transform.position);*/
@@ -317,9 +370,17 @@ public class RoomDeathtrapElement : RoomBasicElement
             // the Deathtrap sphere and the effect is playing.
             if (!deathtrapTouchFeedbackHandler.IsEffectPlaying())
             {
-                //Vector3 newPosition = this.transform.position + new Vector3(0f, 1f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
-                Vector3 newPosition = deathtrapPortal.position + new Vector3(0f, 0f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
-            
+                Vector3 newPosition;
+                if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)
+                {
+                    newPosition = deathtrapPortal.position + new Vector3(0f, 0f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+                }
+                else
+                {
+                    // If the distance is less than the minimum, set the silhouette at the minimum distance
+                    newPosition = deathtrapPortal.position + new Vector3(0f, 0f, Constants.DEATHTRAP_SONAR_DISTANCE_MIN / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+                }
+
                 if(humanSilhouette.activeSelf)
                 {
                     if (silhouetteMoveCoroutine != null)
