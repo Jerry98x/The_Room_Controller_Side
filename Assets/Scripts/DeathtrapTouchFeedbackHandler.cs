@@ -89,16 +89,25 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
     }
     
     
-    public void StopEffect()
+    public void StopEffect(bool isPositiveEffect)
     {
         /*effect.Stop();
         effect.Reinit();*/
         float quickFadeOutDuration = 0.3f;
-        StartCoroutine(FadeOutEffect(quickFadeOutDuration)); // Adjust the duration as needed
+
+        if (isPositiveEffect)
+        {
+            
+        }
+        else
+        {
+            StartCoroutine(FadeOutNegativeEffect(quickFadeOutDuration)); // Adjust the duration as needed
+        }
+        
 
     }
     
-    private IEnumerator FadeOutEffect(float duration)
+    private IEnumerator FadeOutNegativeEffect(float duration)
     {
         float elapsed = 0.0f;
         float initialLifetime = effect.GetFloat("StripsLifetime");
@@ -198,12 +207,19 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
     }
     
     
-    public bool IsEffectPlaying()
+    public bool IsNegativeEffectPlaying()
     {
         if (effect.aliveParticleCount > 0)
         {
             return true;
         }
+        return false;
+    }
+    
+    
+    public bool IsPositiveEffectPlaying()
+    {
+        // TODO: Implement this method
         return false;
     }
     

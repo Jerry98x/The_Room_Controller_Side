@@ -144,7 +144,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
         else
         {
-            if (deathtrapTouchFeedbackHandler.IsEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
+            if (deathtrapTouchFeedbackHandler.IsNegativeEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
             {
                 float deltaTimeToAdd = 0.03f;
                 deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
@@ -214,13 +214,15 @@ public class RoomDeathtrapElement : RoomBasicElement
         switch (touchIntensity)
         {
             case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
-                deathtrapTouchFeedbackHandler.StopEffect();
+                deathtrapTouchFeedbackHandler.StopEffect(false);
+                deathtrapTouchFeedbackHandler.StopEffect(true);
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
                 
                 GeneratePositiveParticlesEffect(touchIntensity);
                 break;
-            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 GrowVinesEffect(touchIntensity);
                 break;
         }
@@ -242,7 +244,14 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Double check
         if(humanSilhouette.activeSelf && touchIntensity > 1)
         {
-            // First set the spawn position to the current position of the silhouette
+            // If the positive effect is playing, stop it and smoothly transition to the negative effect
+            if(deathtrapTouchFeedbackHandler.IsPositiveEffectPlaying())
+            {
+                deathtrapTouchFeedbackHandler.StopEffect(true);
+            }
+            
+            
+            // Set the spawn position to the current position of the silhouette
             deathtrapTouchFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
             //deathtrapTouchFeedbackHandler.SetAttractorPosition(humanSilhouette.transform.position);
             deathtrapTouchFeedbackHandler.ResetInitialPosition();
@@ -255,7 +264,17 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Double check
         if (humanSilhouette.activeSelf && touchIntensity == 0)
         {
+            // If the negative effect is playing, stop it and smoothly transition to the positive effect
+            if (deathtrapTouchFeedbackHandler.IsNegativeEffectPlaying())
+            {
+                deathtrapTouchFeedbackHandler.StopEffect(false);
+            }
             
+            
+            // Set the spawn position to the current position of the silhouette
+            deathtrapTouchFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
+            deathtrapTouchFeedbackHandler.ResetInitialPosition();
+            // TODO: call the positive effect
         }
     }
 
@@ -289,7 +308,8 @@ public class RoomDeathtrapElement : RoomBasicElement
                     goodTouchSound.Play();
                 }
                 break;
-            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 // Play the bad touch sound
                 if (goodTouchSound.isPlaying)
                 {
@@ -368,7 +388,7 @@ public class RoomDeathtrapElement : RoomBasicElement
             // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
             // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
             // the Deathtrap sphere and the effect is playing.
-            if (!deathtrapTouchFeedbackHandler.IsEffectPlaying())
+            if (!deathtrapTouchFeedbackHandler.IsNegativeEffectPlaying())
             {
                 Vector3 newPosition;
                 if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)

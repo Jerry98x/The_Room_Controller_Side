@@ -55,7 +55,8 @@ public class FullScreenEffectsManager : MonoBehaviour
                 SetPositiveEffectDisplayTime(baseDuration);
                 StartCoroutine(DisplayPositiveEffect());
                 break;
-            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY | Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 SetNegativeEffectDisplayTime(baseDuration);
                 StartCoroutine(DisplayNegativeEffect());
                 break;

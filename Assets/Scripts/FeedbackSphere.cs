@@ -14,7 +14,7 @@ public class FeedbackSphere : MonoBehaviour
     [SerializeField] InputActionReference yButtonAction;
     
     [SerializeField] [ColorUsage(true, true)] private Color initialEmissionColor;
-    [SerializeField] [ColorUsage(true, true)] private Color testingColor1;
+    [SerializeField] private ParticleSystem liquidSprayingParticleSystem;
     [SerializeField] [ColorUsage(true, true)] private Color testingColor2;
 
     private Renderer sphereRenderer;
@@ -25,6 +25,7 @@ public class FeedbackSphere : MonoBehaviour
 
 
     private bool isInControl = false;
+    private bool isFirstFrame = true;
     private bool isSupposedToResetEmissiveIntensity = false;
     private bool isSupposedToResetPetalsOpening = false;
     
@@ -111,14 +112,26 @@ public class FeedbackSphere : MonoBehaviour
            !(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0))
         {
             Debug.Log("BUTTON X OR A PRESSED!");
-            
-            liquidSprayingTest = 1;
-            
-            if(sphereRenderer != null)
+
+            if (isFirstFrame)
             {
-                Debug.Log("SETTING COLOR TO TESTING COLOR 1");
-                sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, testingColor1);
+                // The physical motor for spraying must be activated only once when the button is pressed,
+                // ignoring if it's being held down
+                liquidSprayingTest = 1;
+                            
+                if(liquidSprayingParticleSystem != null)
+                {
+                    liquidSprayingParticleSystem.Play();
+                }
+                
+                isFirstFrame = false;
             }
+            else
+            {
+                liquidSprayingTest = 0;
+            }
+            
+            
             
         }
         else if((xButtonAction.action.ReadValue<float>() == 0 && aButtonAction.action.ReadValue<float>() == 0) &&
@@ -126,28 +139,9 @@ public class FeedbackSphere : MonoBehaviour
         {
             liquidSprayingTest = 0;
             
-            if(sphereRenderer != null)
-            {
-                sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, initialEmissionColor);
-            }
+            // Reset the boolean to true so that the next time the button is pressed, the motor is activated
+            isFirstFrame = true;
         }
-        
-        /*if(xrController.gameObject.tag.Equals("LeftController"))
-        {
-            float buttonValue = xButtonAction.action.ReadValue<float>();
-            if (buttonValue > 0)
-            {
-                Debug.Log("BUTTON X PRESSED!");
-            }
-        }
-        else if(xrController.gameObject.tag.Equals("RightController"))
-        {
-            float buttonValue = aButtonAction.action.ReadValue<float>();
-            if (buttonValue > 0)
-            {
-                Debug.Log("BUTTON A PRESSED!");
-            }
-        }*/
         
         
     }
