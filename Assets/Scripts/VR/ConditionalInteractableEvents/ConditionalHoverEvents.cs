@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class ConditionalHoverEvents : MonoBehaviour
+public abstract class ConditionalHoverEvents : MonoBehaviour
 {
-    [SerializeField] private XRSimpleInteractable interactable;
-    [SerializeField] private HandleNetoRayMovement handleNetoRayMovement;
 
+    [SerializeField] private XRSimpleInteractable interactable;
+    
+    
     // Actions to be performed on hover entered and exited
     public UnityEngine.Events.UnityEvent onHoverEnteredActions;
     public UnityEngine.Events.UnityEvent onHoverExitedActions;
-
+    
+    
     void Start()
     {
         // Ensure interactable is assigned
@@ -24,30 +25,21 @@ public class ConditionalHoverEvents : MonoBehaviour
         // Subscribe to the hover events
         interactable.hoverEntered.AddListener(OnHoverEntered);
         interactable.hoverExited.AddListener(OnHoverExited);
+        
     }
-
-    void OnDestroy()
+    
+    
+    protected virtual void OnDestroy()
     {
         // Unsubscribe from the hover events
         interactable.hoverEntered.RemoveListener(OnHoverEntered);
         interactable.hoverExited.RemoveListener(OnHoverExited);
     }
 
-    void OnHoverEntered(HoverEnterEventArgs args)
-    {
-        if (!handleNetoRayMovement.HasEmergency())
-        {
-            // Execute actions if the condition is true
-            onHoverEnteredActions.Invoke();
-        }
-    }
 
-    void OnHoverExited(HoverExitEventArgs args)
-    {
-        if (!handleNetoRayMovement.HasEmergency())
-        {
-            // Execute actions if the condition is true
-            onHoverExitedActions.Invoke();
-        }
-    }
+    protected abstract void OnHoverEntered(HoverEnterEventArgs args);
+    protected abstract void OnHoverExited(HoverExitEventArgs args);
+
+    
+
 }

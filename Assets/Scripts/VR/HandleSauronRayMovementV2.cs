@@ -42,6 +42,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private float scale = 0.35f;
     
     
+    private List<ActionBasedController> xrControllers = new List<ActionBasedController>();
+    private List<XRDirectInteractor> interactors = new List<XRDirectInteractor>();
+    private List<Pointer> pointers = new List<Pointer>();
     
     
     
@@ -60,10 +63,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
     // Movement properties
-    
-    private ActionBasedController xrController;
-    private XRDirectInteractor interactor;
-    private Pointer pointer;
     
     private Vector3 targetPosition;
     private Vector3 smoothedMovement;
@@ -159,18 +158,16 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(interactor != null || pointer != null)
-        {
-            Debug.Log("INTERACTOR NOT NULL: " + interactor);
-            return;
-        }
-
-        interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        pointer = other.gameObject.GetComponent<Pointer>();
-        xrController = interactor.GetComponentInParent<ActionBasedController>();
+        XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
+        Pointer pointer = other.gameObject.GetComponent<Pointer>();
+        ActionBasedController xrController = interactor?.GetComponentInParent<ActionBasedController>();
         
-        if (interactor != null || pointer != null)
+        if(interactor != null && !interactors.Contains(interactor))
         {
+            interactors.Add(interactor);
+            xrControllers.Add(xrController);
+            pointers.Add(pointer);
+            
             
             inactiveSpiralwaveRay = transform.parent.GetComponentInChildren<SpiralwaveRay>();
             activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
@@ -178,21 +175,32 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             isInControl = true;
         }
+        
     }
 
     
     void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
+        
+        if (interactor != null && interactors.Contains(interactor))
         {
-            
-            inactiveSpiralwaveRay = null;
-            activeSpiralwaveRay = null;
 
-            pointer = null;
-            interactor = null;
+            int index = interactors.IndexOf(interactor);
+            Debug.Log("Removing interactor at index: " + index);
             
-            isInControl = false;
+            // Remove this interactor and corresponding elements from the lists
+            interactors.RemoveAt(index);
+            pointers.RemoveAt(index);
+            xrControllers.RemoveAt(index);
+            
+            // If no controllers remain in the list, disable control
+            if (interactors.Count == 0)
+            {
+                inactiveSpiralwaveRay = null;
+                activeSpiralwaveRay = null;
+                isInControl = false;
+            }
             
         }
     }
@@ -200,10 +208,20 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
+        
+        if (interactor != null && interactors.Contains(interactor))
         {
             // Check if the trigger is released
-            float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            
+            float triggerValue = 0;
+            // Loop through each controller and get the maximum trigger value
+            foreach (var xrController in xrControllers)
+            {
+                float currentTriggerValue = xrController.activateActionValue.action.ReadValue<float>();
+                triggerValue = Mathf.Max(triggerValue, currentTriggerValue);
+            }
+            
             if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
             {
                 isInControl = true;
@@ -217,11 +235,24 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     public void HandleRayEndpointMovement()
     {
         
-        Vector3 currentPointerPosition = pointer.transform.position;
-        Vector3 previousPointerPosition = pointer.GetPreviousPosition();
-
-        // Calculate the pointer's movement vector
-        Vector3 pointerMovement = currentPointerPosition - previousPointerPosition;
+        Vector3 pointerMovement = Vector3.zero;
+        float distance = 0;
+        // Loop through each pointer and calculate the movement for the one that is moving the most
+        foreach (Pointer pointer in pointers)
+        {
+            // Get the current pointer position and the previous frame pointer position
+            Vector3 currentPointerPosition = pointer.transform.position;
+            Vector3 previousPointerPosition = pointer.GetPreviousPosition();
+            
+            float newPointerDistance = Vector3.Distance(currentPointerPosition, previousPointerPosition);
+            if(newPointerDistance > distance)
+            {
+                distance = newPointerDistance;
+                
+                // Calculate the pointer's movement vector
+                pointerMovement = currentPointerPosition - previousPointerPosition;
+            }
+        }
         Debug.Log($"DIO: Pointer Movement Vector: {pointerMovement}");
 
         // Apply a multiplier to make the movement more significant
@@ -314,12 +345,28 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private void HandleRayEndpointMovement(out float finalNewDistance)
     {
+        int index = 0;
         
-        Vector3 currentPointerPosition = pointer.transform.position;
-        Vector3 previousPointerPosition = pointer.GetPreviousPosition();
-
-        // Calculate the pointer's movement vector
-        Vector3 pointerMovement = currentPointerPosition - previousPointerPosition;
+        Vector3 pointerMovement = Vector3.zero;
+        float distance = 0;
+        // Loop through each pointer and calculate the movement for the one that is moving the most
+        foreach (Pointer pointer in pointers)
+        {
+            // Get the current pointer position and the previous frame pointer position
+            Vector3 currentPointerPosition = pointer.transform.position;
+            Vector3 previousPointerPosition = pointer.GetPreviousPosition();
+            
+            float newPointerDistance = Vector3.Distance(currentPointerPosition, previousPointerPosition);
+            if(newPointerDistance > distance)
+            {
+                distance = newPointerDistance;
+                
+                // Calculate the pointer's movement vector
+                pointerMovement = currentPointerPosition - previousPointerPosition;
+                
+                index = pointers.IndexOf(pointer);
+            }
+        }
         Debug.Log($"DIO: Pointer Movement Vector: {pointerMovement}");
 
         // Apply a multiplier to make the movement more significant
@@ -380,7 +427,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             
             // Send haptic feedback to the hand controller
-            ProvideHapticFeedback(colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
+            ProvideHapticFeedback(index, colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
         }
         
         
@@ -521,22 +568,26 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private void HandleControlInterruption()
     {
-        Debug.Log("XR CONTROLLER: " + xrController);
-
-        bool backTriggerPressed = xrController.activateActionValue.action.ReadValue<float>() > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD;
-        if (backTriggerPressed)
+        float triggerValue = 0;
+        // Loop through each controller and get the maximum grip value
+        foreach (var xrController in xrControllers)
+        {
+            float currentTriggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            triggerValue = Mathf.Max(triggerValue, currentTriggerValue);
+        }
+        
+        if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
         {
             isInControl = false;
         }
 
     }
     
-    public void ProvideHapticFeedback(float amplitude, float duration)
+    public void ProvideHapticFeedback(int index, float amplitude, float duration)
     {
-        Debug.Log("XR CONTROLLER: " + xrController);
-
-        // Trigger the haptic feedback on the controller
-        xrController.SendHapticImpulse(amplitude, duration);
+        
+        // Trigger the haptic feedback on the controller that caused the collision
+        xrControllers[index].SendHapticImpulse(amplitude, duration);
     }
 
 
@@ -663,6 +714,12 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     public float GetBetaElevationAngle()
     {
         return betaElevationAngle;
+    }
+    
+    
+    public List<ActionBasedController> GetControllers()
+    {
+        return xrControllers;
     }
 
 

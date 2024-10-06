@@ -50,6 +50,10 @@ public class RoomDeathtrapElement : RoomBasicElement
         deathtrapMaterial = GetComponentInChildren<Renderer>().material;
         deathtrapColor = deathtrapMaterial.GetColor(Constants.EMISSION_COLOR_ID);
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
+
+        // Position the hypothetical initial "lastSilhouettePosition" in the middle of the perceivable distance
+        lastSilhouettePosition = deathtrapPortal.position + (deathtrapPortal.position - transform.position) *
+            (Constants.DEATHTRAP_SONAR_DISTANCE_MAX - Constants.DEATHTRAP_SONAR_DISTANCE_MIN) / (2 * Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
         
         lastMessage = new int[2];
         for (int i = 0; i < lastMessage.Length; i++)
@@ -208,7 +212,9 @@ public class RoomDeathtrapElement : RoomBasicElement
         if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY && !humanSilhouette.activeSelf)
         {
             // Play the silhouette effect, positioning it at a reasonable fixed distance in this case
-            PresenceDetected((int)Constants.DEATHTRAP_SONAR_DISTANCE_MIN);
+            //PresenceDetected((int)Constants.DEATHTRAP_SONAR_DISTANCE_MIN);
+            humanSilhouette.SetActive(true);
+            humanSilhouette.transform.position = lastSilhouettePosition;
         }
         
         switch (touchIntensity)
@@ -388,7 +394,7 @@ public class RoomDeathtrapElement : RoomBasicElement
             // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
             // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
             // the Deathtrap sphere and the effect is playing.
-            if (!deathtrapTouchFeedbackHandler.IsNegativeEffectPlaying())
+            if (!deathtrapTouchFeedbackHandler.IsNegativeEffectPlaying() && !deathtrapTouchFeedbackHandler.IsPositiveEffectPlaying())
             {
                 Vector3 newPosition;
                 if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)
@@ -436,6 +442,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
         else
         {
+            // Visitor is going away from the Deathtrap
             if(humanSilhouette.activeSelf)
             {
                 float fadeOutDuration = 0.3f;

@@ -33,9 +33,9 @@ public class HandleNetoRayMovement : MonoBehaviour
     [SerializeField] private EmergencyAudioEffect emergencyAudioEffect;
 
     
-    private ActionBasedController xrController;
-    private XRDirectInteractor interactor;
-    private Pointer pointer;
+    private List<ActionBasedController> xrControllers = new List<ActionBasedController>();
+    private List<XRDirectInteractor> interactors = new List<XRDirectInteractor>();
+    private List<Pointer> pointers = new List<Pointer>();
     
     private SinewaveRay inactiveSinewaveRay;
     private SinewaveRay activeSinewaveRay;
@@ -112,18 +112,16 @@ public class HandleNetoRayMovement : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
 
-        if(interactor != null || pointer != null)
-        {
-            Debug.Log("INTERACTOR NOT NULL: " + interactor);
-            return;
-        }
+        XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
+        Pointer pointer = other.gameObject.GetComponent<Pointer>();
+        ActionBasedController xrController = interactor?.GetComponentInParent<ActionBasedController>();
 
-        interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        pointer = other.gameObject.GetComponent<Pointer>();
-        xrController = interactor.GetComponentInParent<ActionBasedController>();
-        
-        if ((interactor != null || pointer != null) && !hasEmergency)
+        if (interactor != null && !interactors.Contains(interactor) && !hasEmergency)
         {
+            interactors.Add(interactor);
+            pointers.Add(pointer);
+            xrControllers.Add(xrController);
+            
             activeSinewaveRay = inactiveSinewaveRay.transform.GetChild(0).GetComponent<SinewaveRay>();
             isInControl = true;
             isSupposedToResetEmissiveIntensity = false;
@@ -134,7 +132,9 @@ public class HandleNetoRayMovement : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
+        
+        if (interactor != null && interactors.Contains(interactor))
         {
             // Reset the active ray material to its initial color to avoid color artifacts in the
             // specific case where the emergency mode was started with the hand already inside the collider
@@ -145,22 +145,44 @@ public class HandleNetoRayMovement : MonoBehaviour
                 SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
             }*/
             
-            isSupposedToResetEmissiveIntensity = false;
-            activeSinewaveRay = null;
-
-            pointer = null;
-            interactor = null;
-            isInControl = false;
+            
+            
+            int index = interactors.IndexOf(interactor);
+            Debug.Log("Removing interactor at index: " + index);
+            
+            // Remove this interactor and corresponding elements from the lists
+            interactors.RemoveAt(index);
+            pointers.RemoveAt(index);
+            xrControllers.RemoveAt(index);
+            
+            // If no controllers remain in the list, disable control
+            if (interactors.Count == 0)
+            {
+                isSupposedToResetEmissiveIntensity = false;
+                activeSinewaveRay = null;
+                isInControl = false;
+            }
+            
         }
     }
     
     
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
+        
+        if (interactor != null && interactors.Contains(interactor))
         {
             // Check if the trigger is released
-            float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            
+            float triggerValue = 0;
+            // Loop through each controller and get the maximum trigger value
+            foreach (var xrController in xrControllers)
+            {
+                float currentTriggerValue = xrController.activateActionValue.action.ReadValue<float>();
+                triggerValue = Mathf.Max(triggerValue, currentTriggerValue);
+            }
+            
             if (triggerValue <= Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD && !hasEmergency)
             {
                 isInControl = true;
@@ -176,12 +198,26 @@ public class HandleNetoRayMovement : MonoBehaviour
         // Calculate the direction from coreCenter to the ray's endpoint
         Vector3 direction = (rayEndPoint.position - coreCenter.position).normalized;
 
-        // Get the current pointer position and the previous frame pointer position
-        Vector3 currentPointerPosition = pointer.transform.position;
-        Vector3 previousPointerPosition = pointer.GetPreviousPosition();
-
-        // Calculate the pointer's movement vector
-        Vector3 pointerMovement = currentPointerPosition - previousPointerPosition;
+        
+        Vector3 pointerMovement = Vector3.zero;
+        float distance = 0;
+        // Loop through each pointer and calculate the movement for the one that is moving the most
+        foreach (Pointer pointer in pointers)
+        {
+            // Get the current pointer position and the previous frame pointer position
+            Vector3 currentPointerPosition = pointer.transform.position;
+            Vector3 previousPointerPosition = pointer.GetPreviousPosition();
+            
+            float newPointerDistance = Vector3.Distance(currentPointerPosition, previousPointerPosition);
+            if(newPointerDistance > distance)
+            {
+                distance = newPointerDistance;
+                
+                // Calculate the pointer's movement vector
+                pointerMovement = currentPointerPosition - previousPointerPosition;
+            }
+        }
+        
 
         // Project the pointer's movement onto the direction vector
         Vector3 projectedMovement = Vector3.Project(pointerMovement, direction);
@@ -244,7 +280,14 @@ public class HandleNetoRayMovement : MonoBehaviour
             // control of the Neto. All the following times I press the lateral trigger, I will stay here.
             // The boolean gets reset to false when I loose control of the Neto.
             
-            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            float gripValue = 0;
+            // Loop through each controller and get the maximum grip value
+            foreach (var xrController in xrControllers)
+            {
+                float currentGripValue = xrController.selectActionValue.action.ReadValue<float>();
+                gripValue = Mathf.Max(gripValue, currentGripValue);
+            }
+            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
                 Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
@@ -309,7 +352,14 @@ public class HandleNetoRayMovement : MonoBehaviour
             // this from happening, but is needed to properly reset the emissive intensity when I let the lateral
             // trigger go (since it could not detect the grip values smoothly).
             
-            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            float gripValue = 0;
+            // Loop through each controller and get the maximum grip value
+            foreach (var xrController in xrControllers)
+            {
+                float currentGripValue = xrController.selectActionValue.action.ReadValue<float>();
+                gripValue = Mathf.Max(gripValue, currentGripValue);
+            }
+            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
                 Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
@@ -352,10 +402,14 @@ public class HandleNetoRayMovement : MonoBehaviour
 
     private void HandleControlInterruption()
     {
-        Debug.Log("XR CONTROLLER: " + xrController);
-
-        Debug.Log("TRIGGER VALUE: " + xrController.activateActionValue.action.ReadValue<float>());
-        float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
+        float triggerValue = 0;
+        // Loop through each controller and get the maximum grip value
+        foreach (var xrController in xrControllers)
+        {
+            float currentTriggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            triggerValue = Mathf.Max(triggerValue, currentTriggerValue);
+        }
+        
         if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD && !hasEmergency)
         {
             isInControl = false;
@@ -452,6 +506,11 @@ public class HandleNetoRayMovement : MonoBehaviour
     public bool HasEmergency()
     {
         return hasEmergency;
+    }
+    
+    public List<ActionBasedController> GetControllers()
+    {
+        return xrControllers;
     }
     
     

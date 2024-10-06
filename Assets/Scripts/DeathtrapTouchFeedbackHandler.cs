@@ -81,6 +81,7 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
 
             effect.SetVector3("SpawnPosition", spawnPosition);
             attractor.position = spawnPosition;
+            
             SetAttractorDirection();
                 
             effect.SendEvent("VinesEffectPlay");

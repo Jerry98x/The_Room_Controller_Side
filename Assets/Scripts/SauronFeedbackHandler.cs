@@ -44,7 +44,7 @@ public class SauronFeedbackHandler : MonoBehaviour
         /*silhouetteOriginalPosition = humanSilhouette.transform.position;
         attractorOriginalPosition = attractor.transform.position;*/
         
-        
+        //rayEndPoint.rotation = Quaternion.LookRotation(particleEndpointPosition.position - rayEndPoint.position);
         /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
         attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
         
@@ -222,22 +222,22 @@ public class SauronFeedbackHandler : MonoBehaviour
     {
         if(attractor.position != rayEndPoint.transform.position)
         {
-            Debug.Log("Gesù gay");
             // Mainly for testing purposes
             ResetAttractorInitialPosition();
         }
         else
         {
-            Debug.Log("Gesù etero");
             // Clear the particles emitted by the VisualEffect object
             effect.Stop();
             //effect.SetFloat("StripsLifetime", stripsLifetime);
             effect.Reinit();
                 
-            spawnPosition = rayEndPoint.transform.position;
+            /*spawnPosition = rayEndPoint.transform.position;
             effect.SetVector3("SpawnPosition", spawnPosition);
-            attractor.position = rayEndPoint.transform.position;
-            SetAttractorDirection();
+            attractor.position = rayEndPoint.transform.position;*/
+            //SetAttractorDirection();
+            Debug.Log("Attraction position from VFX Graph: " + effect.GetVector3("Attractor"));
+            Debug.Log("Attraction position from script: " + attractor.position);
                 
             effect.SendEvent("VinesEffectPlay");
             shouldMove = true;
@@ -249,6 +249,8 @@ public class SauronFeedbackHandler : MonoBehaviour
     {
         particleDirection = particleEndpointPosition.position - rayEndPoint.transform.position;
         //effect.transform.rotation = Quaternion.LookRotation(particleDirection);
+        transform.rotation = Quaternion.LookRotation(particleDirection);
+        //transform.LookAt(particleEffectStopPosition);
     }
     
     

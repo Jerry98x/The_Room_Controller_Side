@@ -13,15 +13,18 @@ public class FeedbackSphere : MonoBehaviour
     [SerializeField] InputActionReference xButtonAction;
     [SerializeField] InputActionReference yButtonAction;
     
+    [SerializeField] [ColorUsage(true, true)] private Color inactiveSphereInitialColor;
     [SerializeField] [ColorUsage(true, true)] private Color initialEmissionColor;
+    [SerializeField] private MeshRenderer inactiveSphereRenderer;
     [SerializeField] private ParticleSystem liquidSprayingParticleSystem;
     [SerializeField] [ColorUsage(true, true)] private Color testingColor2;
 
+    private Transform inactiveSphere;
     private Renderer sphereRenderer;
     
-    private ActionBasedController xrController;
-    private XRDirectInteractor interactor;
-    private Pointer pointer;
+    private List<ActionBasedController> xrControllers = new List<ActionBasedController>();
+    private List<XRDirectInteractor> interactors = new List<XRDirectInteractor>();
+    private List<Pointer> pointers = new List<Pointer>();
 
 
     private bool isInControl = false;
@@ -39,6 +42,11 @@ public class FeedbackSphere : MonoBehaviour
     private void Start()
     {
         sphereRenderer = GetComponent<Renderer>();
+        if(transform.parent != null)
+        {
+            inactiveSphere = transform.parent;
+        }
+        Debug.Log("Inactive sphere: " + inactiveSphere);
     }
 
 
@@ -71,35 +79,52 @@ public class FeedbackSphere : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(interactor != null || pointer != null)
-        {
-            Debug.Log("INTERACTOR NOT NULL: " + interactor);
-            return;
-        }
+        XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
+        Pointer pointer = other.gameObject.GetComponent<Pointer>();
+        ActionBasedController xrController = interactor?.GetComponentInParent<ActionBasedController>();
 
-        interactor = other.gameObject.GetComponent<XRDirectInteractor>();
-        pointer = other.gameObject.GetComponent<Pointer>();
-        xrController = interactor.GetComponentInParent<ActionBasedController>();
+        Debug.Log("Interactor: " + interactor);
         
-        if (interactor != null || pointer != null)
+        if(interactor != null && !interactors.Contains(interactor))
         {
+            interactors.Add(interactor);
+            pointers.Add(pointer);
+            xrControllers.Add(xrController);
+
             isInControl = true;
             isSupposedToResetEmissiveIntensity = false;
             isSupposedToResetPetalsOpening = false;
         }
+        
+        Debug.Log("INTERACTORS COUNT: " + interactors.Count);
         
         
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<XRDirectInteractor>() == interactor)
+        XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
+        
+        if (interactor != null && interactors.Contains(interactor))
         {
-            pointer = null;
-            interactor = null;
-            isInControl = false;
-            isSupposedToResetEmissiveIntensity = false;
-            isSupposedToResetPetalsOpening = false;
+            int index = interactors.IndexOf(interactor);
+            Debug.Log("Removing interactor at index: " + index);
+            
+            // Remove this interactor and corresponding elements from the lists
+            interactors.RemoveAt(index);
+            pointers.RemoveAt(index);
+            xrControllers.RemoveAt(index);
+            
+            Debug.Log("Remainig interactors: " + interactors.Count);
+            Debug.Log("Remaining interactors: " + interactors);
+            
+            // If no controllers remain in the list, disable control
+            if (interactors.Count == 0)
+            {
+                isInControl = false;
+                isSupposedToResetEmissiveIntensity = false;
+                isSupposedToResetPetalsOpening = false;
+            }
         }
     }
 
@@ -149,10 +174,13 @@ public class FeedbackSphere : MonoBehaviour
     
     private void HandlePetalsOpeningBasedOnTrigger()
     {
-        float triggerValue = xrController.activateActionValue.action.ReadValue<float>();
-        if (triggerValue > 0)
+        
+        float triggerValue = 0;
+        // Loop through each controller and get the maximum trigger value
+        foreach (var xrController in xrControllers)
         {
-            Debug.Log("TRIGGER PRESSED! Trigger value: " + triggerValue);
+            float currentTriggerValue = xrController.activateActionValue.action.ReadValue<float>();
+            triggerValue = Mathf.Max(triggerValue, currentTriggerValue);
         }
         
         
@@ -166,13 +194,14 @@ public class FeedbackSphere : MonoBehaviour
             float newScale = RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
                 Constants.DEATHTRAP_CORE_MAX_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
             Debug.Log("TRIGGER PRESSED! Final scale: " + newScale);
-            /*float lerpSpeed = 1.0f;
-            float newScale = Mathf.Lerp(transform.localScale.x, targetScale, Time.deltaTime * lerpSpeed);*/
-            transform.localScale = new Vector3(newScale, newScale, newScale);
+            
+            // Increase the size of the father object. This object, which is its child, will be scaled accordingly
+            inactiveSphere.transform.localScale = new Vector3(newScale, newScale, newScale);
         }
         else
         {
             transform.localScale = new Vector3(Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
+            inactiveSphere.transform.localScale = new Vector3(Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
         }
 
         /*
@@ -261,7 +290,15 @@ public class FeedbackSphere : MonoBehaviour
             // control of the Deathtrap. All the following times I press the lateral trigger, I will stay here.
             // The boolean gets reset to false when I loose control of the Deathtrap.
             
-            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            float gripValue = 0;
+            // Loop through each controller and get the maximum grip value
+            foreach (var xrController in xrControllers)
+            {
+                float currentGripValue = xrController.selectActionValue.action.ReadValue<float>();
+                gripValue = Mathf.Max(gripValue, currentGripValue);
+            }
+            
+            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
                 Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
@@ -278,7 +315,14 @@ public class FeedbackSphere : MonoBehaviour
                     //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
                     Color newEmissionColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissionColor, cappedEmissiveIntensity);
                 
-                    SetMaterialColor(newEmissionColor);
+                    SetMaterialColor(sphereRenderer, newEmissionColor);
+                }
+                if(inactiveSphereRenderer != null)
+                {
+                    Color currentInactiveEmissionColor = inactiveSphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);
+                    Color newInactiveEmissionColor = GetHDRIntensity.AdjustEmissiveIntensity(currentInactiveEmissionColor, cappedEmissiveIntensity);
+                
+                    SetMaterialColor(inactiveSphereRenderer, newInactiveEmissionColor);
                 }
 
             }
@@ -291,8 +335,15 @@ public class FeedbackSphere : MonoBehaviour
                 {
                     Color newEmissionColor = initialEmissionColor;
                 
-                    SetMaterialColor(newEmissionColor);
+                    SetMaterialColor(sphereRenderer, newEmissionColor);
                 
+                }
+                
+                if(inactiveSphereRenderer != null  && liquidSprayingTest == 0 && badSmellEmittingTest == 0)
+                {
+                    Color newInactiveEmissionColor = inactiveSphereInitialColor;
+                
+                    SetMaterialColor(inactiveSphereRenderer, newInactiveEmissionColor);
                 }
                 
                 
@@ -307,7 +358,16 @@ public class FeedbackSphere : MonoBehaviour
             // this from happening, but is needed to properly reset the emissive intensity when I let the lateral
             // trigger go (since it could not detect the grip values smoothly).
             
-            float gripValue = xrController.selectActionValue.action.ReadValue<float>();
+            float gripValue = 0;
+            // Loop through each controller and get the maximum grip value
+            foreach (var xrController in xrControllers)
+            {
+                float currentGripValue = xrController.selectActionValue.action.ReadValue<float>();
+                gripValue = Mathf.Max(gripValue, currentGripValue);
+            }
+            
+            Debug.Log("GRIP VALUE TEST: " + gripValue);
+            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
                 Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
@@ -324,7 +384,14 @@ public class FeedbackSphere : MonoBehaviour
                     //Color newEmissiveColor = new Color(currentEmissiveColor.r * cappedEmissiveIntensity, currentEmissiveColor.g * cappedEmissiveIntensity, currentEmissiveColor.b * cappedEmissiveIntensity, currentEmissiveColor.a);
                     Color newEmissionColor = GetHDRIntensity.AdjustEmissiveIntensity(currentEmissionColor, cappedEmissiveIntensity);
                 
-                    SetMaterialColor(newEmissionColor);
+                    SetMaterialColor(sphereRenderer, newEmissionColor);
+                }
+                if(inactiveSphereRenderer != null)
+                {
+                    Color currentInactiveEmissionColor = inactiveSphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);
+                    Color newInactiveEmissionColor = GetHDRIntensity.AdjustEmissiveIntensity(currentInactiveEmissionColor, cappedEmissiveIntensity);
+                
+                    SetMaterialColor(inactiveSphereRenderer, newInactiveEmissionColor);
                 }
 
                 // Set the boolean to true so that as soon as I press the lateral trigger, I end up in the other
@@ -338,25 +405,12 @@ public class FeedbackSphere : MonoBehaviour
     }
     
     
-    private void SetMaterialColor(Color newEmissionColor)
+    private void SetMaterialColor(Renderer rend, Color newEmissionColor)
     {
-        sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, newEmissionColor);
+        rend.material.SetColor(Constants.EMISSION_COLOR_ID, newEmissionColor);
     }
     
     
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-
-
 
 
     public bool IsInControl()
@@ -364,6 +418,10 @@ public class FeedbackSphere : MonoBehaviour
         return isInControl;
     }
     
+    public List<ActionBasedController> GetControllers()
+    {
+        return xrControllers;
+    }
     
     public int GetLiquidSprayingTest()
     {
