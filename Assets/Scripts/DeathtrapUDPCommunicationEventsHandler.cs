@@ -42,9 +42,10 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     private int liquidSprayingTest;
     private int petalsOpeningTest;
-    private int badSmellEmittingTest;
     private int ledsBrightnessTest;
     
+    private int badSmellEmittingTest;
+    private int badSmellLedsBrightnessTest;
     
     private string message;
     private byte[] messageBytes;
@@ -69,7 +70,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // TODO: implement the actual operations to do at start time with the Deathtrap module
     private void Start()
     {
-        testingSphereCollider = feedbackSphere.GetComponent<SphereCollider>();
+        //testingSphereCollider = feedbackSphere.GetComponent<SphereCollider>();
         
         endPointSO = roomElement.GetEndPointSO();
 
@@ -126,9 +127,10 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         // Momentarily used to get the buttons and triggers values to send to the ESP32
         liquidSprayingTest = feedbackSphere.GetLiquidSprayingTest();
         petalsOpeningTest = feedbackSphere.GetPetalsOpeningTest();
-        badSmellEmittingTest = feedbackSphere.GetBadSmellEmittingTest();
         ledsBrightnessTest = feedbackSphere.GetLedsBrightnessTest();
         
+        badSmellEmittingTest = badSmellSphere.GetBadSmellEmittingTest();
+        badSmellLedsBrightnessTest = badSmellSphere.GetBadSmellLedsBrightnessTest();
         
     }
 

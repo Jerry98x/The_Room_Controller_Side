@@ -306,6 +306,11 @@ public class BadSmellSphere : MonoBehaviour
     {
         return badSmellEmittingTest;
     }
+    
+    public int GetBadSmellLedsBrightnessTest()
+    {
+        return badSmellLedsBrightnessTest;
+    }
 
 
     

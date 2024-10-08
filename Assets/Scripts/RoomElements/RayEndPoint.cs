@@ -16,6 +16,7 @@ public class RayEndPoint : MonoBehaviour
     [SerializeField] private float endpointMovementMultiplier;
     [SerializeField] private float minEndpointDistance;
     [SerializeField] private float maxEndpointDistance;
+    [SerializeField] private Transform center;
 
     private Vector3 initialPosition;
     private Vector3 lastPosition;
@@ -30,24 +31,15 @@ public class RayEndPoint : MonoBehaviour
         initialPosition = transform.position;
         lastPosition = initialPosition;
         
-        /*CapsuleCollider[] colliders = GetComponents<CapsuleCollider>();
-        foreach (CapsuleCollider collider in colliders)
-        {
-            if (collider != null && collider.enabled)
-            {
-                GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                visual.transform.position = collider.transform.position;
-                visual.transform.rotation = collider.transform.rotation;
-                visual.transform.localScale = new Vector3(collider.radius * 2, collider.height / 2, collider.radius * 2);
-                visual.transform.parent = transform;
-
-                // Make the visual representation red and more visible
-                Color color = Color.red;
-                color.a = 1f; // Fully opaque
-                visual.GetComponent<Renderer>().material.color = color;
-            }
-        }*/
+        Vector3 direction = center.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(direction);
         
+    }
+    
+    private void Update()
+    {
+        Vector3 direction = center.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void LateUpdate()

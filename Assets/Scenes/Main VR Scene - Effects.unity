@@ -3958,7 +3958,7 @@ GameObject:
   - component: {fileID: 276743108}
   m_Layer: 6
   m_Name: Pointer
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3997,7 +3997,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &276743105
 MeshRenderer:
@@ -7200,7 +7200,7 @@ GameObject:
   - component: {fileID: 559617068}
   m_Layer: 0
   m_Name: RayLine
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10921,7 +10921,7 @@ GameObject:
   - component: {fileID: 728559719}
   m_Layer: 0
   m_Name: RayLine
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15651,6 +15651,11 @@ PrefabInstance:
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.z
       value: 13.44641
       objectReference: {fileID: 0}
+    - target: {fileID: 1803037145048353673, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1833623610483008787, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -15722,6 +15727,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 99b5f9b40cab415489a25770d727803f, type: 2}
+    - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: center
+      value: 
+      objectReference: {fileID: 2106698161}
     - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: maxEndpointDistance
@@ -16315,7 +16325,7 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -16334,6 +16344,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Name
+      value: ParticlesLifetime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Name
+      value: StripsLifetime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
       value: 1
       objectReference: {fileID: 0}
@@ -16349,6 +16369,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Overridden
       value: 0
       objectReference: {fileID: 0}
@@ -16360,6 +16390,16 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[1].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
@@ -16476,6 +16516,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7652678004559845960, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_UseWorldSpace
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7718129239821687201, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -18418,7 +18463,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 30
+    angle: 15
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -20442,7 +20487,7 @@ ParticleSystem:
     strength:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.15
+      scalar: 0.1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -22616,6 +22661,113 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minY: -1
   maxY: 1
+--- !u!1 &957641980
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 957641984}
+  - component: {fileID: 957641983}
+  - component: {fileID: 957641982}
+  - component: {fileID: 957641981}
+  m_Layer: 0
+  m_Name: CapsuleTEST
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!136 &957641981
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957641980}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &957641982
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957641980}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &957641983
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957641980}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &957641984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957641980}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.77333295, y: 0.14333355, z: 5.5599995}
+  m_LocalScale: {x: 0.16561, y: 0.16561, z: 0.16561}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &965615826
 GameObject:
   m_ObjectHideFlags: 0
@@ -32902,7 +33054,7 @@ GameObject:
   - component: {fileID: 1473419183}
   m_Layer: 0
   m_Name: Visual
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34711,7 +34863,7 @@ GameObject:
   - component: {fileID: 1652000841}
   m_Layer: 0
   m_Name: Visual
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35668,7 +35820,7 @@ MonoBehaviour:
   deathtrapPortal: {fileID: 5689714433570583651}
   inactiveBadSmellSphereInitialColor: {r: 0.20784314, g: 0.12941177, b: 0.19607843,
     a: 1}
-  initialBadSmellEmissionColor: {r: 0.81960785, g: 0, b: 0.67058825, a: 1}
+  initialBadSmellEmissionColor: {r: 1.4980392, g: 0, b: 1.2256684, a: 1}
   inactiveBadSmellSphereRenderer: {fileID: 1716251764}
   badSmellParticleSystem: {fileID: 937730715}
 --- !u!54 &1716251769
@@ -43443,7 +43595,7 @@ GameObject:
   - component: {fileID: 1844985390}
   m_Layer: 6
   m_Name: Pointer
-  m_TagString: Untagged
+  m_TagString: LeftController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43482,7 +43634,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1844985387
 MeshRenderer:
@@ -48322,7 +48474,7 @@ MonoBehaviour:
   deathtrapPortal: {fileID: 5689714433570583651}
   inactiveBadSmellSphereInitialColor: {r: 0.20784314, g: 0.12941177, b: 0.19607843,
     a: 1}
-  initialBadSmellEmissionColor: {r: 0.81960785, g: 0, b: 0.67058825, a: 1}
+  initialBadSmellEmissionColor: {r: 1.4980392, g: 0, b: 1.2256684, a: 1}
   inactiveBadSmellSphereRenderer: {fileID: 1716251764}
   badSmellParticleSystem: {fileID: 937730715}
 --- !u!54 &2026761904
@@ -48785,11 +48937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aButtonAction: {fileID: 4315690758106756877, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  bButtonAction: {fileID: 1861163245014032088, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
   xButtonAction: {fileID: -5461687381335132470, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
-  yButtonAction: {fileID: 5222650556366038809, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   inactiveSphereInitialColor: {r: 0, g: 0, b: 0, a: 0}
   initialEmissionColor: {r: 0.15431276, g: 1.4980391, b: 0.12153891, a: 1}
@@ -56079,3 +56227,4 @@ SceneRoots:
   - {fileID: 2141551096}
   - {fileID: 1097742291}
   - {fileID: 1787402532}
+  - {fileID: 957641984}
