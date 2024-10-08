@@ -32,7 +32,7 @@ public class FullScreenEffectsManager : MonoBehaviour
 
     private void Update()
     {
-        HandledEvents();
+        //HandledEvents();
     }
     
     private void HandledEvents()
@@ -73,9 +73,15 @@ public class FullScreenEffectsManager : MonoBehaviour
         negativeEffectMaterial.SetFloat(voronoiIntensity, voronoiIntensityStartAmount);
         negativeEffectMaterial.SetFloat(vignetteIntensity, vignetteIntensityStartAmount);
         
-        yield return new WaitForSeconds(negativeEffectDisplayTime);
-        
+        //yield return new WaitForSeconds(negativeEffectDisplayTime);
         float elapsedTime = 0f;
+        while (elapsedTime < negativeEffectDisplayTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        elapsedTime = 0f;
         while (elapsedTime < negativeEffectFadeOutDuration)
         {
             elapsedTime += Time.deltaTime;
@@ -134,6 +140,19 @@ public class FullScreenEffectsManager : MonoBehaviour
         }
         
         scriptableRendererFeature.SetActive(false);
+    }
+
+
+    public void IncreaseFullScreenEffectDuration(float value, bool isPositiveEffect)
+    {
+        if (isPositiveEffect)
+        {
+            positiveEffectDisplayTime += value;
+        }
+        else
+        {
+            negativeEffectDisplayTime += value; }
+        
     }
     
     

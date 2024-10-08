@@ -41,6 +41,11 @@ public class RoomDeathtrapElement : RoomBasicElement
     private Coroutine silhouetteFadeOutCoroutine;
     
     
+    
+    // Testing purposes
+    private bool isKKeyHeldDown = false;
+    
+    
 
     protected override void Start()
     {
@@ -62,8 +67,59 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
     }
 
-
     private void Update()
+    {
+        //UpdateV1();
+        UpdateV2();
+        
+    }
+
+    private void UpdateV2()
+    {
+        // For testing purposes
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            PresenceDetected(UnityEngine.Random.Range(0, 14000));
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            PresenceDetected(15000);
+        }
+        
+        
+        
+        
+        // Check if the key was pressed down this frame
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            isKKeyHeldDown = true;
+            HandleTouchEffect(2);
+            PlayAmbientTouchSound(2);
+            HandleFullScreenEffect(2);
+        }
+        
+        // Check if the key is being held down
+        if (isKKeyHeldDown && Input.GetKey(KeyCode.K))
+        {
+            deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(Time.deltaTime);
+            fullScreenEffectsManager.IncreaseFullScreenEffectDuration(Time.deltaTime, false);
+        }
+        
+        // Check if the key was released
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            HandleTouchEffect(0);
+            PlayAmbientTouchSound(0);
+            HandleFullScreenEffect(0);
+            isKKeyHeldDown = false;
+        }
+        
+        
+    }
+
+    
+
+    private void UpdateV1()
     {
         // For testing purposes
         if (Input.GetKeyDown(KeyCode.J))
@@ -237,7 +293,6 @@ public class RoomDeathtrapElement : RoomBasicElement
 
     private void HandleFullScreenEffect(int touchIntensity)
     {
-
         int duration = (int)deathtrapTouchFeedbackHandler.GetStripsLifetime();
         fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration);
     }

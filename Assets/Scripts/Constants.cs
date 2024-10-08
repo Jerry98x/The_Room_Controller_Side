@@ -52,8 +52,10 @@ public class Constants {
     public const float ENDPOINT_REACH_Z_MIN = 2f;
     public const float ENDPOINT_REACH_Z_MAX = 10f;
     
-    public const float CAPPED_MIN_EMISSION_INTENSITY = 2f;
+    public const float CAPPED_MIN_EMISSION_INTENSITY = 1f;
     public const float CAPPED_MAX_EMISSION_INTENSITY = 5f;
+    public const float CAPPED_MIN_EMISSION_INTENSITY_BAD_SMELL = 1f;
+    public const float CAPPED_MAX_EMISSION_INTENSITY_BAD_SMELL = 5f;
 
     // Inversely proportional to the distance
     public const float NETO_AMPLITUDE_DISTANCE_RATE = 0.45f;

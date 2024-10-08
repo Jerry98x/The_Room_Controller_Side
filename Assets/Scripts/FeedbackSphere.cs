@@ -3,21 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class FeedbackSphere : MonoBehaviour
 {
     
     [SerializeField] InputActionReference aButtonAction;
-    [SerializeField] InputActionReference bButtonAction;
     [SerializeField] InputActionReference xButtonAction;
-    [SerializeField] InputActionReference yButtonAction;
     
     [SerializeField] [ColorUsage(true, true)] private Color inactiveSphereInitialColor;
     [SerializeField] [ColorUsage(true, true)] private Color initialEmissionColor;
     [SerializeField] private MeshRenderer inactiveSphereRenderer;
     [SerializeField] private ParticleSystem liquidSprayingParticleSystem;
-    [SerializeField] [ColorUsage(true, true)] private Color testingColor2;
+    [SerializeField] private Renderer badSmellSphereRenderer;
+    [SerializeField] [ColorUsage(true, true)] private Color badSmellLightColor;
+    [SerializeField] private ParticleSystem badSmellParticleSystem;
 
     private Transform inactiveSphere;
     private Renderer sphereRenderer;
@@ -63,7 +65,7 @@ public class FeedbackSphere : MonoBehaviour
             HandlePetalsOpeningBasedOnTrigger();
             
             // 3) Handle bad smell emission
-            HandleBasSmellEmittingBasedOnButton();
+            //HandleBadSmellEmittingBasedOnButton();
             
             // 4) Handle brightness of the LEDs
             HandleEmissiveIntensityBasedOnTrigger();
@@ -132,41 +134,86 @@ public class FeedbackSphere : MonoBehaviour
 
     private void HandleSprayingBasedOnButton()
     {
+        // Only way I could find to distinguish between the left and right hand controllers, since there are no
+        // specific methods or fields in ActionBasedController to do so. I think it's acceptable in this specific
+        // case, since the controllers are just two: one for the left hand and one for the right hand.
+        string leftController = "LeftController";
+        string rightController = "RightController";
 
-        if((xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0) &&
-           !(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0))
+        if (xrControllers.Count == 1)
         {
-            Debug.Log("BUTTON X OR A PRESSED!");
-
-            if (isFirstFrame)
+            // Check if the X or A button is being pressed while the corresponding controller is inside the collider
+            foreach (var xrController in xrControllers)
             {
-                // The physical motor for spraying must be activated only once when the button is pressed,
-                // ignoring if it's being held down
-                liquidSprayingTest = 1;
-                            
-                if(liquidSprayingParticleSystem != null)
+                if((xrController.gameObject.CompareTag(leftController) && xButtonAction.action.ReadValue<float>() > 0) ||
+                   (xrController.gameObject.CompareTag(rightController) && aButtonAction.action.ReadValue<float>() > 0))
                 {
-                    liquidSprayingParticleSystem.Play();
+                    if (isFirstFrame)
+                    {
+                        // The physical motor for spraying must be activated only once when the button is pressed,
+                        // ignoring if it's being held down
+                        liquidSprayingTest = 1;
+                                
+                        if(liquidSprayingParticleSystem != null)
+                        {
+                            liquidSprayingParticleSystem.Play();
+                        }
+                    
+                        isFirstFrame = false;
+                    }
+                    else
+                    {
+                        liquidSprayingTest = 0;
+                    }
                 }
-                
-                isFirstFrame = false;
+                else if((xrController.gameObject.CompareTag(leftController) && xButtonAction.action.ReadValue<float>() == 0) || 
+                        (xrController.gameObject.CompareTag(rightController) && aButtonAction.action.ReadValue<float>() == 0))
+                {
+                    liquidSprayingTest = 0;
+            
+                    // Reset the boolean to true so that the next time the button is pressed, the motor is activated
+                    isFirstFrame = true;
+                }
             }
-            else
-            {
-                liquidSprayingTest = 0;
-            }
-            
-            
-            
         }
-        else if((xButtonAction.action.ReadValue<float>() == 0 && aButtonAction.action.ReadValue<float>() == 0) &&
-                !(yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0))
+        else if(xrControllers.Count == 2)
         {
-            liquidSprayingTest = 0;
+            // Check if the X or A button is being pressed while the corresponding controller is inside the collider
+            foreach (var xrController in xrControllers)
+            {
+                if ((xrController.gameObject.CompareTag(leftController) && xButtonAction.action.ReadValue<float>() > 0 && aButtonAction.action.ReadValue<float>() == 0) ||
+                    (xrController.gameObject.CompareTag(rightController) && aButtonAction.action.ReadValue<float>() > 0 && xButtonAction.action.ReadValue<float>() == 0))
+                {
+                    if (isFirstFrame)
+                    {
+                        // The physical motor for spraying must be activated only once when the button is pressed,
+                        // ignoring if it's being held down
+                        liquidSprayingTest = 1;
+                                
+                        if(liquidSprayingParticleSystem != null)
+                        {
+                            liquidSprayingParticleSystem.Play();
+                        }
+                    
+                        isFirstFrame = false;
+                    }
+                    else
+                    {
+                        liquidSprayingTest = 0;
+                    }
+                }
+                else if((xrController.gameObject.CompareTag(leftController) && xButtonAction.action.ReadValue<float>() == 0 && aButtonAction.action.ReadValue<float>() == 0) || 
+                        (xrController.gameObject.CompareTag(rightController) && aButtonAction.action.ReadValue<float>() == 0 && xButtonAction.action.ReadValue<float>() == 0))
+                {
+                    liquidSprayingTest = 0;
             
-            // Reset the boolean to true so that the next time the button is pressed, the motor is activated
-            isFirstFrame = true;
+                    // Reset the boolean to true so that the next time the button is pressed, the motor is activated
+                    isFirstFrame = true;
+                }
+            }
         }
+        
+        
         
         
     }
@@ -249,35 +296,48 @@ public class FeedbackSphere : MonoBehaviour
     
     
     
-    private void HandleBasSmellEmittingBasedOnButton()
+    /*private void HandleBadSmellEmittingBasedOnButton()
     {
         
-        if((yButtonAction.action.ReadValue<float>() > 0 || bButtonAction.action.ReadValue<float>() > 0) &&
-           !(xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0))
-        {
-            Debug.Log("BUTTON Y OR B PRESSED!");
-            
-            badSmellEmittingTest = 1;
-            
-            if(sphereRenderer != null)
-            {
-                sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, testingColor2);
-            }
+        // Only way I could find to distinguish between the left and right hand controllers, since there are no
+        // specific methods or fields in ActionBasedController to do so. I think it's acceptable in this specific
+        // case, since the controllers are just two: one for the left hand and one for the right hand.
+        string leftController = "LeftController";
+        string rightController = "RightController";
 
-            
-        }
-        else if((yButtonAction.action.ReadValue<float>() == 0 && bButtonAction.action.ReadValue<float>() == 0) &&
-                !(xButtonAction.action.ReadValue<float>() > 0 || aButtonAction.action.ReadValue<float>() > 0))
+        foreach (var xrController in xrControllers)
         {
-            badSmellEmittingTest = 0;
-            
-            if(sphereRenderer != null)
+            if((xrController.gameObject.CompareTag(leftController) && yButtonAction.action.ReadValue<float>() > 0) ||
+               (xrController.gameObject.CompareTag(rightController) && bButtonAction.action.ReadValue<float>() > 0))
             {
-                sphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, initialEmissionColor);
+                badSmellEmittingTest = 1;
+                
+                if(badSmellSphereRenderer != null)
+                {
+                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, badSmellLightColor);
+                }
+    
+                if (badSmellParticleSystem != null)
+                {
+                    badSmellParticleSystem.Play();
+                }
+                
+                
+            }
+            else if(yButtonAction.action.ReadValue<float>() == 0 && bButtonAction.action.ReadValue<float>() == 0)
+            {
+                badSmellEmittingTest = 0;
+                
+                if(badSmellSphereRenderer != null)
+                {
+                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, inactiveSphereInitialColor);
+                }
             }
         }
         
-    }
+        
+        
+    }*/
 
 
 
@@ -331,7 +391,7 @@ public class FeedbackSphere : MonoBehaviour
                 // Branch needed to reset the emissive intensity when I let the lateral trigger go (since it
                 // could not detect the grip values smoothly)
                 
-                if (sphereRenderer != null && liquidSprayingTest == 0 && badSmellEmittingTest == 0)
+                if (sphereRenderer != null && liquidSprayingTest == 0)
                 {
                     Color newEmissionColor = initialEmissionColor;
                 
@@ -339,7 +399,7 @@ public class FeedbackSphere : MonoBehaviour
                 
                 }
                 
-                if(inactiveSphereRenderer != null  && liquidSprayingTest == 0 && badSmellEmittingTest == 0)
+                if(inactiveSphereRenderer != null  && liquidSprayingTest == 0)
                 {
                     Color newInactiveEmissionColor = inactiveSphereInitialColor;
                 

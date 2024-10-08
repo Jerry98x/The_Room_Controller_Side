@@ -33,6 +33,7 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
         
         effect = GetComponent<VisualEffect>();
         stripsLifetime = effect.GetFloat("StripsLifetime");
+        Debug.Log("StripsLifetime in Start: " + stripsLifetime);
         //spawnPosition = effect.GetVector3("SpawnPosition");
         spawnPosition = attractor.transform.position;
         
@@ -192,6 +193,7 @@ public class DeathtrapTouchFeedbackHandler : MonoBehaviour
     public void IncreaseParticlesLifetime(float value)
     {
         stripsLifetime += value;
+        Debug.Log("StripsLifetime after increase: " + stripsLifetime);
         effect.SetFloat("StripsLifetime", stripsLifetime);
     }
     

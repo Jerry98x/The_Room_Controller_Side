@@ -15,6 +15,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private FeedbackSphere feedbackSphere;
+    [SerializeField] private BadSmellSphere badSmellSphere;
 
     private SphereCollider testingSphereCollider;
 
