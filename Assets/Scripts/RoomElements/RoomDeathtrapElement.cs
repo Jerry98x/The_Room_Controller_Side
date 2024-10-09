@@ -33,6 +33,8 @@ public class RoomDeathtrapElement : RoomBasicElement
     private Material deathtrapMaterial;
     private Color deathtrapColor;
     private Vector3 lastSilhouettePosition;
+    private float initialStripsLifetime;
+    private float initialStripsRemainingLifetime;
     
     
     private Coroutine colorChangeCoroutine;
@@ -55,6 +57,8 @@ public class RoomDeathtrapElement : RoomBasicElement
         deathtrapMaterial = GetComponentInChildren<Renderer>().material;
         deathtrapColor = deathtrapMaterial.GetColor(Constants.EMISSION_COLOR_ID);
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
+        initialStripsLifetime = deathtrapTouchFeedbackHandler.GetStripsLifetime();
+        initialStripsRemainingLifetime = initialStripsLifetime;
 
         // Position the hypothetical initial "lastSilhouettePosition" in the middle of the perceivable distance
         lastSilhouettePosition = deathtrapPortal.position + (deathtrapPortal.position - transform.position) *
@@ -92,6 +96,8 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Check if the key was pressed down this frame
         if (Input.GetKeyDown(KeyCode.K))
         {
+            /*Debug.Log("StripsLifetime GETKEYDOWN 1: " + effect.SetFloat("StripsLifetime", stripsLifetime));
+            Debug.Log("StripsLifetime GETKEYDOWN 2: " + deathtrapTouchFeedbackHandler.GetStripsLifetime());*/
             isKKeyHeldDown = true;
             HandleTouchEffect(2);
             PlayAmbientTouchSound(2);
@@ -101,6 +107,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Check if the key is being held down
         if (isKKeyHeldDown && Input.GetKey(KeyCode.K))
         {
+            initialStripsRemainingLifetime -= Time.deltaTime;
             deathtrapTouchFeedbackHandler.IncreaseParticlesLifetime(Time.deltaTime);
             fullScreenEffectsManager.IncreaseFullScreenEffectDuration(Time.deltaTime, false);
         }
@@ -108,13 +115,31 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Check if the key was released
         if (Input.GetKeyUp(KeyCode.K))
         {
-            HandleTouchEffect(0);
-            PlayAmbientTouchSound(0);
-            HandleFullScreenEffect(0);
+            if (initialStripsRemainingLifetime >= 0)
+            {
+                StartCoroutine(WaitForBaseTimeAndStopEffects(initialStripsRemainingLifetime));
+            }
+            else
+            {
+                HandleTouchEffect(0);
+                PlayAmbientTouchSound(0);
+                HandleFullScreenEffect(0);
+            }
+            
             isKKeyHeldDown = false;
+            initialStripsRemainingLifetime = initialStripsLifetime;
         }
         
         
+    }
+    
+    private IEnumerator WaitForBaseTimeAndStopEffects(float baseTime)
+    {
+        yield return new WaitForSeconds(baseTime);
+        
+        HandleTouchEffect(0);
+        PlayAmbientTouchSound(0);
+        HandleFullScreenEffect(0);
     }
 
     

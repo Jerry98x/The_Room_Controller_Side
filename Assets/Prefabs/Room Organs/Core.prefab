@@ -412,15 +412,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aButtonAction: {fileID: 4315690758106756877, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  bButtonAction: {fileID: 1861163245014032088, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
   xButtonAction: {fileID: -5461687381335132470, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  yButtonAction: {fileID: 5222650556366038809, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
+  inactiveSphereInitialColor: {r: 0, g: 0, b: 0, a: 0}
   initialEmissionColor: {r: 0.15431276, g: 1.4980391, b: 0.12153891, a: 1}
+  inactiveSphereRenderer: {fileID: 0}
   liquidSprayingParticleSystem: {fileID: 0}
-  testingColor2: {r: 1.4980391, g: 0.12549016, b: 1.3548481, a: 1}
+  badSmellSphereRenderer: {fileID: 0}
+  badSmellLightColor: {r: 0, g: 0, b: 0, a: 0}
+  badSmellParticleSystem: {fileID: 0}
 --- !u!114 &8223311146653287146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,6 +589,12 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 6
         m_Name: NumberOfVines
+        m_Overridden: 1
+      - m_Value: 3
+        m_Name: StripsLifetime
+        m_Overridden: 1
+      - m_Value: 3
+        m_Name: ParticlesLifetime
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -1050,15 +1056,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aButtonAction: {fileID: 4315690758106756877, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  bButtonAction: {fileID: 1861163245014032088, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
   xButtonAction: {fileID: -5461687381335132470, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  yButtonAction: {fileID: 5222650556366038809, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
+  inactiveSphereInitialColor: {r: 0, g: 0, b: 0, a: 0}
   initialEmissionColor: {r: 0.15431276, g: 1.4980391, b: 0.12153891, a: 1}
+  inactiveSphereRenderer: {fileID: 0}
   liquidSprayingParticleSystem: {fileID: 0}
-  testingColor2: {r: 1.4980391, g: 0.12549016, b: 1.3548481, a: 1}
+  badSmellSphereRenderer: {fileID: 0}
+  badSmellLightColor: {r: 0, g: 0, b: 0, a: 0}
+  badSmellParticleSystem: {fileID: 0}
 --- !u!114 &7888138721443379648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6038,6 +6044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomElement: {fileID: 0}
   feedbackSphere: {fileID: 0}
+  badSmellSphere: {fileID: 0}
   liquidSpraying: 0
   petalsOpening: 40
   badSmellEmitting: 0

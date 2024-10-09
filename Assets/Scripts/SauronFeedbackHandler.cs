@@ -25,6 +25,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     private Vector3 particleDirection;
     private float attractorSpeed = 15f;
     private Vector3 spawnPosition;
+    private float distanceRate = 2f / 3f;
     
     
     private Coroutine silhouetteGeneralCoroutine;
@@ -44,10 +45,15 @@ public class SauronFeedbackHandler : MonoBehaviour
         /*silhouetteOriginalPosition = humanSilhouette.transform.position;
         attractorOriginalPosition = attractor.transform.position;*/
         
-        //rayEndPoint.rotation = Quaternion.LookRotation(particleEndpointPosition.position - rayEndPoint.position);
+        
         /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
         attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
-        
+
+        // Reset the position of the TrackingPipelineVFX object (the object that emits the vines effect and this very
+        // same object), because the VFX is not general and the scene origin is the position that makes it work correctly
+        transform.position = new Vector3(0, 0, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+
     }
     
     
@@ -55,7 +61,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     {
         // Particles effect needs to stop at 2/3 the distance between the spawn position and the particle endpoint position
         // Basically the "Lerp" function
-        particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
+        //particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
         
         HandledEvents();
         MoveAttractor();
@@ -220,24 +226,34 @@ public class SauronFeedbackHandler : MonoBehaviour
     
     public void VinesEffectStarted()
     {
+        // Before each vines burst, reset the position of the TrackingPipelineVFX object (the object that emits the vines
+        // effect and this very same object), because the VFX is not general and the scene origin is the position that
+        // makes it work correctly
+        transform.position = new Vector3(0, 0, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        
+        // Particles effect needs to stop at a certain rate of the distance between the spawn position and the particle
+        // endpoint position. Basically, the "Lerp" function!
+        particleEffectStopPosition = rayEndPoint.transform.position + distanceRate * (particleEndpointPosition.position - rayEndPoint.transform.position);
+        
         if(attractor.position != rayEndPoint.transform.position)
         {
+            Debug.Log("Gesù gay");
             // Mainly for testing purposes
             ResetAttractorInitialPosition();
         }
         else
         {
+            Debug.Log("Gesù etero");
             // Clear the particles emitted by the VisualEffect object
             effect.Stop();
             //effect.SetFloat("StripsLifetime", stripsLifetime);
             effect.Reinit();
                 
-            /*spawnPosition = rayEndPoint.transform.position;
+            spawnPosition = rayEndPoint.transform.position;
             effect.SetVector3("SpawnPosition", spawnPosition);
-            attractor.position = rayEndPoint.transform.position;*/
-            //SetAttractorDirection();
-            Debug.Log("Attraction position from VFX Graph: " + effect.GetVector3("Attractor"));
-            Debug.Log("Attraction position from script: " + attractor.position);
+            attractor.position = rayEndPoint.transform.position;
+            SetAttractorDirection();
                 
             effect.SendEvent("VinesEffectPlay");
             shouldMove = true;
@@ -249,8 +265,6 @@ public class SauronFeedbackHandler : MonoBehaviour
     {
         particleDirection = particleEndpointPosition.position - rayEndPoint.transform.position;
         //effect.transform.rotation = Quaternion.LookRotation(particleDirection);
-        transform.rotation = Quaternion.LookRotation(particleDirection);
-        //transform.LookAt(particleEffectStopPosition);
     }
     
     
@@ -271,7 +285,7 @@ public class SauronFeedbackHandler : MonoBehaviour
         {
             // Correct the particle endpoint position, because the length of the ray may have changed and so the
             // position I want the particles to stop at (2/3 of the distance between he spawn position and the core center)
-            particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
+            //particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
             
             // Correct the direction of the attractor object
             SetAttractorDirection();
@@ -304,7 +318,7 @@ public class SauronFeedbackHandler : MonoBehaviour
             // effect is fading away as well in this moment, so it can be ignored
             if(effect.aliveParticleCount > 0)
             {
-                particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
+                //particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
 
                 if(attractor.position != particleEffectStopPosition)
                 {

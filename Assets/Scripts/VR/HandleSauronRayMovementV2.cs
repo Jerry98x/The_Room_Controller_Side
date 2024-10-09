@@ -84,7 +84,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private bool insideAnyCollider = false;
     
     private float colliderHapticFeedbackAmplitude = 0.5f;
-    private float colliderHapticFeedbackDuration = 0.5f;
+    private float colliderHapticFeedbackDuration = 0.2f;
     
     
     private void Start()

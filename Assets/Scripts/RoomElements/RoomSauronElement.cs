@@ -114,15 +114,23 @@ public class RoomSauronElement : RoomBasicElement
     {
 
         // The value of the intensity has changes since the last message
+
         if (touchIntensity > 0)
+
         {
+
             // Someone touched the Sauron element
+
             sauronFeedbackHandler.HandleSilhouetteAndVinesEffects();
+
         }
         else
         {
+
             //Someone who was touching the Sauron element has stopped
+
             
+
         }
         
     }
