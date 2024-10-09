@@ -31,16 +31,16 @@ public class RayEndPoint : MonoBehaviour
         initialPosition = transform.position;
         lastPosition = initialPosition;
         
-        Vector3 direction = center.position - transform.position;
-        transform.rotation = Quaternion.LookRotation(direction);
+        /*Vector3 direction = center.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(direction);*/
         
     }
     
-    private void Update()
+    /*private void Update()
     {
         Vector3 direction = center.position - transform.position;
         transform.rotation = Quaternion.LookRotation(direction);
-    }
+    }*/
 
     private void LateUpdate()
     {
