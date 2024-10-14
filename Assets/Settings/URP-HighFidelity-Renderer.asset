@@ -45,13 +45,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: FullScreenPositiveEventV2
+  m_Name: FullScreenPositiveEvent
   m_EditorClassIdentifier: 
   m_Active: 0
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
-  passMaterial: {fileID: 2100000, guid: d0c7b5151035fb64c904bd5f69ef7642, type: 2}
+  passMaterial: {fileID: 2100000, guid: c788fd25f280aaa4cba75d3d9e51f27e, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: FullScreenPositiveEvent
+  m_Name: FullScreenPositiveEventOld
   m_EditorClassIdentifier: 
   m_Active: 0
   injectionPoint: 600

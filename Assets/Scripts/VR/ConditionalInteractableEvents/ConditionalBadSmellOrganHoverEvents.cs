@@ -11,7 +11,7 @@ public class ConditionalBadSmellOrganHoverEvents : ConditionalHoverEvents
     protected override void OnHoverEntered(HoverEnterEventArgs args)
     {
         List<ActionBasedController> controllers = badSmellSphere.GetControllers();
-        if (controllers.Count == 1)
+        if (controllers.Count >= 1)
         {
             // Execute actions if the condition is true
             onHoverEnteredActions.Invoke();

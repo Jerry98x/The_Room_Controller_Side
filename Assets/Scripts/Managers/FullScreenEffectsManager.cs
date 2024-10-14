@@ -106,9 +106,32 @@ public class FullScreenEffectsManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         
         
-        // TODO: Implement positive effect
+        positiveEffectRendererFeature.SetActive(true);
         
         
+        
+        float elapsedTime = 0f;
+        while (elapsedTime < positiveEffectDisplayTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        /*elapsedTime = 0f;
+        while (elapsedTime < positiveEffectFadeOutDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            
+            float lerpedVoronoi = Mathf.Lerp(voronoiIntensityStartAmount, 0f, elapsedTime / negativeEffectFadeOutDuration);
+            float lerpedVignette = Mathf.Lerp(vignetteIntensityStartAmount, 0f, elapsedTime / negativeEffectFadeOutDuration);
+            
+            positiveEffectMaterial.SetFloat(voronoiIntensity, lerpedVoronoi);
+            positiveEffectMaterial.SetFloat(vignetteIntensity, lerpedVignette);
+            
+            yield return null;
+        }*/
+
+        positiveEffectRendererFeature.SetActive(false);
         
     }
 

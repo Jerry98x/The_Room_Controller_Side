@@ -86,7 +86,7 @@ public class Constants {
     public const float NETO_EMERGENCY_MODE_DURATION = 3f;
 
     public const float DEATHTRAP_CORE_MIN_SIZE = 1.0f;
-    public const float DEATHTRAP_CORE_MAX_SIZE = 1.2f;
+    public const float DEATHTRAP_CORE_MAX_SIZE = 1.1f;
 
     #endregion
 

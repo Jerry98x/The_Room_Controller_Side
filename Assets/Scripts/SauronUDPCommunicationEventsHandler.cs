@@ -90,7 +90,7 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         
         if(sauronRayMovementHandler.IsInControl())
         {
-            Debug.Log("In control of Sauron " + roomElement.GetEndPointSO().IP);
+            //Debug.Log("In control of Sauron " + roomElement.GetEndPointSO().IP);
             
             HandleValuesToSend();
                     

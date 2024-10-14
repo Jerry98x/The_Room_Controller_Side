@@ -14,7 +14,7 @@ public class ConditionalNetoHoverEvents : ConditionalHoverEvents
         
         if (!handleNetoRayMovement.HasEmergency())
         {
-            if (controllers.Count == 1)
+            if (controllers.Count >= 1)
             {
                 // Execute actions if the condition is true
                 onHoverEnteredActions.Invoke();

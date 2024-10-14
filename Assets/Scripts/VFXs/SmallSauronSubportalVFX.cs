@@ -16,15 +16,15 @@ public class SmallSauronSubportalVFX : MonoBehaviour
         // First one in the hierarchy!
         sphereAttractor = GetComponentInChildren<Transform>();
         
-        Vector3 yOffset = new Vector3(0, 0, 0);
+        /*Vector3 yOffset = new Vector3(0, 0, 0);
         rayDirection = center.position - transform.position - yOffset;
-        sphereAttractor.rotation = Quaternion.LookRotation(rayDirection);
+        sphereAttractor.rotation = Quaternion.LookRotation(rayDirection);*/
     }
 
-    private void Update()
+    /*private void Update()
     {
         rayDirection = center.position - transform.position;
         transform.rotation = Quaternion.LookRotation(rayDirection);
-    }
+    }*/
     
 }

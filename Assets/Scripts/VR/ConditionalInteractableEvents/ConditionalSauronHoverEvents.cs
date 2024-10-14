@@ -12,7 +12,7 @@ public class ConditionalSauronHoverEvents : ConditionalHoverEvents
     {
         List<ActionBasedController> controllers = handleSauronRayMovement.GetControllers();
         
-        if (controllers.Count == 1)
+        if (controllers.Count >= 1)
         {
             // Execute actions if the condition is true
             onHoverEnteredActions.Invoke();

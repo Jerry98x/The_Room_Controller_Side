@@ -17,8 +17,6 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField] private FeedbackSphere feedbackSphere;
     [SerializeField] private BadSmellSphere badSmellSphere;
 
-    private SphereCollider testingSphereCollider;
-
     private bool isInControl = false;
     
     
@@ -70,8 +68,6 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // TODO: implement the actual operations to do at start time with the Deathtrap module
     private void Start()
     {
-        //testingSphereCollider = feedbackSphere.GetComponent<SphereCollider>();
-        
         endPointSO = roomElement.GetEndPointSO();
 
         lastMessage = new int[4];
