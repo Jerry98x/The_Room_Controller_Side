@@ -55,7 +55,7 @@ public class HandleNetoRayMovement : MonoBehaviour
         inactiveSinewaveRay = transform.parent.GetComponentInChildren<SinewaveRay>();
         initialInactiveBaseColor = inactiveSinewaveRay.GetComponent<Renderer>().material.GetColor(Constants.BASE_COLOR_ID);
         initialInactiveEmissiveColor = inactiveSinewaveRay.GetComponent<Renderer>().material.GetColor(Constants.EMISSIVE_COLOR_ID);
-        netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
+        netoMovementMultiplier = inactiveSinewaveRay.GetEndPointObject().GetMaxEndpointMovementMultiplier();
 
         
         
@@ -218,6 +218,9 @@ public class HandleNetoRayMovement : MonoBehaviour
             }
         }
         
+        
+        
+        
 
         // Project the pointer's movement onto the direction vector
         Vector3 projectedMovement = Vector3.Project(pointerMovement, direction);
@@ -234,6 +237,16 @@ public class HandleNetoRayMovement : MonoBehaviour
         // Clamp the new distance within the allowed range
         float clampedDistance = Mathf.Clamp(newDistance, rayEndPoint.GetComponent<RayEndPoint>().GetMinEndpointDistance(), rayEndPoint.GetComponent<RayEndPoint>().GetMaxEndpointDistance());
 
+        
+        
+        // Return if the distance between positions is under a threshold
+        if(distance < Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD)
+        {
+            finalNewDistance = clampedDistance;
+            return;
+        }
+        
+        
         // Calculate the new clamped position of the endpoint
         Vector3 clampedEndPointPosition = coreCenter.position + direction * clampedDistance;
         

@@ -126,7 +126,7 @@ public class HandleSauronRayMovement : MonoBehaviour
             
             inactiveSpiralwaveRay = transform.parent.GetComponentInChildren<SpiralwaveRay>();
             activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
-            sauronMovementMultiplier = inactiveSpiralwaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
+            sauronMovementMultiplier = inactiveSpiralwaveRay.GetEndPointObject().GetMaxEndpointMovementMultiplier();
             
             isInControl = true;
         }

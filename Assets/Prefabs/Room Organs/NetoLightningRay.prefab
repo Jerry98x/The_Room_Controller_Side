@@ -5952,9 +5952,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointMovementMultiplier: 20
+  minEndpointMovementMultiplier: 20
+  maxEndpointMovementMultiplier: 20
   minEndpointDistance: 2
   maxEndpointDistance: 10
+  center: {fileID: 0}
 --- !u!1 &3990104191708799246
 GameObject:
   m_ObjectHideFlags: 0

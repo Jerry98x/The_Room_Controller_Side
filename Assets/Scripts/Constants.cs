@@ -69,6 +69,11 @@ public class Constants {
     public const float SAURON_MAX_RADIUS = 0.2f;
 
     
+    public const float XR_CONTROLLER_MOVEMENT_THRESHOLD = 0.001f;
+    public const float XR_CONTROLLER_AVERAGE_MOVEMENT_DISTANCE = 1f;
+    public const float MINIMUM_MOVEMENT_MULTIPLIER = 3f;
+    public const float MAXIMUM_MOVEMENT_MULTIPLIER = 20f;
+    
 
     public const float PARENT_LINERENDERER_WIDTH_MULTIPLIER = 0.8f;
     public const float CHILD_LINERENDERER_WIDTH_MUKTIPLIER = 1f;

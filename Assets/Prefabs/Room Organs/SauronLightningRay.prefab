@@ -630,7 +630,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointMovementMultiplier: 0
+  minEndpointMovementMultiplier: 1
+  maxEndpointMovementMultiplier: 20
   minEndpointDistance: 0
   maxEndpointDistance: 0
   center: {fileID: 0}
@@ -1396,7 +1397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439bb275e0fd40343a84c26ef36de24e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointMovementMultiplier: 0
+  minEndpointMovementMultiplier: 1
+  maxEndpointMovementMultiplier: 20
   minEndpointDistance: 0
   maxEndpointDistance: 0
   center: {fileID: 0}

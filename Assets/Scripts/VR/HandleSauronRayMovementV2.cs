@@ -77,7 +77,8 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private SpiralwaveRay inactiveSpiralwaveRay;
     private SpiralwaveRay activeSpiralwaveRay;
-    private float sauronMovementMultiplier;
+    private float sauronMaxMovementMultiplier;
+    private float sauronMinMovementMultiplier;
     private bool isInControl = false;
     
     
@@ -171,7 +172,8 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             inactiveSpiralwaveRay = transform.parent.GetComponentInChildren<SpiralwaveRay>();
             activeSpiralwaveRay = inactiveSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
-            sauronMovementMultiplier = inactiveSpiralwaveRay.GetEndPointObject().GetEndpointMovementMultiplier();
+            sauronMaxMovementMultiplier = inactiveSpiralwaveRay.GetEndPointObject().GetMaxEndpointMovementMultiplier();
+            sauronMinMovementMultiplier = inactiveSpiralwaveRay.GetEndPointObject().GetMinEndpointMovementMultiplier();
             
             isInControl = true;
         }
@@ -256,7 +258,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         Debug.Log($"DIO: Pointer Movement Vector: {pointerMovement}");
 
         // Apply a multiplier to make the movement more significant
-        Vector3 scaledMovement = pointerMovement * sauronMovementMultiplier;
+        Vector3 scaledMovement = pointerMovement * sauronMaxMovementMultiplier;
         Debug.Log($"DIO: Scaled Movement Vector: {scaledMovement}");
         
         // Smooth the movement vector
@@ -367,27 +369,28 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
                 index = pointers.IndexOf(pointer);
             }
         }
-        Debug.Log($"DIO: Pointer Movement Vector: {pointerMovement}");
+        
+        // Return if the distance between positions is under a threshold
+        if(distance < Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD)
+        {
+            finalNewDistance = Vector3.Distance(coreCenter.position, rayEndPoint.position);
+            return;
+        }
+
+
+        float movementMultiplier = ComputeMovementMultiplier(distance);
 
         // Apply a multiplier to make the movement more significant
-        Vector3 scaledMovement = pointerMovement * sauronMovementMultiplier;
-        Debug.Log($"DIO: Scaled Movement Vector: {scaledMovement}");
+        Vector3 scaledMovement = pointerMovement * movementMultiplier;
         
         // Smooth the movement vector
         smoothedMovement = Vector3.Lerp(smoothedMovement, scaledMovement, smoothTime);
-        Debug.Log($"DIO: Smoothed Movement Vector: {smoothedMovement}");
 
         // Calculate new potential position of the ray's endpoint
         Vector3 newEndPointPosition = rayEndPoint.position + smoothedMovement;
-        Debug.Log($"DIO: Target Position: {newEndPointPosition}");
         
         
-        Vector3 adjustedPosition = CalculateSlidePosition(rayEndPoint.position, smoothedMovement);
-        
-        
-        
-        
-        // Calculate maxDistance
+        // Calculate the maximum distance the endpoint can move to stay inside the cage of colliders
         float maxDistance = 0f;
         Vector3 direction = newEndPointPosition - previousPosition;
         RaycastHit hit;
@@ -395,7 +398,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         {
             maxDistance = hit.distance;
         }
-        Debug.Log($"DIO: Max Distance: {maxDistance}");
         
         
         if(direction.magnitude > maxDistance)
@@ -411,8 +413,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         
         
         // Check for collision
-        
-        //if (!IsCollidingSimplified(newEndPointPosition))
         if (!IsColliding(newEndPointPosition))
         {
             previousPosition = rayEndPoint.position;
@@ -421,48 +421,15 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         }
         else
         {
-            /*Collision detected, revert to previous position
-            rayEndPointRb.MovePosition(previousPosition);
-            Debug.Log("DIO: Collision detected, movement blocked.");*/
-            
-            
+            previousPosition = rayEndPoint.position;
+            // Move back of the minimum distance to make it easier to avoid getting stuck
+            rayEndPointRb.MovePosition(rayEndPoint.position - pointerMovement * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD);
+            // rayEndPointRb.MovePosition(rayEndPoint.position + hit.normal * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD);
             // Send haptic feedback to the hand controller
             ProvideHapticFeedback(index, colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
         }
         
-        
-        
-        /*if (!IsColliding(newEndPointPosition))
-        {
-            previousPosition = rayEndPoint.position;
-            // Update the ray's endpoint position
-            //rayEndPoint.position = newEndPointPosition;
-            rayEndPointRb.MovePosition(newEndPointPosition);
-            // Calculate the distance from coreCenter to the new endpoint position
-            //finalNewDistance = Vector3.Distance(coreCenter.position, newEndPointPosition);
-        }
-        else
-        {
-            // Collision detected, calculate slide vector
-            Vector3 slidePosition = CalculateSlidePosition(rayEndPoint.position, smoothedMovement);
-            
-            // Ensure the slide position is valid
-            if (IsPositionInsideColliders(slidePosition))
-            {
-                previousPosition = rayEndPoint.position;
-                rayEndPointRb.MovePosition(slidePosition);
-            }
-            else
-            {
-                rayEndPointRb.MovePosition(previousPosition);
-            }
-            rayEndPointRb.MovePosition(slidePosition);
-            //rayEndPoint.position = previousPosition;
-            //finalNewDistance = Vector3.Distance(coreCenter.position, rayEndPoint.position);
-        }*/
-        
         finalNewDistance = Vector3.Distance(coreCenter.position, rayEndPoint.position);
-        
         
     }
     
@@ -486,18 +453,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     bool IsColliding(Vector3 targetPos)
     {
-        /*Collider[] colliders = new Collider[10]; // Should be enough, since there are two colliders
-        Physics.OverlapSphereNonAlloc(targetPos, sphereCollider.radius, colliders, LayerMask.GetMask("SauronLayer"));
-        foreach (var coll in colliders)
-        {
-            if (coll == portalMeshCollider || coll == portalBoxCollider)
-            {
-                return true;
-            }
-        }
-        return false;*/
-        
-        
         
         Collider[] colliders = Physics.OverlapSphere(targetPos, sphereCollider.radius);
         foreach (var coll in colliders)
@@ -543,6 +498,21 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
         return false;
     }*/
+    
+    
+    private float ComputeMovementMultiplier(float distance)
+    {
+        float movementMultiplier = 0f;
+        
+        // The movement multiplier is proportional to the distance moved by the controller and it can range between
+        // the minimum and maximum movement multipliers values. The smaller the distance between two consecutive hand controller
+        // positions, the smaller the movement multiplier to be applied to the endpoint. This should prevent the endpoint from
+        // moving too much when the hand controller is moved slightly.
+        movementMultiplier = RangeRemappingHelper.Remap(distance, Constants.XR_CONTROLLER_AVERAGE_MOVEMENT_DISTANCE, Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD, 
+            sauronMaxMovementMultiplier, sauronMinMovementMultiplier);
+
+        return movementMultiplier;
+    }
     
     
     

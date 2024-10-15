@@ -12,8 +12,8 @@ using UnityEngine.Serialization;
 /// </remarks>
 public class RayEndPoint : MonoBehaviour
 {
-    
-    [SerializeField] private float endpointMovementMultiplier;
+    [SerializeField] private float minEndpointMovementMultiplier;
+    [SerializeField] private float maxEndpointMovementMultiplier;
     [SerializeField] private float minEndpointDistance;
     [SerializeField] private float maxEndpointDistance;
     [SerializeField] private Transform center;
@@ -77,9 +77,14 @@ public class RayEndPoint : MonoBehaviour
     
     
         
-    public float GetEndpointMovementMultiplier()
+    public float GetMaxEndpointMovementMultiplier()
     {
-        return endpointMovementMultiplier;
+        return maxEndpointMovementMultiplier;
+    }
+    
+    public float GetMinEndpointMovementMultiplier()
+    {
+        return minEndpointMovementMultiplier;
     }
     
     public float GetMinEndpointDistance()

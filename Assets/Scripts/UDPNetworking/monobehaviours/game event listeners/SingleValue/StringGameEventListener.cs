@@ -8,8 +8,8 @@ namespace Oasis.GameEvents
     public class StringGameEventListener : ValueGameEventListener<string>
     {
         
-        [SerializeField] private UnityEvent<string> _unityEvent;
-        [SerializeField] private ValueGameEventSO<string> _gameEvent;
+        private UnityEvent<string> _unityEvent;
+        private ValueGameEventSO<string> _gameEvent;
         
         private void OnEnable() => _gameEvent.Subscribe(this);
         private void OnDisable() => _gameEvent.Unsubscribe(this);
