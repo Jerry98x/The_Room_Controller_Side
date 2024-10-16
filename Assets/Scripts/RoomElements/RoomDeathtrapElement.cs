@@ -409,7 +409,6 @@ public class RoomDeathtrapElement : RoomBasicElement
                 deathtrapTouchPositiveFeedbackHandler.StopEffect();
             }*/
             
-            
             // Set the spawn position to the current position of the silhouette
             deathtrapTouchPositiveFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
             //deathtrapTouchPositiveFeedbackHandler.ResetInitialPosition();

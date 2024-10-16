@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UniColliderInterpolator;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -20,7 +22,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
     //[SerializeField] private Collider portalMeshCollider;
     [SerializeField] private GameObject portal;
+    [SerializeField] private GameObject portalConeSurface;
+    [SerializeField] private GameObject portalConeBase;
     [SerializeField] private GameObject portalSimplified;
+    [SerializeField] private Material[] coneSurfaceMaterials;
     
     
     
@@ -51,7 +56,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     // Colliders properties
     
     //private MeshCollider portalMeshCollider;
-    private BoxCollider portalBoxCollider;
+    private BoxCollider[] portalBoxColliders;
     private MeshCollider[] portalSupportColliders;
     private Collider[] portalColliders;
     
@@ -59,6 +64,8 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     private Rigidbody rayEndPointRb;
     
     private Vector3 previousPosition;
+    
+    private MeshRenderer coneSurfaceRenderer;
     
     
     
@@ -103,10 +110,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         
         //portalMeshCollider = portal.GetComponent<MeshCollider>();
         
-        portalBoxCollider = portal.GetComponent<BoxCollider>();
+        portalBoxColliders = portal.GetComponents<BoxCollider>();
         portalSupportColliders = portal.GetComponents<MeshCollider>();
         
-        portalColliders = portalSimplified.GetComponentsInChildren<Collider>();
+        //portalColliders = portalSimplified.GetComponentsInChildren<Collider>();
         
         
         sphereCollider = rayEndPoint.GetComponent<SphereCollider>();
@@ -119,11 +126,14 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         targetPosition = rayEndPoint.position;
         
         
+        coneSurfaceRenderer = portalConeSurface.GetComponent<MeshRenderer>();
+        AddMaterialToConeSurfaceRenderer(1);
+        
         // Listeners
         onSauronRayDistanceChange.AddListener(UpdateLineRenderers);
     }
-    
-    
+
+
     private void FixedUpdate()
     {
         if (isInControl)
@@ -407,27 +417,80 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         newEndPointPosition = previousPosition + direction;
         
         
-        // Update alpha and beta angles of the cone, so that the values based on them to be sent to the
-        // physical Sauron can be computed
-        UpdateConeAngles(newEndPointPosition);
-        
         
         // Check for collision
         if (!IsColliding(newEndPointPosition))
         {
+            // Stop flashing visual effects
+            portalConeBase.SetActive(false);
+            AddMaterialToConeSurfaceRenderer(1);
+            
             previousPosition = rayEndPoint.position;
             rayEndPointRb.MovePosition(newEndPointPosition);
             Debug.Log($"DIO: Sphere moved to: {newEndPointPosition}");
         }
         else
         {
-            previousPosition = rayEndPoint.position;
-            // Move back of the minimum distance to make it easier to avoid getting stuck
-            rayEndPointRb.MovePosition(rayEndPoint.position - pointerMovement * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD);
-            // rayEndPointRb.MovePosition(rayEndPoint.position + hit.normal * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD);
+            // Start flashing visual effects
+            portalConeBase.SetActive(true);
+            AddMaterialToConeSurfaceRenderer(2);
+            
+            // Get the normal of the surface we're colliding with
+            //Debug.DrawRay(hit.point, hit.normal, Color.red, 2f);
+            Vector3 collisionNormal = hit.normal;
+            
+            Vector3 safePosition = pointerMovement * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD;
+            //rayEndPointRb.MovePosition(rayEndPoint.position - safePosition);
+            
+            
+            
+            
+            // Project the movement vector onto the surface to create a sliding effect
+            Vector3 slideDirection = Vector3.ProjectOnPlane(pointerMovement, collisionNormal);
+            
+            
+            // Calculate the angle between the movement direction and the surface normal
+            float angle = Vector3.Angle(pointerMovement, collisionNormal);
+
+            // Apply a multiplier based on the angle to enhance sliding on less inclined surfaces
+            float slidingSpeedMultiplier = Mathf.Lerp(1f, 3f, Mathf.InverseLerp(0, 45, angle)); // Adjust multiplier range and angle as needed
+            Vector3 adjustedSlideDirection = slideDirection * slidingSpeedMultiplier;
+
+
+            Vector3 movePosition = rayEndPoint.position - safePosition + adjustedSlideDirection;
+            if (IsSphereCompletelySurrounded(movePosition))
+            {
+                // If the slide direction has a valid magnitude, move the object along the surface
+                if (adjustedSlideDirection.magnitude > Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD)
+                {
+                    previousPosition = rayEndPoint.position;
+                    rayEndPointRb.MovePosition(movePosition);
+                }
+                else
+                {
+                    // Fallback: Move back slightly to avoid getting stuck
+                    previousPosition = rayEndPoint.position;
+                    rayEndPointRb.MovePosition(rayEndPoint.position - safePosition);
+                }
+            }
+            else
+            {
+                rayEndPointRb.MovePosition(previousPosition);
+            }
+            
+            
+            
+            
+            
             // Send haptic feedback to the hand controller
             ProvideHapticFeedback(index, colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
         }
+        
+        
+        
+        // Update alpha and beta angles of the cone, so that the values based on them to be sent to the
+        // physical Sauron can be computed
+        UpdateConeAngles(newEndPointPosition);
         
         finalNewDistance = Vector3.Distance(coreCenter.position, rayEndPoint.position);
         
@@ -457,12 +520,36 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(targetPos, sphereCollider.radius);
         foreach (var coll in colliders)
         {
-            if (coll == portalBoxCollider || System.Array.Exists(portalSupportColliders, c => c == coll))
+            if (System.Array.Exists(portalBoxColliders, c => c == coll) || System.Array.Exists(portalSupportColliders, c => c == coll))
             {
                 return true;
             }
         }
         return false;
+    }
+    
+    
+    bool IsSphereCompletelySurrounded(Vector3 pos)
+    {
+        
+        // Cast raycasts in multiple directions
+        Vector3[] directions = {
+            Vector3.up, Vector3.down,
+            Vector3.left, Vector3.right,
+            Vector3.forward, Vector3.back
+        };
+
+        foreach (Vector3 dir in directions)
+        {
+            if (!Physics.Raycast(pos, dir))
+            {
+                // Raycast didn't hit any collider in this direction
+                return false;
+            }
+        }
+
+        // If all raycasts hit colliders, the sphere is completely surrounded
+        return true;
     }
     
     bool IsCollidingSimplified(Vector3 targetPos)
@@ -666,6 +753,24 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVector, coneHorizontalAxis);#1#
 
     }*/
+    
+    
+    
+    
+    void AddMaterialToConeSurfaceRenderer(int numberOfMaterials)
+    {
+        // Create a new array with an additional slot for the new material
+        Material[] newMaterials = new Material[numberOfMaterials];
+
+        // Copy the material(s) from the serialized array of materials
+        for (int i = 0; i < numberOfMaterials; i++)
+        {
+            newMaterials[i] = coneSurfaceMaterials[i];
+        }
+        
+        // Assign the new array back to coneSurfaceRenderer.materials
+        coneSurfaceRenderer.materials = newMaterials;
+    }
     
     
     

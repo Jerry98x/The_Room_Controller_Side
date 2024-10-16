@@ -6149,7 +6149,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 3b1a309f3d81e47489fb4078023d8630,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 804fff668d528594c87d33270f77bbc5, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 7d0d925e3cc75e64eaabb85cdf57633d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -15779,9 +15779,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2302760043008476641, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2302760043008476641, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0213e47d4f8476045bc04153b13f4b44, type: 2}
+    - target: {fileID: 2302760043008476641, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 805c9b747af830443ac9c0439b485897, type: 2}
     - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: center
@@ -15804,8 +15814,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: maxEndpointMovementMultiplier
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 2320601963330920988, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: minEndpointMovementMultiplier
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2479218219153636101, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -16515,6 +16530,11 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027754942419921505, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7254913140293585473, guid: ce02e72fd9ce33849a97abd6330a3d3a,

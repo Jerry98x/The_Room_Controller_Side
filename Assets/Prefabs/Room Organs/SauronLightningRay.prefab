@@ -173,7 +173,12 @@ MonoBehaviour:
   coreCenter: {fileID: 0}
   rayEndPoint: {fileID: 3066118131402179863}
   portal: {fileID: 4955583272121401885}
+  portalConeSurface: {fileID: 357456172771730484}
+  portalConeBase: {fileID: 7027754942419921505}
   portalSimplified: {fileID: 0}
+  coneSurfaceMaterials:
+  - {fileID: 2100000, guid: 0213e47d4f8476045bc04153b13f4b44, type: 2}
+  - {fileID: 2100000, guid: 805c9b747af830443ac9c0439b485897, type: 2}
   coneBaseCenter: {fileID: 0}
   coneTip: {fileID: 0}
   coneBaseExtremity: {fileID: 0}
@@ -2000,11 +2005,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7344638257471925027, guid: 7a82784b193fa0949ab6df9b9f75d0c3,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0213e47d4f8476045bc04153b13f4b44, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a82784b193fa0949ab6df9b9f75d0c3, type: 3}
+--- !u!1 &357456172771730484 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9146135626330147574, guid: 7a82784b193fa0949ab6df9b9f75d0c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 8797897982652477122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4593530454370929884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5019004526088659486, guid: 7a82784b193fa0949ab6df9b9f75d0c3,
@@ -2014,6 +2030,12 @@ Transform:
 --- !u!1 &4955583272121401885 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4529967157308189919, guid: 7a82784b193fa0949ab6df9b9f75d0c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 8797897982652477122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7027754942419921505 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1990573961549644963, guid: 7a82784b193fa0949ab6df9b9f75d0c3,
     type: 3}
   m_PrefabInstance: {fileID: 8797897982652477122}
   m_PrefabAsset: {fileID: 0}
