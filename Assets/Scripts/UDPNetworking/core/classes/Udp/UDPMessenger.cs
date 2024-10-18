@@ -30,6 +30,10 @@ public class UDPMessenger
         // UDP messages
         private List<UdpMessage> _unreadUdpMsgs = new List<UdpMessage>();
         
+        // Dictionary to track the latest message from each IP
+        private Dictionary<IPAddress, UdpMessage> _latestMessages = new Dictionary<IPAddress, UdpMessage>();
+
+        
     #endregion
 
     
@@ -140,13 +144,52 @@ public class UDPMessenger
 
             Debug.Log($"uffa: {data.Length} - text: {text} - from ip: {anyIP.Address}");
             
-            // add message to unread list and save it as Latest
+            
+            UdpMessage newMessage = new UdpMessage(data, text, anyIP);
+    
+            // IMPORTANT: it's better to store one message per endpoint (IP) if there are many endpoints, especially if
+            // there are different endpoints of a specific type and very few endpoints of another specific type,
+            // to avoid the first ones to flood the buffer in UDPManager
+            if (_latestMessages.ContainsKey(anyIP.Address))
+            {
+                _latestMessages[anyIP.Address] = newMessage;
+            }
+            else
+            {
+                _latestMessages.Add(anyIP.Address, newMessage);
+            }
+            
+            // Update the unread messages list
+            _unreadUdpMsgs = new List<UdpMessage>(_latestMessages.Values);
+    
+            // Check buffer size limit
+            if (_unreadUdpMsgs.Count > _bufferSize)
+            {
+                _unreadUdpMsgs.RemoveAt(0);
+            }
+            
+            
+            
+            
+            
+            
+            /*// add message to unread list and save it as Latest
             LatestUdpMsg = new UdpMessage(data, text, anyIP);
             _unreadUdpMsgs.Add(LatestUdpMsg);
             
             // if maximum amount has been reached, remove oldest unread message
+            Debug.Log("QUANTI MINCHIA SONO I MESSAGGI NON LETTI? " + _unreadUdpMsgs.Count);
+            foreach (var udpMessage in _unreadUdpMsgs)
+            {
+                Debug.Log("QUALI MINCHIA SONO? " + udpMessage.Msg);
+            }
+
             if (_unreadUdpMsgs.Count > _bufferSize)
+            {
+                //Debug.Log("MINCHIA: rimozione messaggio " + _unreadUdpMsgs[0].Msg);
                 _unreadUdpMsgs.RemoveAt(0);
+            }*/
+                
             
             
         }

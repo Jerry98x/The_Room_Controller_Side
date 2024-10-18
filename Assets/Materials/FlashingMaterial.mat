@@ -38,13 +38,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.04
-    - _FlashIntensity: 1
-    - _Frequency: 4
+    - _Alpha: 0.02
+    - _FlashIntensity: 0.5
+    - _Frequency: 2
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _BaseColor: {r: 0.7584905, g: 0, b: 0, a: 1}
+    - _BaseColor: {r: 0.9245283, g: 0.6262371, b: 0.6262371, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &4543270198860093188
 MonoBehaviour:

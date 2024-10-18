@@ -47,6 +47,7 @@ public class RoomDeathtrapElement : RoomBasicElement
     private Coroutine silhouetteFadeOutCoroutine;
     
     
+    private bool avoidMultipleRestarts = false;
     
     // Testing purposes
     private bool isKKeyHeldDown = false;
@@ -82,9 +83,13 @@ public class RoomDeathtrapElement : RoomBasicElement
     {
         //UpdateV1();
         UpdateV2();
+        Debug.Log("AVOID MULTIPLE RESTARTS: " + avoidMultipleRestarts);
         
     }
 
+    
+    //TODO: Fix lifetime when switching between good and bad (maybe coroutine should be stopped?)
+    //TODO: Check if fullscreen effect for positive touch needs to be increased (?) when multiple touches happen
     private void UpdateV2()
     {
         // For testing purposes
@@ -101,36 +106,40 @@ public class RoomDeathtrapElement : RoomBasicElement
         
         // Negative effect 
         // Check if the key was pressed down this frame
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K) && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() && !avoidMultipleRestarts)
         {
-            /*Debug.Log("StripsLifetime GETKEYDOWN 1: " + effect.SetFloat("StripsLifetime", stripsLifetime));
-            Debug.Log("StripsLifetime GETKEYDOWN 2: " + deathtrapTouchFeedbackHandler.GetStripsLifetime());*/
+            Debug.Log("DENTRO GETKEYDOWN");
+            avoidMultipleRestarts = true;
             isKKeyHeldDown = true;
             HandleTouchEffect(2);
             PlayAmbientTouchSound(2);
-            HandleFullScreenEffect(2);
+            HandleFullScreenEffect(2, false);
         }
         
         // Check if the key is being held down
-        if (isKKeyHeldDown && Input.GetKey(KeyCode.K))
+        if (isKKeyHeldDown && Input.GetKey(KeyCode.K) && avoidMultipleRestarts)
         {
+            Debug.Log("DENTRO GETKEY");
             initialStripsRemainingLifetime -= Time.deltaTime;
             deathtrapTouchNegativeFeedbackHandler.IncreaseParticlesLifetime(Time.deltaTime);
             fullScreenEffectsManager.IncreaseFullScreenEffectDuration(Time.deltaTime, false);
         }
         
         // Check if the key was released
-        if (Input.GetKeyUp(KeyCode.K))
+        if (Input.GetKeyUp(KeyCode.K) && avoidMultipleRestarts)
         {
             if (initialStripsRemainingLifetime >= 0)
             {
+                Debug.Log("DENTRO GETKEYUP - IF: comando abortito prima della naturale fine");
                 StartCoroutine(WaitForBaseTimeAndStopEffects(initialStripsRemainingLifetime));
             }
             else
             {
+                Debug.Log("DENTRO GETKEYUP - ELSE: comando abortito dopo la naturale fine");
+                avoidMultipleRestarts = false;
                 HandleTouchEffect(0);
                 PlayAmbientTouchSound(0);
-                HandleFullScreenEffect(0);
+                HandleFullScreenEffect(0, false);
             }
             
             isKKeyHeldDown = false;
@@ -142,16 +151,17 @@ public class RoomDeathtrapElement : RoomBasicElement
         
         // Positive effect
         // Check if the key was pressed down this frame
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.H) && !deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying() && !avoidMultipleRestarts)
         {
+            avoidMultipleRestarts = true;
             isHKeyHeldDown = true;
             HandleTouchEffect(1);
             PlayAmbientTouchSound(1);
-            HandleFullScreenEffect(1);
+            HandleFullScreenEffect(1, true);
         }
         
         // Check if the key is being held down
-        if (isHKeyHeldDown && Input.GetKey(KeyCode.H))
+        if (isHKeyHeldDown && Input.GetKey(KeyCode.H) && avoidMultipleRestarts)
         {
             initialGoodParticlesRemainingLifetime -= Time.deltaTime;
             deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMinLifetime(Time.deltaTime);
@@ -160,7 +170,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
         
         // Check if the key was released
-        if (Input.GetKeyUp(KeyCode.H))
+        if (Input.GetKeyUp(KeyCode.H) && avoidMultipleRestarts)
         {
             if (initialGoodParticlesRemainingLifetime >= 0)
             {
@@ -168,9 +178,10 @@ public class RoomDeathtrapElement : RoomBasicElement
             }
             else
             {
+                avoidMultipleRestarts = false;
                 HandleTouchEffect(0);
                 PlayAmbientTouchSound(0);
-                HandleFullScreenEffect(0);
+                HandleFullScreenEffect(0, true);
             }
             
             isHKeyHeldDown = false;
@@ -183,11 +194,15 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private IEnumerator WaitForBaseTimeAndStopEffects(float baseTime)
     {
+        Debug.Log("DENTRO COROUTINE PRIMA DEL WAIT");
+        avoidMultipleRestarts = false;
         yield return new WaitForSeconds(baseTime);
-        
+        Debug.Log("DENTRO COROUTINE DOPO IL WAIT");
+        //avoidMultipleRestarts = false;
         HandleTouchEffect(0);
         PlayAmbientTouchSound(0);
-        HandleFullScreenEffect(0);
+        // It is not important whether I pass a TRUE or FALSE when stopping the effect
+        HandleFullScreenEffect(0, false);
     }
 
     
@@ -209,13 +224,13 @@ public class RoomDeathtrapElement : RoomBasicElement
         {
             HandleTouchEffect(2);
             PlayAmbientTouchSound(2);
-            HandleFullScreenEffect(2);
+            HandleFullScreenEffect(2, false);
         }
         if (Input.GetKeyDown(KeyCode.M))
         {
             HandleTouchEffect(0);
             PlayAmbientTouchSound(0);
-            HandleFullScreenEffect(0);
+            HandleFullScreenEffect(0, false);
         }
         
     }
@@ -263,16 +278,17 @@ public class RoomDeathtrapElement : RoomBasicElement
         
         
         
-        if(lastMessage[1] != messageContent[1])
+        /*if(lastMessage[1] != messageContent[1])
         {
             PresenceDetected(messageContent[1]);
-        }
+        }*/
+        PresenceDetected(messageContent[1]);
         
         if(lastMessage[0] != messageContent[0])
         {
             HandleTouchEffect(messageContent[0]);
             PlayAmbientTouchSound(messageContent[0]);
-            HandleFullScreenEffect(messageContent[0]);
+            HandleFullScreenEffect(messageContent[0], false);
             
         }
         else
@@ -369,10 +385,19 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
 
 
-    private void HandleFullScreenEffect(int touchIntensity)
+    private void HandleFullScreenEffect(int touchIntensity, bool isPositive)
     {
-        int duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
-        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration);
+        int duration;
+        if (isPositive)
+        {
+            duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
+        }
+        else
+        {
+            duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
+        }
+        
+        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
     }
     
     
@@ -381,13 +406,14 @@ public class RoomDeathtrapElement : RoomBasicElement
     {
         Debug.Log("Growing vines with touch intensity: " + touchIntensity);
         // Double check
-        if(humanSilhouette.activeSelf && touchIntensity > 1)
+        if(humanSilhouette.activeSelf && touchIntensity > 1 && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
         {
             // If the positive effect is playing, stop it and smoothly transition to the negative effect
-            /*if(deathtrapTouchFeedbackHandler.IsPositiveEffectPlaying())
+            if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
             {
-                deathtrapTouchFeedbackHandler.StopEffect(true);
-            }*/
+                deathtrapTouchPositiveFeedbackHandler.StopEffect();
+                initialGoodParticlesRemainingLifetime = initialGoodParticlesLifetime;
+            }
             
             
             // Set the spawn position to the current position of the silhouette
@@ -401,13 +427,14 @@ public class RoomDeathtrapElement : RoomBasicElement
     private void GeneratePositiveParticlesEffect(int touchIntensity)
     {
         // Double check
-        if (humanSilhouette.activeSelf && touchIntensity == 1)
+        if (humanSilhouette.activeSelf && touchIntensity == 1 && !deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
         {
             // If the negative effect is playing, stop it and smoothly transition to the positive effect
-            /*if (deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
+            if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
             {
-                deathtrapTouchPositiveFeedbackHandler.StopEffect();
-            }*/
+                deathtrapTouchNegativeFeedbackHandler.StopEffect();
+                initialStripsRemainingLifetime = initialStripsLifetime;
+            }
             
             // Set the spawn position to the current position of the silhouette
             deathtrapTouchPositiveFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);

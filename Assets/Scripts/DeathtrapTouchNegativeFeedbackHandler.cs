@@ -13,6 +13,7 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
 
     private VisualEffect effect;
     private float stripsLifetime;
+    private float initialStripsLifetime;
 
     private bool shouldMove = false; // To control when the Attractor object should start moving
     private Vector3 particleDirection;
@@ -32,6 +33,7 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
 
         effect = GetComponent<VisualEffect>();
         stripsLifetime = effect.GetFloat("StripsLifetime");
+        initialStripsLifetime = stripsLifetime;
         Debug.Log("StripsLifetime in Start: " + stripsLifetime);
         //spawnPosition = effect.GetVector3("SpawnPosition");
         spawnPosition = attractor.transform.position;
@@ -192,10 +194,20 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
         spawnPosition = position;
     }
     
+    public VisualEffect GetEffect()
+    {
+        return effect;
+    }
+    
     
     public float GetStripsLifetime()
     {
         return stripsLifetime;
+    }
+    
+    public float GetInitialStripsLifetime()
+    {
+        return initialStripsLifetime;
     }
     
     

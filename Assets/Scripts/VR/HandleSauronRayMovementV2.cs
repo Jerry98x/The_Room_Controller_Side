@@ -91,7 +91,7 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     private bool insideAnyCollider = false;
     
-    private float colliderHapticFeedbackAmplitude = 0.5f;
+    private float colliderHapticFeedbackAmplitude = 0.25f;
     private float colliderHapticFeedbackDuration = 0.2f;
     
     
@@ -161,6 +161,14 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             // Handle control interruption
             HandleControlInterruption();
             
+        }
+        else
+        {
+            if (coneSurfaceRenderer.materials.Length > 1)
+            {
+                AddMaterialToConeSurfaceRenderer(1);
+            }
+            portalConeBase.SetActive(false);
         }
         
         
@@ -423,7 +431,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         {
             // Stop flashing visual effects
             portalConeBase.SetActive(false);
-            AddMaterialToConeSurfaceRenderer(1);
+            if (coneSurfaceRenderer.materials.Length > 1)
+            {
+                AddMaterialToConeSurfaceRenderer(1);
+            }
             
             previousPosition = rayEndPoint.position;
             rayEndPointRb.MovePosition(newEndPointPosition);
@@ -433,7 +444,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         {
             // Start flashing visual effects
             portalConeBase.SetActive(true);
-            AddMaterialToConeSurfaceRenderer(2);
+            if (coneSurfaceRenderer.materials.Length < 2)
+            {
+                AddMaterialToConeSurfaceRenderer(2);
+            }
             
             // Get the normal of the surface we're colliding with
             //Debug.DrawRay(hit.point, hit.normal, Color.red, 2f);

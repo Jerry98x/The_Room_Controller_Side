@@ -1,5 +1,6 @@
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using Core;
 using Oasis.GameEvents;
@@ -15,8 +16,6 @@ public class UDPManager : Monosingleton<UDPManager>
     
     // Event
     public MessageReceivedEvent onMessageReceived;
-    
-    
     
     
     [Header("Network setup")]
@@ -143,14 +142,20 @@ public class UDPManager : Monosingleton<UDPManager>
     
     private void ReceiveMessages()
     {
-        Debug.Log("RICEZIONE: inizio");
         if (_udpMessenger.UnreadMsgsPresent)
         {
-            Debug.Log("RICEZIONE: ci sono messaggi non letti");
-            var messages = _udpMessenger.UnreadUdpMessages;
+            var messages = _udpMessenger.UnreadUdpMessages; 
+            foreach (var udpMessage in messages)
+            {
+                
+                Debug.Log("I CAZZO DI MESSAGGI:" + udpMessage.Msg);
+                
+            }
+            Debug.Log("RICEZIONE: il numero è " + messages.Count);
 
             foreach (var message in messages)
             {
+                Debug.Log("RICEZIONE: il messaggio è " + message.Msg + " al tempo " + Time.time);
 
                 // Invoke the event with the message's string and the EndPointSO instance
                 onMessageReceived.Invoke(message.Msg, message.Sender);

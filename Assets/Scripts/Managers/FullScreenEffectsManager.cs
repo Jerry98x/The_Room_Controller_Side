@@ -22,6 +22,7 @@ public class FullScreenEffectsManager : MonoBehaviour
 
     private int voronoiIntensity = Shader.PropertyToID("_voronoiIntensity");
     private int vignetteIntensity = Shader.PropertyToID("_vignetteIntensity");
+    private int lightAlpha = Shader.PropertyToID("_lightAlpha");
     
 
     private void Start()
@@ -39,24 +40,26 @@ public class FullScreenEffectsManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            DisplayFullScreenEffect(3, 5);
+            DisplayFullScreenEffect(3, 5, false);
         }
     }
 
 
-    public void DisplayFullScreenEffect(int intensity, int baseDuration)
+    public void DisplayFullScreenEffect(int intensity, int baseDuration, bool isPositive)
     {
         switch (intensity)
         {
             case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
-                StopEffect();
+                StopEffect(isPositive);
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+                StopEffect(false);
                 SetPositiveEffectDisplayTime(baseDuration);
                 StartCoroutine(DisplayPositiveEffect());
                 break;
             case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                StopEffect(true);
                 SetNegativeEffectDisplayTime(baseDuration);
                 StartCoroutine(DisplayNegativeEffect());
                 break;
@@ -136,31 +139,51 @@ public class FullScreenEffectsManager : MonoBehaviour
     }
 
 
-    private void StopEffect()
+    private void StopEffect(bool isPositive)
     {
         // Stop both effects prematurely with respect to their lifetime, but make them fade out
-        StartCoroutine(FadeOutEffect(negativeEffectRendererFeature, negativeEffectMaterial, negativeEffectFadeOutDuration));
-        StartCoroutine(FadeOutEffect(positiveEffectRendererFeature, positiveEffectMaterial, positiveEffectFadeOutDuration));
+        StartCoroutine(FadeOutEffect(isPositive, negativeEffectRendererFeature, negativeEffectMaterial, negativeEffectFadeOutDuration));
+        StartCoroutine(FadeOutEffect(isPositive, positiveEffectRendererFeature, positiveEffectMaterial, positiveEffectFadeOutDuration));
     }
     
-    IEnumerator FadeOutEffect(ScriptableRendererFeature scriptableRendererFeature, Material material, float duration)
+    IEnumerator FadeOutEffect(bool isPositive, ScriptableRendererFeature scriptableRendererFeature, Material material, float duration)
     {
         float elapsedTime = 0f;
-        float initialVoronoi = material.GetFloat(voronoiIntensity);
-        float initialVignette = material.GetFloat(vignetteIntensity);
-        
-        while (elapsedTime < duration)
+
+        if(isPositive)
         {
-            elapsedTime += Time.deltaTime;
+            float initialLightAlpha = material.GetFloat(lightAlpha);
             
-            float lerpedVoronoi = Mathf.Lerp(initialVoronoi, 0f, elapsedTime / duration);
-            float lerpedVignette = Mathf.Lerp(initialVignette, 0f, elapsedTime / duration);
-            
-            material.SetFloat(voronoiIntensity, lerpedVoronoi);
-            material.SetFloat(vignetteIntensity, lerpedVignette);
-            
-            yield return null;
+            while(elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                
+                float lerpedLightAlpha = Mathf.Lerp(initialLightAlpha, 0f, elapsedTime / duration);
+                
+                material.SetFloat(lightAlpha, lerpedLightAlpha);
+                
+                yield return null;
+            }
         }
+        else
+        {
+            float initialVoronoi = material.GetFloat(voronoiIntensity);
+            float initialVignette = material.GetFloat(vignetteIntensity);
+            
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                
+                float lerpedVoronoi = Mathf.Lerp(initialVoronoi, 0f, elapsedTime / duration);
+                float lerpedVignette = Mathf.Lerp(initialVignette, 0f, elapsedTime / duration);
+                
+                material.SetFloat(voronoiIntensity, lerpedVoronoi);
+                material.SetFloat(vignetteIntensity, lerpedVignette);
+                
+                yield return null;
+            }
+        }
+        
         
         scriptableRendererFeature.SetActive(false);
     }

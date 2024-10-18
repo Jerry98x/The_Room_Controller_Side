@@ -116,6 +116,11 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         spawnPosition = position;
     }
     
+    public VisualEffect GetEffect()
+    {
+        return effect;
+    }
+    
     
     public float GetGoodParticlesMaxLifetime()
     {
