@@ -307,6 +307,18 @@ public class NetoFeedbackHandler : MonoBehaviour
     }
     
     
+    public void IncreaseAudioEffectVolume(float vol)
+    {
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, 0, 1);
+    }
+    
+    public void IncreaseParticleEffectLifeTime(float deltaLifetime)
+    {
+        ParticleSystem.MainModule main = partSystem.main;
+        main.startLifetime = main.startLifetime.constant + deltaLifetime;
+    }
+    
+    
     
     
     

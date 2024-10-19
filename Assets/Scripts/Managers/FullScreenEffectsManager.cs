@@ -106,7 +106,7 @@ public class FullScreenEffectsManager : MonoBehaviour
     private IEnumerator DisplayPositiveEffect()
     {
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         
         
         positiveEffectRendererFeature.SetActive(true);
@@ -201,6 +201,15 @@ public class FullScreenEffectsManager : MonoBehaviour
         
     }
     
+    public void SetPositiveEffectDisplayTime(float time)
+    {
+        positiveEffectDisplayTime = time;
+    }
+    
+    public void SetPositiveEffectFadeOutDuration(float time)
+    {
+        positiveEffectFadeOutDuration = time;
+    }
     
     public void SetNegativeEffectDisplayTime(float time)
     {
@@ -212,14 +221,14 @@ public class FullScreenEffectsManager : MonoBehaviour
         negativeEffectFadeOutDuration = time;
     }
     
-    public void SetPositiveEffectDisplayTime(float time)
+    public bool IsPositiveFullScreenEffectPlaying()
     {
-        positiveEffectDisplayTime = time;
+        return positiveEffectRendererFeature.isActive;
     }
     
-    public void SetPositiveEffectFadeOutDuration(float time)
+    public bool IsNegativeFullScreenEffectPlaying()
     {
-        positiveEffectFadeOutDuration = time;
+        return negativeEffectRendererFeature.isActive;
     }
 
 }

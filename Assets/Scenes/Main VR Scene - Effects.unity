@@ -6803,6 +6803,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 529976887}
   m_CullTransparentMesh: 1
+--- !u!198 &530036331 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6214038473859831171, guid: 14a44f16a2195484ca6a535bfaa05760,
+    type: 3}
+  m_PrefabInstance: {fileID: 1080573277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &531959924
 GameObject:
   m_ObjectHideFlags: 0
@@ -8320,17 +8326,17 @@ PrefabInstance:
     - target: {fileID: 3877045268373941289, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
-      value: 2.9502935
+      value: 3.5916944
       objectReference: {fileID: 0}
     - target: {fileID: 3877045268373941289, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
-      value: 2.9537225
+      value: 3.0380855
       objectReference: {fileID: 0}
     - target: {fileID: 3877045268373941289, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.z
-      value: 16.288391
+      value: 18.180872
       objectReference: {fileID: 0}
     - target: {fileID: 3908078281473070903, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
@@ -13144,6 +13150,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
+      propertyPath: voiceParticleSystem
+      value: 
+      objectReference: {fileID: 867432468}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
       propertyPath: emergencyModeHandler
       value: 
       objectReference: {fileID: 1742500648}
@@ -16460,12 +16471,12 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -16485,12 +16496,12 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -16940,6 +16951,12 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04, y: 0.040000003, z: 0.01}
   m_Center: {x: 9.313226e-10, y: 6.693881e-10, z: -0.025}
+--- !u!198 &867432468 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6214038473859831171, guid: 14a44f16a2195484ca6a535bfaa05760,
+    type: 3}
+  m_PrefabInstance: {fileID: 755607389}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &894207167
 GameObject:
   m_ObjectHideFlags: 0
@@ -18155,6 +18172,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2e71b0d84c7128f4f913e3e937a4af1c,
         type: 2}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: voiceParticleSystem
+      value: 
+      objectReference: {fileID: 980043848}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: emergencyModeHandler
@@ -20224,6 +20246,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 11e320b240b4ae74ab715874b7aecf2d,
         type: 2}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: voiceParticleSystem
+      value: 
+      objectReference: {fileID: 530036331}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: emergencyModeHandler
@@ -26197,6 +26224,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
+      propertyPath: voiceParticleSystem
+      value: 
+      objectReference: {fileID: 1717173086}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
       propertyPath: emergencyModeHandler
       value: 
       objectReference: {fileID: 405468719}
@@ -31214,6 +31246,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5594b9e3bb866ee44899cbc04c72dbd0,
         type: 2}
+    - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: voiceParticleSystem
+      value: 
+      objectReference: {fileID: 273197018}
     - target: {fileID: 1730159053930928556, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: emergencyModeHandler

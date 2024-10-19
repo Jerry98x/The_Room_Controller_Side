@@ -293,16 +293,28 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
         else
         {
+            float deltaTimeToAdd = 0.03f;
+            // Effect
             if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
             {
-                float deltaTimeToAdd = 0.03f;
                 deathtrapTouchNegativeFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
             }
             else if (deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
             {
-                float deltaTimeToAdd = 0.03f;
                 deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMinLifetime(deltaTimeToAdd);
                 deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMaxLifetime(deltaTimeToAdd);
+            }
+            
+            // No need to handle sound, because it loops automatically
+            
+            // Fullscreen effect
+            if (fullScreenEffectsManager.IsNegativeFullScreenEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
+            {
+                fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, false);
+            }
+            else if (fullScreenEffectsManager.IsPositiveFullScreenEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
+            {
+                fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, true);
             }
         }
         
@@ -360,28 +372,36 @@ public class RoomDeathtrapElement : RoomBasicElement
         // In case the touch intensity is > 0, the touch feedback effect should be played
         // However, first we need to check if the human silhouette is active, so if for some reason / error
         // the silhouette is not active, we are going to activate it before playing the touch feedback effect
-        if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY && !humanSilhouette.activeSelf)
+        if (!humanSilhouette.activeSelf)
         {
             // Play the silhouette effect, positioning it at a reasonable fixed distance in this case
             //PresenceDetected((int)Constants.DEATHTRAP_SONAR_DISTANCE_MIN);
-            humanSilhouette.SetActive(true);
-            humanSilhouette.transform.position = lastSilhouettePosition;
+            if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
+            {
+                humanSilhouette.SetActive(true);
+                humanSilhouette.transform.position = lastSilhouettePosition;
+            }
+            
+        }
+        else
+        {
+            switch (touchIntensity)
+            {
+                case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                    deathtrapTouchNegativeFeedbackHandler.StopEffect();
+                    deathtrapTouchPositiveFeedbackHandler.StopEffect();
+                    break;
+                case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+                    GeneratePositiveParticlesEffect(touchIntensity);
+                    break;
+                case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                    GrowVinesEffect(touchIntensity);
+                    break;
+            }
         }
         
-        switch (touchIntensity)
-        {
-            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
-                deathtrapTouchNegativeFeedbackHandler.StopEffect();
-                deathtrapTouchPositiveFeedbackHandler.StopEffect();
-                break;
-            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
-                GeneratePositiveParticlesEffect(touchIntensity);
-                break;
-            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
-            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
-                GrowVinesEffect(touchIntensity);
-                break;
-        }
+        
     }
 
 
@@ -401,29 +421,6 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
-    
-    private void GrowVinesEffect(int touchIntensity)
-    {
-        Debug.Log("Growing vines with touch intensity: " + touchIntensity);
-        // Double check
-        if(humanSilhouette.activeSelf && touchIntensity > 1 && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
-        {
-            // If the positive effect is playing, stop it and smoothly transition to the negative effect
-            if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
-            {
-                deathtrapTouchPositiveFeedbackHandler.StopEffect();
-                initialGoodParticlesRemainingLifetime = initialGoodParticlesLifetime;
-            }
-            
-            
-            // Set the spawn position to the current position of the silhouette
-            deathtrapTouchNegativeFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
-            //deathtrapTouchFeedbackHandler.SetAttractorPosition(humanSilhouette.transform.position);
-            deathtrapTouchNegativeFeedbackHandler.ResetInitialPosition();
-            deathtrapTouchNegativeFeedbackHandler.VinesEffectStarted();
-        }
-    }
-    
     private void GeneratePositiveParticlesEffect(int touchIntensity)
     {
         // Double check
@@ -440,6 +437,28 @@ public class RoomDeathtrapElement : RoomBasicElement
             deathtrapTouchPositiveFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
             //deathtrapTouchPositiveFeedbackHandler.ResetInitialPosition();
             deathtrapTouchPositiveFeedbackHandler.GoodParticlesEffectStarted();
+        }
+    }
+    
+    
+    private void GrowVinesEffect(int touchIntensity)
+    {
+        // Double check
+        if(humanSilhouette.activeSelf && touchIntensity > 1 && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
+        {
+            // If the positive effect is playing, stop it and smoothly transition to the negative effect
+            if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
+            {
+                deathtrapTouchPositiveFeedbackHandler.StopEffect();
+                initialGoodParticlesRemainingLifetime = initialGoodParticlesLifetime;
+            }
+            
+            
+            // Set the spawn position to the current position of the silhouette
+            deathtrapTouchNegativeFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
+            //deathtrapTouchFeedbackHandler.SetAttractorPosition(humanSilhouette.transform.position);
+            deathtrapTouchNegativeFeedbackHandler.ResetInitialPosition();
+            deathtrapTouchNegativeFeedbackHandler.VinesEffectStarted();
         }
     }
 

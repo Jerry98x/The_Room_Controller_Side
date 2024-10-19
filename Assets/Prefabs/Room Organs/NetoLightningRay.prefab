@@ -5315,6 +5315,7 @@ MonoBehaviour:
   receivingEndPointSO: {fileID: 0}
   netoFeedbackHandler: {fileID: 0}
   emergencyModeHandler: {fileID: 0}
+  voiceParticleSystem: {fileID: 0}
 --- !u!1 &2359166916280231782
 GameObject:
   m_ObjectHideFlags: 0
@@ -6363,7 +6364,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 961.0404, y: 540.5466, z: 10.331295}
+      - m_Value: {x: 640.4154, y: 221.29659, z: 10.331295}
         m_Name: Attractor
         m_Overridden: 1
       - m_Value: {x: -3.319782, y: 0.6010768, z: 13.44641}
@@ -7540,7 +7541,7 @@ PrefabInstance:
     - target: {fileID: 8444914307040689151, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
       propertyPath: m_Name
-      value: Ring Particle System Cone
+      value: VoiceRingParticleSystem
       objectReference: {fileID: 0}
     - target: {fileID: 8444914307040689151, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
@@ -7824,7 +7825,7 @@ PrefabInstance:
     - target: {fileID: 8444914307040689151, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
       propertyPath: m_Name
-      value: Ring Particle System Cone
+      value: FeedbackRingParticleSystem
       objectReference: {fileID: 0}
     - target: {fileID: 8444914307040689151, guid: b601e460cb2c8944180157a740b6e5c8,
         type: 3}
@@ -8292,12 +8293,12 @@ PrefabInstance:
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
-      value: 963.3495
+      value: 642.7245
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
-      value: 540.8503
+      value: 221.6003
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}

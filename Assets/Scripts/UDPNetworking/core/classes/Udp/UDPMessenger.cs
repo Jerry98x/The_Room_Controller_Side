@@ -178,15 +178,9 @@ public class UDPMessenger
             _unreadUdpMsgs.Add(LatestUdpMsg);
             
             // if maximum amount has been reached, remove oldest unread message
-            Debug.Log("QUANTI MINCHIA SONO I MESSAGGI NON LETTI? " + _unreadUdpMsgs.Count);
-            foreach (var udpMessage in _unreadUdpMsgs)
-            {
-                Debug.Log("QUALI MINCHIA SONO? " + udpMessage.Msg);
-            }
 
             if (_unreadUdpMsgs.Count > _bufferSize)
             {
-                //Debug.Log("MINCHIA: rimozione messaggio " + _unreadUdpMsgs[0].Msg);
                 _unreadUdpMsgs.RemoveAt(0);
             }*/
                 

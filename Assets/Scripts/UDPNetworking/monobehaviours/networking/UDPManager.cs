@@ -145,18 +145,9 @@ public class UDPManager : Monosingleton<UDPManager>
         if (_udpMessenger.UnreadMsgsPresent)
         {
             var messages = _udpMessenger.UnreadUdpMessages; 
-            foreach (var udpMessage in messages)
-            {
-                
-                Debug.Log("I CAZZO DI MESSAGGI:" + udpMessage.Msg);
-                
-            }
-            Debug.Log("RICEZIONE: il numero è " + messages.Count);
 
             foreach (var message in messages)
             {
-                Debug.Log("RICEZIONE: il messaggio è " + message.Msg + " al tempo " + Time.time);
-
                 // Invoke the event with the message's string and the EndPointSO instance
                 onMessageReceived.Invoke(message.Msg, message.Sender);
 

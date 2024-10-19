@@ -74,7 +74,7 @@ public class RoomSauronElement : RoomBasicElement
         }
         else
         {
-            if (sauronFeedbackHandler.IsEffectPlaying())
+            if (sauronFeedbackHandler.IsEffectPlaying() && messageContent[0] > 0)
             {
                 float deltaTimeToAdd = 0.3f;
                 sauronFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
@@ -116,21 +116,13 @@ public class RoomSauronElement : RoomBasicElement
         // The value of the intensity has changes since the last message
 
         if (touchIntensity > 0)
-
         {
-
             // Someone touched the Sauron element
-
-            sauronFeedbackHandler.HandleSilhouetteAndVinesEffects();
-
-        }
-        else
-        {
-
-            //Someone who was touching the Sauron element has stopped
-
+            if (!sauronFeedbackHandler.IsEffectPlaying() && !sauronFeedbackHandler.GetHumanSilhouette().activeSelf)
+            {
+                sauronFeedbackHandler.HandleSilhouetteAndVinesEffects();
+            }
             
-
         }
         
     }

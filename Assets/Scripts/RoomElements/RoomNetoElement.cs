@@ -15,6 +15,7 @@ public class RoomNetoElement : RoomBasicElement
 
     [SerializeField] private NetoFeedbackHandler netoFeedbackHandler;
     [SerializeField] private HandleNetoRayMovement emergencyModeHandler;
+    [SerializeField] private ParticleSystem voiceParticleSystem;
     
     private Vector3 initialPosition;
     
@@ -73,10 +74,28 @@ public class RoomNetoElement : RoomBasicElement
         
         if(lastMessage[0] != messageContent[0])
         {
-            TriggerNetoEffects(messageContent[0]);
+            //TriggerNetoEffects(messageContent[0]);
+            if (!voiceParticleSystem.isPlaying)
+            {
+                TriggerNetoEffects(messageContent[0]);
+            }
+            
+        }
+        else
+        {
+            float deltaTimeToAdd = 0.3f;
+            // Increase the lifetime of the audio feedback and, if needed, change the volume
+            /*netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
+            netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]);*/
+            
+            if(!voiceParticleSystem.isPlaying)
+            {
+                netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
+                netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]);
+            }
         }
 
-        if (lastMessage != messageContent)
+        if (lastMessage[1] != messageContent[1])
         {
             CheckEmergencyMode(messageContent[1]);
         }

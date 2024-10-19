@@ -351,6 +351,11 @@ public class SauronFeedbackHandler : MonoBehaviour
         }
         return false;
     }
+    
+    public GameObject GetHumanSilhouette()
+    {
+        return humanSilhouette;
+    }
 
 
 
