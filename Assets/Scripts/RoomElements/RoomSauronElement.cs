@@ -76,8 +76,13 @@ public class RoomSauronElement : RoomBasicElement
         {
             if (sauronFeedbackHandler.IsEffectPlaying() && messageContent[0] > 0)
             {
-                float deltaTimeToAdd = 0.3f;
+                float deltaTimeToAdd = 0.03f;
+                
                 sauronFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
+            }
+            else
+            {
+                Debug.Log("Esploda la madonna");
             }
         }
         
@@ -117,11 +122,20 @@ public class RoomSauronElement : RoomBasicElement
 
         if (touchIntensity > 0)
         {
+            Debug.Log("DIOOOOOOOOOO TOUCHING");
+            sauronFeedbackHandler.SetTouchCheck(true);
             // Someone touched the Sauron element
             if (!sauronFeedbackHandler.IsEffectPlaying() && !sauronFeedbackHandler.GetHumanSilhouette().activeSelf)
             {
                 sauronFeedbackHandler.HandleSilhouetteAndVinesEffects();
             }
+            
+        }
+        else
+        {
+            Debug.Log("DIOOOOOOOOOO NOT TOUCHING");
+            sauronFeedbackHandler.ResetParticlesLifetime();
+            sauronFeedbackHandler.SetTouchCheck(false);
             
         }
         

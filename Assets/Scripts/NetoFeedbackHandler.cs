@@ -174,7 +174,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         silhouetteOriginalPosition = humanSilhouette.transform.position;
         
         float fadeInDuration = 0.2f;
-        float movementDuration = 0.8f;
+        float movementDuration = 0.4f;
         bool forward = true;
         silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
         //silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(movementDuration));
@@ -280,8 +280,8 @@ public class NetoFeedbackHandler : MonoBehaviour
     private IEnumerator WaitForAudioEffectToEnd()
     {
         yield return new WaitUntil( () => !partSystem.IsAlive() );
-        float fadeOutDuration = 0.3f;
-        float movementDuration = 0.8f;
+        float fadeOutDuration = 0.2f;
+        float movementDuration = 0.4f;
         StartCoroutine(MoveSilhouette(movementDuration, false, () =>
         {
             StartCoroutine(FadeOutSilhouette(fadeOutDuration));
@@ -297,11 +297,11 @@ public class NetoFeedbackHandler : MonoBehaviour
     {
         partSystem.transform.position = humanSilhouette.transform.position;
         ParticleSystem.MainModule main = partSystem.main;
-        main.startSize = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, maxParticleSize, minParticleSize);
+        main.startSize = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, maxParticleSize, minParticleSize);
         partSystem.Play();
         shouldMove = true;
         audioSource[0].transform.position = humanSilhouette.transform.position;
-        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, 0, 1);
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0, 1);
         audioSource[0].Play();
         
     }
@@ -309,7 +309,7 @@ public class NetoFeedbackHandler : MonoBehaviour
     
     public void IncreaseAudioEffectVolume(float vol)
     {
-        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_MIN, 0, 1);
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0, 1);
     }
     
     public void IncreaseParticleEffectLifeTime(float deltaLifetime)

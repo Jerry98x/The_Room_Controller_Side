@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.VFX;
@@ -49,6 +50,13 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private bool avoidMultipleRestarts = false;
     
+    private int timesAboveMaxDistance = 0;
+    private int timesAboveMaxDistanceThreshold = 10;
+    private int timesGivingGoodTouch = 0;
+    private int timesGivingGoodTouchThreshold = 5;
+    private int timesGivingBadTouch = 0;
+    private int timesGivingBadTouchThreshold = 5;
+    
     // Testing purposes
     private bool isKKeyHeldDown = false;
     private bool isHKeyHeldDown = false;
@@ -83,7 +91,7 @@ public class RoomDeathtrapElement : RoomBasicElement
     {
         //UpdateV1();
         UpdateV2();
-        Debug.Log("AVOID MULTIPLE RESTARTS: " + avoidMultipleRestarts);
+        Debug.Log("TIMES GIVING GOOD TOUCH UPDATE: " + timesGivingGoodTouch);
         
     }
 
@@ -111,9 +119,9 @@ public class RoomDeathtrapElement : RoomBasicElement
             Debug.Log("DENTRO GETKEYDOWN");
             avoidMultipleRestarts = true;
             isKKeyHeldDown = true;
-            HandleTouchEffect(2);
-            PlayAmbientTouchSound(2);
-            HandleFullScreenEffect(2, false);
+            HandleTouchEffect(3);
+            PlayAmbientTouchSound(3);
+            HandleFullScreenEffect(3, false);
         }
         
         // Check if the key is being held down
@@ -205,36 +213,6 @@ public class RoomDeathtrapElement : RoomBasicElement
         HandleFullScreenEffect(0, false);
     }
 
-    
-
-    private void UpdateV1()
-    {
-        // For testing purposes
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            PresenceDetected(UnityEngine.Random.Range(0, 14000));
-        }
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            PresenceDetected(15000);
-        }
-        
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            HandleTouchEffect(2);
-            PlayAmbientTouchSound(2);
-            HandleFullScreenEffect(2, false);
-        }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            HandleTouchEffect(0);
-            PlayAmbientTouchSound(0);
-            HandleFullScreenEffect(0, false);
-        }
-        
-    }
-
 
     protected override void ExecuteMessageResponse(string message)
     {
@@ -283,39 +261,35 @@ public class RoomDeathtrapElement : RoomBasicElement
             PresenceDetected(messageContent[1]);
         }*/
         PresenceDetected(messageContent[1]);
-        
+
+        timesGivingGoodTouch += 1;
+        timesGivingBadTouch += 1;
         if(lastMessage[0] != messageContent[0])
         {
-            HandleTouchEffect(messageContent[0]);
-            PlayAmbientTouchSound(messageContent[0]);
-            HandleFullScreenEffect(messageContent[0], false);
+            if ((lastMessage[0] == Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY && messageContent[0] == Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY)
+                || (lastMessage[0] == Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY && messageContent[0] == Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY))
+            {
+                // Increase the lifetime of the effect and handle the fact that Medium and Hard touch are the same in terms of effect
+                HandleIncreaseLifetime(messageContent[0]);
+            }
+            else
+            {
+                // General case
+                if (timesGivingGoodTouch > timesGivingGoodTouchThreshold || timesGivingBadTouch > timesGivingBadTouchThreshold)
+                {
+                  HandleTouchEffect(messageContent[0]);
+                  PlayAmbientTouchSound(messageContent[0]);
+                  HandleFullScreenEffect(messageContent[0], false);   
+                }
+                
+            }
+            
             
         }
         else
         {
-            float deltaTimeToAdd = 0.03f;
-            // Effect
-            if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
-            {
-                deathtrapTouchNegativeFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
-            }
-            else if (deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
-            {
-                deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMinLifetime(deltaTimeToAdd);
-                deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMaxLifetime(deltaTimeToAdd);
-            }
-            
-            // No need to handle sound, because it loops automatically
-            
-            // Fullscreen effect
-            if (fullScreenEffectsManager.IsNegativeFullScreenEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
-            {
-                fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, false);
-            }
-            else if (fullScreenEffectsManager.IsPositiveFullScreenEffectPlaying() && messageContent[0] != Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
-            {
-                fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, true);
-            }
+            // Increase the lifetime of the effect and handle the fact that Medium and Hard touch are the same in terms of effect
+            HandleIncreaseLifetime(messageContent[0]);
         }
         
         
@@ -367,72 +341,71 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     
     
+    
     private void HandleTouchEffect(int touchIntensity)
     {
         // In case the touch intensity is > 0, the touch feedback effect should be played
         // However, first we need to check if the human silhouette is active, so if for some reason / error
         // the silhouette is not active, we are going to activate it before playing the touch feedback effect
-        if (!humanSilhouette.activeSelf)
+        if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY && !humanSilhouette.activeSelf)
         {
             // Play the silhouette effect, positioning it at a reasonable fixed distance in this case
             //PresenceDetected((int)Constants.DEATHTRAP_SONAR_DISTANCE_MIN);
-            if (touchIntensity > Constants.DEATHTRAP_NO_TOUCH_INTENSITY)
-            {
-                humanSilhouette.SetActive(true);
-                humanSilhouette.transform.position = lastSilhouettePosition;
-            }
+            
+            humanSilhouette.SetActive(true);
+            humanSilhouette.transform.position = lastSilhouettePosition;
+            
             
         }
-        else
+        
+        switch (touchIntensity)
         {
-            switch (touchIntensity)
-            {
-                case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
-                    deathtrapTouchNegativeFeedbackHandler.StopEffect();
-                    deathtrapTouchPositiveFeedbackHandler.StopEffect();
-                    break;
-                case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                timesGivingBadTouch = 0;
+                deathtrapTouchNegativeFeedbackHandler.StopEffect();
+                timesGivingGoodTouch = 0;
+                deathtrapTouchPositiveFeedbackHandler.StopEffect();
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                timesGivingGoodTouch += 1;
+                Debug.Log("TIMES GIVING GOOD TOUCH HANDLE...: " + timesGivingGoodTouch);
+                if (timesGivingGoodTouch > timesGivingGoodTouchThreshold)
+                {
                     GeneratePositiveParticlesEffect(touchIntensity);
-                    break;
-                case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
-                case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                }
+                break;
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                timesGivingBadTouch += 1;
+                if (timesGivingBadTouch > timesGivingBadTouchThreshold)
+                {
                     GrowVinesEffect(touchIntensity);
-                    break;
-            }
+                }
+                
+                break;
         }
         
         
-    }
-
-
-    private void HandleFullScreenEffect(int touchIntensity, bool isPositive)
-    {
-        int duration;
-        if (isPositive)
-        {
-            duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
-        }
-        else
-        {
-            duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
-        }
         
-        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
     }
     
     
     private void GeneratePositiveParticlesEffect(int touchIntensity)
     {
-        // Double check
-        if (humanSilhouette.activeSelf && touchIntensity == 1 && !deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
+        
+        // If the negative effect is playing, stop it and smoothly transition to the positive effect
+        if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
         {
-            // If the negative effect is playing, stop it and smoothly transition to the positive effect
-            if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
-            {
-                deathtrapTouchNegativeFeedbackHandler.StopEffect();
-                initialStripsRemainingLifetime = initialStripsLifetime;
-            }
-            
+            deathtrapTouchNegativeFeedbackHandler.StopEffect();
+            initialStripsRemainingLifetime = initialStripsLifetime;
+            deathtrapTouchNegativeFeedbackHandler.ResetInitialLifetime();
+            timesGivingBadTouch = 0;
+        }
+        
+        // Double check
+        if (humanSilhouette.activeSelf && (touchIntensity == Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY || touchIntensity == Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY)
+                                       && !deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
+        {
             // Set the spawn position to the current position of the silhouette
             deathtrapTouchPositiveFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
             //deathtrapTouchPositiveFeedbackHandler.ResetInitialPosition();
@@ -443,17 +416,22 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     private void GrowVinesEffect(int touchIntensity)
     {
-        // Double check
-        if(humanSilhouette.activeSelf && touchIntensity > 1 && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
+        
+        // If the positive effect is playing, stop it and smoothly transition to the negative effect
+        if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
         {
-            // If the positive effect is playing, stop it and smoothly transition to the negative effect
-            if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
-            {
-                deathtrapTouchPositiveFeedbackHandler.StopEffect();
-                initialGoodParticlesRemainingLifetime = initialGoodParticlesLifetime;
-            }
-            
-            
+            deathtrapTouchPositiveFeedbackHandler.StopEffect();
+            initialGoodParticlesRemainingLifetime = initialGoodParticlesLifetime;
+            deathtrapTouchPositiveFeedbackHandler.ResetInitialLifetime();
+            timesGivingGoodTouch = 0;
+
+        }
+
+        
+        // Double check
+        if(humanSilhouette.activeSelf && touchIntensity == Constants.DEATHTRAP_HARD_TOUCH_INTENSITY &&
+           !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
+        {
             // Set the spawn position to the current position of the silhouette
             deathtrapTouchNegativeFeedbackHandler.SetSpawnPosition(humanSilhouette.transform.position);
             //deathtrapTouchFeedbackHandler.SetAttractorPosition(humanSilhouette.transform.position);
@@ -482,6 +460,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 }
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
                 // Play the good touch sound
                 if (badTouchSound.isPlaying)
                 {
@@ -492,7 +471,6 @@ public class RoomDeathtrapElement : RoomBasicElement
                     goodTouchSound.Play();
                 }
                 break;
-            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 // Play the bad touch sound
                 if (goodTouchSound.isPlaying)
@@ -510,54 +488,76 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     
     
-    
-    
-    
-    
-    private void ChangeDeathtrapEmissionColor(int touchIntensity)
+    private void HandleFullScreenEffect(int touchIntensity, bool isPositive)
     {
-        StopAllCoroutines();
-        Debug.Log("Changing color with touch intensity: " + touchIntensity);
-        switch (touchIntensity)
+        int duration;
+        if (isPositive)
         {
-            case 0:
-                StartCoroutine(ChangeEmissionColorGradually(initialColor));
-                break;
-            case 1:
-                StartCoroutine(ChangeEmissionColorGradually(softTouchColor));
-                break;
-            case 2:
-                StartCoroutine(ChangeEmissionColorGradually(mediumTouchColor));
-                break;
-            case 3:
-                StartCoroutine(ChangeEmissionColorGradually(hardTouchColor));
-                break;
+            duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
         }
+        else
+        {
+            duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
+        }
+        
+        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
     }
 
     
     
-    private IEnumerator ChangeEmissionColorGradually(Color targetColor)
+    
+    private void HandleIncreaseLifetime(int currentPressureMessage)
     {
-        
-        Debug.Log("Changing color coroutine with color: " + targetColor);
-        currentColor = deathtrapColor;
-        float duration = 1.0f; // Duration of the color change
-        float elapsed = 0.0f;
-  
-        while (elapsed < duration)
+        float deltaTimeToAdd = 0.03f;
+
+        // Effect
+        switch (currentPressureMessage)
         {
-            deathtrapColor = Color.Lerp(currentColor, targetColor, elapsed / duration);
-            deathtrapMaterial.SetColor(Constants.EMISSION_COLOR_ID, deathtrapColor);
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                if(deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying())
+                {
+                    timesGivingGoodTouch += 1;
+                    deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMinLifetime(deltaTimeToAdd);
+                    deathtrapTouchPositiveFeedbackHandler.IncreaseParticlesMaxLifetime(deltaTimeToAdd);
+                }
+                break;
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                if (deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
+                {
+                    timesGivingBadTouch += 1;
+                    deathtrapTouchNegativeFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
+                }
+                break;
+        }
+        
             
-            elapsed += Time.deltaTime;
-            yield return null;
+        // No need to handle sound, because it loops automatically
+            
+        
+        // Fullscreen effect
+        switch (currentPressureMessage)
+        {
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                if(fullScreenEffectsManager.IsPositiveFullScreenEffectPlaying())
+                {
+                    fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, true);
+                }
+                break;
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                if (fullScreenEffectsManager.IsNegativeFullScreenEffectPlaying())
+                {
+                    fullScreenEffectsManager.IncreaseFullScreenEffectDuration(deltaTimeToAdd, false);
+                }
+                break;
         }
-
-        //deathtrapMaterial.SetColor(Constants.EMISSION_COLOR_ID, targetColor);
         
     }
-    
     
     
     private void PresenceDetected(int detected)
@@ -565,6 +565,10 @@ public class RoomDeathtrapElement : RoomBasicElement
         Debug.Log("Changing silhouette at distance: " + detected);
         if (detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
         {
+            timesAboveMaxDistance = 0;
+            // Visitor is near the Deathrap
+            
+            
             /*// Make the silhouette look at the core center
             humanSilhouette.transform.LookAt(transform.position);*/
             
@@ -572,8 +576,6 @@ public class RoomDeathtrapElement : RoomBasicElement
             // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
             // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
             // the Deathtrap sphere and the effect is playing.
-            if (!deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() /*&& !deathtrapTouchFeedbackHandler.IsPositiveEffectPlaying()*/)
-            {
                 Vector3 newPosition;
                 if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)
                 {
@@ -587,6 +589,7 @@ public class RoomDeathtrapElement : RoomBasicElement
 
                 if(humanSilhouette.activeSelf)
                 {
+                    // Silhouette already present and active
                     if (silhouetteMoveCoroutine != null)
                     {
                         StopCoroutine(silhouetteMoveCoroutine);
@@ -595,45 +598,53 @@ public class RoomDeathtrapElement : RoomBasicElement
                 }
                 else
                 {
+                    // Silhouette needs to appear
                     float fadeInDuration = 0.4f;
                     humanSilhouette.SetActive(true);
                     
-                    if (silhouetteFadeInCoroutine != null)
+                    /*if (silhouetteFadeInCoroutine != null)
                     {
                         StopCoroutine(silhouetteFadeInCoroutine);
-                    }
+                    }*/
                     if (silhouetteMoveCoroutine != null)
                     {
                         StopCoroutine(silhouetteMoveCoroutine);
                     }
                     
                     
-                    silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
+                    //silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
                     silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
                 }
 
                 lastSilhouettePosition = newPosition;
-            }
             
             
             
         }
         else
         {
-            // Visitor is going away from the Deathtrap
-            if(humanSilhouette.activeSelf)
+            timesAboveMaxDistance += 1;
+            if (!deathtrapTouchPositiveFeedbackHandler.IsPositiveEffectPlaying() &&
+                !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() &&
+                timesAboveMaxDistance > timesAboveMaxDistanceThreshold)
             {
-                float fadeOutDuration = 0.3f;
-                if (silhouetteFadeOutCoroutine != null)
+                // Visitor is going away from the Deathtrap
+                /*if(humanSilhouette.activeSelf)
                 {
+                    float fadeOutDuration = 0.3f;
+                    Debug.Log("FADEOUT COROUTINE CHECK SILHOUETTE");
                     if (silhouetteFadeOutCoroutine != null)
                     {
+                        Debug.Log("FADEOUT COROUTINE CHECK COROUTINE");
                         StopCoroutine(silhouetteFadeOutCoroutine);
                     }
-                }
                 
-                silhouetteFadeOutCoroutine = StartCoroutine(FadeOutSilhouette(fadeOutDuration));
+                    silhouetteFadeOutCoroutine = StartCoroutine(FadeOutSilhouette(fadeOutDuration));
+                }*/
+            
+                humanSilhouette.SetActive(false);
             }
+            
         }
         
     }
@@ -701,9 +712,10 @@ public class RoomDeathtrapElement : RoomBasicElement
             elapsed += Time.deltaTime;
             yield return null;
         }
+        Debug.Log("FADEOUT COROUTINE INSIDE");
         
         silhouetteEffect.SetFloat("Alpha", 0f);
-        humanSilhouette.SetActive(false);
+        //humanSilhouette.SetActive(false);
         
         
         /*Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
@@ -721,6 +733,52 @@ public class RoomDeathtrapElement : RoomBasicElement
         color.a = 0;
         silhouetteRenderer.material.color = color;
         humanSilhouette.SetActive(false);*/
+    }
+    
+    
+    
+    private void ChangeDeathtrapEmissionColor(int touchIntensity)
+    {
+        StopAllCoroutines();
+        Debug.Log("Changing color with touch intensity: " + touchIntensity);
+        switch (touchIntensity)
+        {
+            case 0:
+                StartCoroutine(ChangeEmissionColorGradually(initialColor));
+                break;
+            case 1:
+                StartCoroutine(ChangeEmissionColorGradually(softTouchColor));
+                break;
+            case 2:
+                StartCoroutine(ChangeEmissionColorGradually(mediumTouchColor));
+                break;
+            case 3:
+                StartCoroutine(ChangeEmissionColorGradually(hardTouchColor));
+                break;
+        }
+    }
+
+    
+    
+    private IEnumerator ChangeEmissionColorGradually(Color targetColor)
+    {
+        
+        Debug.Log("Changing color coroutine with color: " + targetColor);
+        currentColor = deathtrapColor;
+        float duration = 1.0f; // Duration of the color change
+        float elapsed = 0.0f;
+  
+        while (elapsed < duration)
+        {
+            deathtrapColor = Color.Lerp(currentColor, targetColor, elapsed / duration);
+            deathtrapMaterial.SetColor(Constants.EMISSION_COLOR_ID, deathtrapColor);
+            
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        //deathtrapMaterial.SetColor(Constants.EMISSION_COLOR_ID, targetColor);
+        
     }
     
 

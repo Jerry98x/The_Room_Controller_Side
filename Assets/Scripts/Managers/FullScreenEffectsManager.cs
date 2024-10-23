@@ -7,7 +7,7 @@ public class FullScreenEffectsManager : MonoBehaviour
 {
     
     [SerializeField] private float positiveEffectDisplayTime = 1f;
-    [SerializeField] private float positiveEffectFadeOutDuration = 0.5f;
+    [SerializeField] private float positiveEffectFadeOutDuration = 0.2f;
     
     [SerializeField] private ScriptableRendererFeature negativeEffectRendererFeature;
     [SerializeField] private ScriptableRendererFeature positiveEffectRendererFeature;
@@ -18,11 +18,14 @@ public class FullScreenEffectsManager : MonoBehaviour
     [SerializeField] private float vignetteIntensityStartAmount = 1.25f;
     
     private float negativeEffectDisplayTime = 1f;
-    private float negativeEffectFadeOutDuration = 0.5f;
+    private float negativeEffectFadeOutDuration = 0.2f;
 
     private int voronoiIntensity = Shader.PropertyToID("_voronoiIntensity");
     private int vignetteIntensity = Shader.PropertyToID("_vignetteIntensity");
     private int lightAlpha = Shader.PropertyToID("_lightAlpha");
+
+
+    private bool isTouchCheck = false;
     
 
     private void Start()
@@ -53,15 +56,19 @@ public class FullScreenEffectsManager : MonoBehaviour
                 StopEffect(isPositive);
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
-                StopEffect(false);
-                SetPositiveEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayPositiveEffect());
-                break;
             case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                //StopEffect(false);
+                negativeEffectRendererFeature.SetActive(false);
+                positiveEffectRendererFeature.SetActive(true);
+                /*SetPositiveEffectDisplayTime(baseDuration);
+                StartCoroutine(DisplayPositiveEffect());*/
+                break;
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
-                StopEffect(true);
-                SetNegativeEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayNegativeEffect());
+                //StopEffect(true);
+                positiveEffectRendererFeature.SetActive(false);
+                negativeEffectRendererFeature.SetActive(true);
+                /*SetNegativeEffectDisplayTime(baseDuration);
+                StartCoroutine(DisplayNegativeEffect());*/
                 break;
         }
     }
@@ -70,7 +77,7 @@ public class FullScreenEffectsManager : MonoBehaviour
     private IEnumerator DisplayNegativeEffect()
     {
         
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
         
         negativeEffectRendererFeature.SetActive(true);
         negativeEffectMaterial.SetFloat(voronoiIntensity, voronoiIntensityStartAmount);
@@ -78,11 +85,11 @@ public class FullScreenEffectsManager : MonoBehaviour
         
         //yield return new WaitForSeconds(negativeEffectDisplayTime);
         float elapsedTime = 0f;
-        while (elapsedTime < negativeEffectDisplayTime)
+        /*while (elapsedTime < negativeEffectDisplayTime)
         {
             elapsedTime += Time.deltaTime;
             yield return null;
-        }
+        }*/
         
         elapsedTime = 0f;
         while (elapsedTime < negativeEffectFadeOutDuration)
@@ -106,7 +113,7 @@ public class FullScreenEffectsManager : MonoBehaviour
     private IEnumerator DisplayPositiveEffect()
     {
         
-        yield return new WaitForSeconds(1.5f);
+        //yield return new WaitForSeconds(1.5f);
         
         
         positiveEffectRendererFeature.SetActive(true);
@@ -229,6 +236,16 @@ public class FullScreenEffectsManager : MonoBehaviour
     public bool IsNegativeFullScreenEffectPlaying()
     {
         return negativeEffectRendererFeature.isActive;
+    }
+
+    public bool IsTouching()
+    {
+        return isTouchCheck;
+    }
+
+    public void SetTouchCheck(bool isTouching)
+    {
+        isTouchCheck = isTouching;
     }
 
 }

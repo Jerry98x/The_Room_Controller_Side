@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -19,7 +20,11 @@ public class SauronFeedbackHandler : MonoBehaviour
     private VisualEffect silhouetteEffect;
     private Vector3 silhouetteOriginalPosition;
     private Vector3 attractorOriginalPosition;
+    private float particlesLifetime;
     private float stripsLifetime;
+    private float originalLifetime;
+
+    private bool isTouchCheck;
     
     private bool shouldMove = false; // To control when the Attractor object should start moving
     private Vector3 particleDirection;
@@ -37,7 +42,9 @@ public class SauronFeedbackHandler : MonoBehaviour
     private void Start()
     {
         effect = GetComponent<VisualEffect>();
+        particlesLifetime = effect.GetFloat("ParticlesLifetime");
         stripsLifetime = effect.GetFloat("StripsLifetime");
+        originalLifetime = stripsLifetime;
         //spawnPosition = effect.GetVector3("SpawnPosition");
         spawnPosition = attractor.transform.position;
         
@@ -59,6 +66,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     
     private void Update()
     {
+        Debug.Log("StripsLifetime " + stripsLifetime);
         // Particles effect needs to stop at 2/3 the distance between the spawn position and the particle endpoint position
         // Basically the "Lerp" function
         //particleEffectStopPosition = rayEndPoint.transform.position + 2f * (particleEndpointPosition.position - rayEndPoint.transform.position) / 3f;
@@ -88,7 +96,7 @@ public class SauronFeedbackHandler : MonoBehaviour
         
         
         float fadeInDuration = 0.2f;
-        float movementDuration = 0.8f;
+        float movementDuration = 0.4f;
         bool forward = true;
         
         // Start the coroutine to fade in the silhouette, then the coroutine to move the silhouette
@@ -206,10 +214,39 @@ public class SauronFeedbackHandler : MonoBehaviour
     private IEnumerator WaitForVinesEffectToEnd()
     {
         // Wait for the vines effect to end
-        yield return new WaitForSeconds(stripsLifetime);
-        //yield return new WaitUntil( () => effect.aliveParticleCount.Equals(0) );
+        //yield return new WaitForSeconds(stripsLifetime);
+        yield return new WaitUntil( () => IsEffectPlaying() );
+        //yield return new WaitForSeconds(stripsLifetime);
+        yield return new WaitUntil( () => !IsEffectPlaying() );
+        //yield return new WaitWhile(() => IsTouchingCheck());
+        //yield return new WaitForSeconds(stripsLifetime);
+        //yield return new WaitUntil(() => !IsTouchingCheck() );
+        //yield return new WaitUntil(() => stripsLifetime.Equals(originalLifetime));
+        
+        
+        
+        /*
+        float timeout = effect.GetFloat("StripsLifetime");
+        float elapsed = 0.0f;
+
+        // Wait until the effect is no longer playing or the touch check is false, with a timeout
+        while (elapsed < timeout)
+        {
+            elapsed += Time.deltaTime;
+            timeout = effect.GetFloat("StripsLifetime");
+            Debug.Log("Lifetime - check: " + timeout);
+            yield return null;
+        }*/
+
+        /*while (IsEffectPlaying() && IsTouchingCheck())
+        {
+            yield return null;
+        }*/
+        
+        
+        
         float fadeOutDuration = 0.3f;
-        float movementDuration = 0.8f;
+        float movementDuration = 0.4f;
         
         // Start the coroutine to move the silhouette back to its original position, then the one to fade it out
         StartCoroutine(MoveSilhouette(movementDuration, false, () =>
@@ -250,11 +287,14 @@ public class SauronFeedbackHandler : MonoBehaviour
             //effect.SetFloat("StripsLifetime", stripsLifetime);
             effect.Reinit();
                 
+            effect.SetFloat("ParticlesLifetime", originalLifetime);
+            effect.SetFloat("StripsLifetime", originalLifetime);
             spawnPosition = rayEndPoint.transform.position;
             effect.SetVector3("SpawnPosition", spawnPosition);
             attractor.position = rayEndPoint.transform.position;
             SetAttractorDirection();
                 
+            //SetTouchCheck(true);
             effect.SendEvent("VinesEffectPlay");
             shouldMove = true;
         }
@@ -332,8 +372,17 @@ public class SauronFeedbackHandler : MonoBehaviour
         
     public void IncreaseParticlesLifetime(float value)
     {
+        particlesLifetime += value;
         stripsLifetime += value;
+        Debug.Log("Lifetime - settaggio: " + stripsLifetime);
+        //effect.SetFloat("ParticlesLifetime", particlesLifetime);
         effect.SetFloat("StripsLifetime", stripsLifetime);
+    }
+
+    public void ResetParticlesLifetime()
+    {
+        particlesLifetime = originalLifetime;
+        stripsLifetime = originalLifetime;
     }
     
     
@@ -345,6 +394,7 @@ public class SauronFeedbackHandler : MonoBehaviour
     
     public bool IsEffectPlaying()
     {
+        Debug.Log("PARTICELLE ALIVE:" + effect.aliveParticleCount);
         if (effect.aliveParticleCount > 0)
         {
             return true;
@@ -355,6 +405,17 @@ public class SauronFeedbackHandler : MonoBehaviour
     public GameObject GetHumanSilhouette()
     {
         return humanSilhouette;
+    }
+
+
+    public void SetTouchCheck(bool touching)
+    {
+        isTouchCheck = touching;
+    }
+
+    public bool IsTouchingCheck()
+    {
+        return isTouchCheck;
     }
 
 

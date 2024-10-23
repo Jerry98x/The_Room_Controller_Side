@@ -16,6 +16,7 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     private VisualEffect effect;
     private float goodParticlesMinLifetime;
     private float goodParticlesMaxLifetime;
+    private float initialParticlesLifetime;
     private Vector3 attractorInitialPosition;
     
     private bool shouldMove = false; // To control when the Attractor object should start moving
@@ -34,6 +35,7 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         effect = GetComponent<VisualEffect>();
         goodParticlesMinLifetime = effect.GetFloat("Lifetime Min");
         goodParticlesMaxLifetime = effect.GetFloat("Lifetime Max");
+        initialParticlesLifetime = goodParticlesMaxLifetime;
         Debug.Log("Lifetime Min in Start: " + goodParticlesMinLifetime);
         Debug.Log("Lifetime Max in Start: " + goodParticlesMaxLifetime);
     }
@@ -65,7 +67,7 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     {
         /*effect.Stop();
         effect.Reinit();*/
-        float quickFadeOutDuration = 0.3f;
+        float quickFadeOutDuration = 0.2f;
         
         StartCoroutine(FadeOutPositiveEffect(quickFadeOutDuration));
         
@@ -97,6 +99,12 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     {
         attractor.position = attractorInitialPosition;
         shouldMove = false;
+    }
+
+    public void ResetInitialLifetime()
+    {
+        goodParticlesMinLifetime = initialParticlesLifetime;
+        goodParticlesMaxLifetime = initialParticlesLifetime;
     }
     
     public void IncreaseParticlesMinLifetime(float value)

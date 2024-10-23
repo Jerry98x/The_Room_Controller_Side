@@ -96,7 +96,7 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
     {
         /*effect.Stop();
         effect.Reinit();*/
-        float quickFadeOutDuration = 0.3f;
+        float quickFadeOutDuration = 0.2f;
         
         StartCoroutine(FadeOutNegativeEffect(quickFadeOutDuration));
     }
@@ -181,6 +181,12 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
         }
     }
 
+    
+    public void ResetInitialLifetime()
+    {
+        
+        stripsLifetime = initialStripsLifetime;
+    }
 
     public void IncreaseParticlesLifetime(float value)
     {

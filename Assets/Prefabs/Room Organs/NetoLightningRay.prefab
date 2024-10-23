@@ -5812,6 +5812,7 @@ MonoBehaviour:
   roomElement: {fileID: 1730159053930928556}
   roomCore: {fileID: 0}
   rayEndPoint: {fileID: 7954295430979137745}
+  rayEndPointObject: {fileID: 8726840885465354496}
   netoRayMovementHandler: {fileID: 0}
   netoPositionChangeEvent: {fileID: 11400000, guid: 547ee07fa9c825f4fa5084d4eba8685d,
     type: 2}
@@ -6364,7 +6365,7 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 640.4154, y: 221.29659, z: 10.331295}
+      - m_Value: {x: 961.0404, y: 540.5466, z: 10.331295}
         m_Name: Attractor
         m_Overridden: 1
       - m_Value: {x: -3.319782, y: 0.6010768, z: 13.44641}
@@ -8293,12 +8294,12 @@ PrefabInstance:
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.x
-      value: 642.7245
+      value: 963.3495
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.y
-      value: 221.6003
+      value: 540.8503
       objectReference: {fileID: 0}
     - target: {fileID: 6501095742748912001, guid: de0562c4743e8c14fb3c3e3800afa64f,
         type: 3}

@@ -72,27 +72,31 @@ public class RoomNetoElement : RoomBasicElement
         
         
         
-        if(lastMessage[0] != messageContent[0])
+        if(lastMessage[0] < Constants.NETO_MIC_VOLUME_THRESHOLD)
         {
-            //TriggerNetoEffects(messageContent[0]);
-            if (!voiceParticleSystem.isPlaying)
+            TriggerNetoEffects(messageContent[0]);
+            /*if (!voiceParticleSystem.isPlaying)
             {
                 TriggerNetoEffects(messageContent[0]);
-            }
+            }*/
             
         }
         else
         {
-            float deltaTimeToAdd = 0.3f;
-            // Increase the lifetime of the audio feedback and, if needed, change the volume
-            /*netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
-            netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]);*/
+            if (messageContent[0] >= Constants.NETO_MIC_VOLUME_THRESHOLD)
+            {
+               float deltaTimeToAdd = 0.03f;
+               // Increase the lifetime of the audio feedback and, if needed, change the volume
+               netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
+               netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]); 
+            }
             
-            if(!voiceParticleSystem.isPlaying)
+            //TODO: vedere se ha senso sto controllo ulteriore per evitare il sovrapporsi
+            /*if(!voiceParticleSystem.isPlaying)
             {
                 netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
                 netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]);
-            }
+            }*/
         }
 
         if (lastMessage[1] != messageContent[1])

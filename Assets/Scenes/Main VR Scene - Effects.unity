@@ -16471,12 +16471,12 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -16496,12 +16496,12 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -40264,7 +40264,7 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
@@ -40283,6 +40283,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Name
+      value: ParticlesLifetime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Name
+      value: StripsLifetime
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
       value: 1
       objectReference: {fileID: 0}
@@ -40298,6 +40308,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Overridden
       value: 0
       objectReference: {fileID: 0}
@@ -40309,6 +40329,16 @@ PrefabInstance:
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[1].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799329755407658876, guid: ce02e72fd9ce33849a97abd6330a3d3a,

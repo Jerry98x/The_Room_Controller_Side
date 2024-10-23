@@ -10,6 +10,7 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField] private RoomBasicElement roomElement;
     [SerializeField] private Transform roomCore;
     [SerializeField] private Transform rayEndPoint;
+    [SerializeField] private RayEndPoint rayEndPointObject;
     [SerializeField] private HandleNetoRayMovement netoRayMovementHandler;
     [SerializeField] private StringGameEventSO netoPositionChangeEvent;
     [SerializeField] private NetoFeedbackHandler netoFeedbackHandler;
@@ -152,8 +153,8 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         Debug.Log("DISTANCE ALONG DIRECTION: " + distanceAlongDirection);
         /*SphericalCoordinatesHandler.CartesianToSpherical(endPoint.transform.position, out float rad, out float inc, out float az);
         Debug.Log("ENDPOINT RADIUS: " + rad);*/
-        servoAngleNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(distanceAlongDirection, Constants.ENDPOINT_REACH_Z_MAX,
-            Constants.ENDPOINT_REACH_Z_MIN, Constants.NETO_SERVO_ANGLE_HIGH, Constants.NETO_SERVO_ANGLE_LOW));
+        servoAngleNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(distanceAlongDirection, rayEndPointObject.GetMaxEndpointDistance(),
+            rayEndPointObject.GetMinEndpointDistance(), Constants.NETO_SERVO_ANGLE_HIGH, Constants.NETO_SERVO_ANGLE_LOW));
         Debug.Log("FINAL SERVO ANGLE: " + servoAngleNeto);
         
         
