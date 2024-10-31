@@ -11444,13 +11444,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   positiveEffectDisplayTime: 1
   positiveEffectFadeOutDuration: 0.5
-  negativeEffectRendererFeature: {fileID: 840071893518926623, guid: c40be3174f62c4acf8c1216858c64956,
+  negativeEffectRendererFeature: {fileID: -1328891630014545359, guid: c40be3174f62c4acf8c1216858c64956,
     type: 2}
-  positiveEffectRendererFeature: {fileID: -987809118967432159, guid: c40be3174f62c4acf8c1216858c64956,
+  positiveEffectRendererFeature: {fileID: -1676747179870239028, guid: c40be3174f62c4acf8c1216858c64956,
     type: 2}
   negativeEffectMaterial: {fileID: 2100000, guid: da3baca6f6f61c54f88adb3169d30be0,
     type: 2}
-  positiveEffectMaterial: {fileID: 2100000, guid: 9c25bba7216a3604bbb9ceb03ce86fba,
+  positiveEffectMaterial: {fileID: 2100000, guid: c788fd25f280aaa4cba75d3d9e51f27e,
     type: 2}
   voronoiIntensityStartAmount: 1.25
   vignetteIntensityStartAmount: 1.25
@@ -13253,6 +13253,16 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Spatialize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3369019401300039219, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: startPoint
@@ -20301,6 +20311,16 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Spatialize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3369019401300039219, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: startPoint
@@ -26462,6 +26482,11 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3124766304562640896, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_Enabled
@@ -31486,6 +31511,11 @@ PrefabInstance:
       propertyPath: centerOfSphere
       value: 
       objectReference: {fileID: 2106698161}
+    - target: {fileID: 2951934718892148241, guid: 14a44f16a2195484ca6a535bfaa05760,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3124766304562640896, guid: 14a44f16a2195484ca6a535bfaa05760,
         type: 3}
       propertyPath: m_Enabled
@@ -38321,6 +38351,9 @@ VisualEffect:
       - m_Value: 3
         m_Name: Lifetime Max
         m_Overridden: 1
+      - m_Value: 1
+        m_Name: Initial Color Cycle Duration
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -38351,7 +38384,71 @@ VisualEffect:
     m_AnimationCurve:
       m_Array: []
     m_Gradient:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0, g: 0, b: 0, a: 0.78431374}
+          key1: {r: 0.08183997, g: 0.06429595, b: 0.5225216, a: 0.8}
+          key2: {r: 0.22332248, g: 0.038326584, b: 0.6316099, a: 0.7019608}
+          key3: {r: 0.67067516, g: 0.02519452, b: 0.118728876, a: 0.78431374}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 23214
+          ctime2: 33103
+          ctime3: 43494
+          ctime4: 65535
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 3687
+          atime2: 55143
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: 1
+          m_NumColorKeys: 5
+          m_NumAlphaKeys: 4
+        m_Name: Color over Lifetime
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0, g: 0, b: 0, a: 0.78431374}
+          key1: {r: 1.6935993, g: 1.3069986, b: 11.179362, a: 0.8}
+          key2: {r: 0.22332248, g: 0.038326584, b: 0.6316099, a: 0.7019608}
+          key3: {r: 0.67067516, g: 0.02519452, b: 0.118728876, a: 0.78431374}
+          key4: {r: 0, g: 0, b: 0, a: 0.39215687}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 23214
+          ctime2: 33103
+          ctime3: 43494
+          ctime4: 65535
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 3687
+          atime2: 55143
+          atime3: 65535
+          atime4: 65535
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: 1
+          m_NumColorKeys: 5
+          m_NumAlphaKeys: 4
+        m_Name: Initial Color Cycle
+        m_Overridden: 1
     m_NamedObject:
       m_Array: []
     m_Bool:
@@ -38365,7 +38462,7 @@ Transform:
   m_GameObject: {fileID: 1830632632}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

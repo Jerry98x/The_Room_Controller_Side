@@ -75,6 +75,12 @@ public class SauronFeedbackHandler : MonoBehaviour
         MoveAttractor();
     }
     
+    /*private void LateUpdate()
+    {
+        // Reset LifetimeIncrement to 0 at the end of each frame to avoid continuous accumulation
+        effect.SetFloat("LifetimeIncrement", 0f);
+    }*/
+    
     
     private void HandledEvents()
     {
@@ -289,6 +295,7 @@ public class SauronFeedbackHandler : MonoBehaviour
                 
             effect.SetFloat("ParticlesLifetime", originalLifetime);
             effect.SetFloat("StripsLifetime", originalLifetime);
+            effect.SetFloat("LifetimeIncrement", 0);
             spawnPosition = rayEndPoint.transform.position;
             effect.SetVector3("SpawnPosition", spawnPosition);
             attractor.position = rayEndPoint.transform.position;
@@ -372,17 +379,19 @@ public class SauronFeedbackHandler : MonoBehaviour
         
     public void IncreaseParticlesLifetime(float value)
     {
-        particlesLifetime += value;
+        //particlesLifetime += value;
         stripsLifetime += value;
         Debug.Log("Lifetime - settaggio: " + stripsLifetime);
         //effect.SetFloat("ParticlesLifetime", particlesLifetime);
-        effect.SetFloat("StripsLifetime", stripsLifetime);
+        effect.SetFloat("LifetimeIncrement", value);
+        Debug.Log("NEW LIFETIME: " + effect.GetFloat("StripsLifetime"));
     }
 
     public void ResetParticlesLifetime()
     {
         particlesLifetime = originalLifetime;
         stripsLifetime = originalLifetime;
+        effect.SetFloat("LifetimeIncrement", 0);
     }
     
     

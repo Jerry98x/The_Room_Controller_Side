@@ -301,7 +301,7 @@ public class NetoFeedbackHandler : MonoBehaviour
         partSystem.Play();
         shouldMove = true;
         audioSource[0].transform.position = humanSilhouette.transform.position;
-        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0, 1);
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0.5f, 1);
         audioSource[0].Play();
         
     }
@@ -309,7 +309,7 @@ public class NetoFeedbackHandler : MonoBehaviour
     
     public void IncreaseAudioEffectVolume(float vol)
     {
-        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0, 1);
+        audioSource[0].volume = RangeRemappingHelper.Remap(vol, Constants.NETO_MIC_VOLUME_MAX, Constants.NETO_MIC_VOLUME_THRESHOLD, 0.5f, 1);
     }
     
     public void IncreaseParticleEffectLifeTime(float deltaLifetime)

@@ -101,7 +101,7 @@ public class RoomNetoElement : RoomBasicElement
 
         if (lastMessage[1] != messageContent[1])
         {
-            CheckEmergencyMode(messageContent[1]);
+            //CheckEmergencyMode(messageContent[1]);
         }
         
         lastMessage[0] = messageContent[0];

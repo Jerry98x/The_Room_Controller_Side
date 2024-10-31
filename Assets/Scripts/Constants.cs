@@ -178,7 +178,7 @@ public class Constants {
         
     public const float NETO_MIC_VOLUME_MIN = 0f;
     public const float NETO_MIC_VOLUME_MAX = 4095f;
-    public const float NETO_MIC_VOLUME_THRESHOLD = 2000f;
+    public const float NETO_MIC_VOLUME_THRESHOLD = 1900f;
     
     
     
