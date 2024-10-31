@@ -11,9 +11,9 @@ public class SphericalCoordinates : MonoBehaviour
     [SerializeField] private Transform centerOfSphere;
     [SerializeField, Range(Constants.ENDPOINT_REACH_Z_MIN, Constants.ENDPOINT_REACH_Z_MAX)]
     private float radius;
-    [Range(-90, 90)]
+    [Range(-120, 120)]
     [SerializeField] private float inclination; // Polar angle (theta)
-    [Range(-180, 180)]
+    [Range(-210, 210)]
     [SerializeField] private float azimuth; // Azimuthal angle (phi)
 
     /// <summary>

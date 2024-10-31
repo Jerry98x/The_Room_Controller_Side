@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minEndpointMovementMultiplier: 1
-  maxEndpointMovementMultiplier: 20
+  maxEndpointMovementMultiplier: 25
   minEndpointDistance: 0
   maxEndpointDistance: 0
   center: {fileID: 0}
@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minEndpointMovementMultiplier: 1
-  maxEndpointMovementMultiplier: 20
+  maxEndpointMovementMultiplier: 25
   minEndpointDistance: 0
   maxEndpointDistance: 0
   center: {fileID: 0}
