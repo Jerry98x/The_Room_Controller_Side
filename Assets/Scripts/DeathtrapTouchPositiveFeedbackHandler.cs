@@ -45,13 +45,16 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     {
         if (attractor.position != attractorInitialPosition)
         {
-            ResetInitialPosition();
+            ResetAttractorInitialPosition();
         }
        
         // Clear the particles emitted by the VisualEffect object
         effect.Stop();
         //effect.SetFloat("StripsLifetime", stripsLifetime);
         effect.Reinit();
+        
+        effect.SetFloat("Lifetime Min", goodParticlesMinLifetime);
+        effect.SetFloat("Lifetime Max", goodParticlesMaxLifetime);
 
         transform.position = spawnPosition;
         distance = Vector3.Distance(transform.position, particleEndpointPosition.position);
@@ -71,7 +74,8 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         
         StartCoroutine(FadeOutPositiveEffect(quickFadeOutDuration));
         
-        ResetInitialPosition();
+        ResetAttractorInitialPosition();
+        ResetEffectObjectInitialPosition();
     }
     
     
@@ -95,10 +99,15 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     }
     
     
-    public void ResetInitialPosition()
+    public void ResetAttractorInitialPosition()
     {
         attractor.position = attractorInitialPosition;
         shouldMove = false;
+    }
+
+    public void ResetEffectObjectInitialPosition()
+    {
+        transform.position = Vector3.zero;
     }
 
     public void ResetInitialLifetime()

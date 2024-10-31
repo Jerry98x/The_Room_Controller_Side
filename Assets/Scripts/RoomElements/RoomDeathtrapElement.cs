@@ -60,6 +60,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     // Testing purposes
     private bool isKKeyHeldDown = false;
     private bool isHKeyHeldDown = false;
+
+
+    private bool goodEffectPlaying = false;
+    private bool badEffectPlaying = false;
     
     
 
@@ -121,7 +125,7 @@ public class RoomDeathtrapElement : RoomBasicElement
             isKKeyHeldDown = true;
             HandleTouchEffect(3);
             PlayAmbientTouchSound(3);
-            HandleFullScreenEffect(3, false);
+            HandleFullScreenEffect(3);
         }
         
         // Check if the key is being held down
@@ -147,7 +151,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 avoidMultipleRestarts = false;
                 HandleTouchEffect(0);
                 PlayAmbientTouchSound(0);
-                HandleFullScreenEffect(0, false);
+                HandleFullScreenEffect(0);
             }
             
             isKKeyHeldDown = false;
@@ -165,7 +169,7 @@ public class RoomDeathtrapElement : RoomBasicElement
             isHKeyHeldDown = true;
             HandleTouchEffect(1);
             PlayAmbientTouchSound(1);
-            HandleFullScreenEffect(1, true);
+            HandleFullScreenEffect(1);
         }
         
         // Check if the key is being held down
@@ -189,7 +193,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 avoidMultipleRestarts = false;
                 HandleTouchEffect(0);
                 PlayAmbientTouchSound(0);
-                HandleFullScreenEffect(0, true);
+                HandleFullScreenEffect(0);
             }
             
             isHKeyHeldDown = false;
@@ -210,7 +214,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         HandleTouchEffect(0);
         PlayAmbientTouchSound(0);
         // It is not important whether I pass a TRUE or FALSE when stopping the effect
-        HandleFullScreenEffect(0, false);
+        HandleFullScreenEffect(0);
     }
 
 
@@ -279,7 +283,7 @@ public class RoomDeathtrapElement : RoomBasicElement
                 {
                   HandleTouchEffect(messageContent[0]);
                   PlayAmbientTouchSound(messageContent[0]);
-                  HandleFullScreenEffect(messageContent[0], false);   
+                  HandleFullScreenEffect(messageContent[0]);   
                 }
                 
             }
@@ -361,6 +365,8 @@ public class RoomDeathtrapElement : RoomBasicElement
         switch (touchIntensity)
         {
             case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                goodEffectPlaying = false;
+                badEffectPlaying = false;
                 timesGivingBadTouch = 0;
                 deathtrapTouchNegativeFeedbackHandler.StopEffect();
                 timesGivingGoodTouch = 0;
@@ -372,14 +378,18 @@ public class RoomDeathtrapElement : RoomBasicElement
                 Debug.Log("TIMES GIVING GOOD TOUCH HANDLE...: " + timesGivingGoodTouch);
                 if (timesGivingGoodTouch > timesGivingGoodTouchThreshold)
                 {
+                    badEffectPlaying = false;
                     GeneratePositiveParticlesEffect(touchIntensity);
+                    goodEffectPlaying = true;
                 }
                 break;
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
                 timesGivingBadTouch += 1;
                 if (timesGivingBadTouch > timesGivingBadTouchThreshold)
                 {
+                    goodEffectPlaying = false;
                     GrowVinesEffect(touchIntensity);
+                    badEffectPlaying = true;
                 }
                 
                 break;
@@ -468,7 +478,11 @@ public class RoomDeathtrapElement : RoomBasicElement
                 }
                 if (!goodTouchSound.isPlaying)
                 {
-                    goodTouchSound.Play();
+                    if (goodEffectPlaying)
+                    {
+                        goodTouchSound.Play();
+                    }
+                    
                 }
                 break;
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
@@ -479,7 +493,11 @@ public class RoomDeathtrapElement : RoomBasicElement
                 }
                 if (!badTouchSound.isPlaying)
                 {
-                    badTouchSound.Play();
+                    if (badEffectPlaying)
+                    {
+                        badTouchSound.Play();
+                    }
+                    
                 }
                 break;
         }
@@ -488,19 +506,55 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     
     
-    private void HandleFullScreenEffect(int touchIntensity, bool isPositive)
+    private void HandleFullScreenEffect(int touchIntensity)
     {
-        int duration;
+
+        switch (touchIntensity)
+        {
+            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                fullScreenEffectsManager.StopEffects();
+                break;
+            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
+            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                if (humanSilhouette.activeSelf && goodEffectPlaying)
+                {
+                    fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, true);
+                }
+                break;
+            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                if (humanSilhouette.activeSelf && badEffectPlaying)
+                {
+                    fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, false);
+                }
+                
+                break;
+        }
+        
+        
+        
+        
+        
+        /*int duration;
         if (isPositive)
         {
-            duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
+            if (goodEffectPlaying)
+            {
+                duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
+                fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, true); 
+            }
+            
         }
         else
         {
-            duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
-        }
+            if (humanSilhouette.activeSelf && deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
+            {
+                duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
+                fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, false);
+            }
+            
+        }*/
         
-        fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
+        //fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
     }
 
     
@@ -576,47 +630,47 @@ public class RoomDeathtrapElement : RoomBasicElement
             // Further check to avoid visually moving away the silhouette while the touch feedback effect is playing.
             // even if the distance might be actually changing. It's better to keep the silhouette in place when it is touching
             // the Deathtrap sphere and the effect is playing.
-                Vector3 newPosition;
-                if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)
-                {
-                    newPosition = deathtrapPortal.position + new Vector3(0f, 0f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
-                }
-                else
-                {
-                    // If the distance is less than the minimum, set the silhouette at the minimum distance
-                    newPosition = deathtrapPortal.position + new Vector3(0f, 0f, Constants.DEATHTRAP_SONAR_DISTANCE_MIN / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
-                }
+            Vector3 newPosition;
+            if (detected >= Constants.DEATHTRAP_SONAR_DISTANCE_MIN)
+            {
+                newPosition = deathtrapPortal.position + new Vector3(0f, 0f, detected / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+            }
+            else
+            {
+                // If the distance is less than the minimum, set the silhouette at the minimum distance
+                newPosition = deathtrapPortal.position + new Vector3(0f, 0f, Constants.DEATHTRAP_SONAR_DISTANCE_MIN / Constants.DEATHTRAP_SONAR_DISTANCE_DIVISOR);
+            }
 
-                if(humanSilhouette.activeSelf)
+            if(humanSilhouette.activeSelf)
+            {
+                // Silhouette already present and active
+                if (silhouetteMoveCoroutine != null)
                 {
-                    // Silhouette already present and active
-                    if (silhouetteMoveCoroutine != null)
-                    {
-                        StopCoroutine(silhouetteMoveCoroutine);
-                    }
-                    silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+                    StopCoroutine(silhouetteMoveCoroutine);
                 }
-                else
+                silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+            }
+            else
+            {
+                // Silhouette needs to appear
+                float fadeInDuration = 0.4f;
+                humanSilhouette.SetActive(true);
+                
+                /*if (silhouetteFadeInCoroutine != null)
                 {
-                    // Silhouette needs to appear
-                    float fadeInDuration = 0.4f;
-                    humanSilhouette.SetActive(true);
-                    
-                    /*if (silhouetteFadeInCoroutine != null)
-                    {
-                        StopCoroutine(silhouetteFadeInCoroutine);
-                    }*/
-                    if (silhouetteMoveCoroutine != null)
-                    {
-                        StopCoroutine(silhouetteMoveCoroutine);
-                    }
-                    
-                    
-                    //silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
-                    silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+                    StopCoroutine(silhouetteFadeInCoroutine);
+                }*/
+                if (silhouetteMoveCoroutine != null)
+                {
+                    StopCoroutine(silhouetteMoveCoroutine);
                 }
+                
+                
+                //silhouetteFadeInCoroutine = StartCoroutine(FadeInSilhouette(fadeInDuration));
+                silhouetteMoveCoroutine = StartCoroutine(MoveSilhouette(lastSilhouettePosition, newPosition));
+            }
 
-                lastSilhouettePosition = newPosition;
+            lastSilhouettePosition = newPosition;
             
             
             

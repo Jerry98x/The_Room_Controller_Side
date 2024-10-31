@@ -20,9 +20,9 @@ public class FullScreenEffectsManager : MonoBehaviour
     private float negativeEffectDisplayTime = 1f;
     private float negativeEffectFadeOutDuration = 0.2f;
 
-    private int voronoiIntensity = Shader.PropertyToID("_voronoiIntensity");
-    private int vignetteIntensity = Shader.PropertyToID("_vignetteIntensity");
-    private int lightAlpha = Shader.PropertyToID("_lightAlpha");
+    private int voronoiIntensity = Shader.PropertyToID("_VoronoiIntensity");
+    private int vignetteIntensity = Shader.PropertyToID("_VignetteIntensity");
+    private int lightAlpha = Shader.PropertyToID("_Alpha");
 
 
     private bool isTouchCheck = false;
@@ -43,34 +43,52 @@ public class FullScreenEffectsManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            DisplayFullScreenEffect(3, 5, false);
+            DisplayFullScreenEffect(3, false);
         }
     }
 
 
-    public void DisplayFullScreenEffect(int intensity, int baseDuration, bool isPositive)
+    public void DisplayFullScreenEffect(int intensity, bool isPositive)
     {
+
+        if (isPositive)
+        {
+            negativeEffectRendererFeature.SetActive(false);
+            positiveEffectRendererFeature.SetActive(true);
+        }
+        else
+        {
+            positiveEffectRendererFeature.SetActive(false);
+            negativeEffectRendererFeature.SetActive(true);
+        }
+        
+        
+        
+        /*
         switch (intensity)
         {
             case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
+                Debug.Log("Display Full Screen Effect: NO");
                 StopEffect(isPositive);
                 break;
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
             case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
+                Debug.Log("Display Full Screen Effect: SOFT/MEDIUM");
                 //StopEffect(false);
                 negativeEffectRendererFeature.SetActive(false);
                 positiveEffectRendererFeature.SetActive(true);
                 /*SetPositiveEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayPositiveEffect());*/
+                StartCoroutine(DisplayPositiveEffect());#1#
                 break;
             case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
+                Debug.Log("Display Full Screen Effect: HARD");
                 //StopEffect(true);
                 positiveEffectRendererFeature.SetActive(false);
                 negativeEffectRendererFeature.SetActive(true);
                 /*SetNegativeEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayNegativeEffect());*/
+                StartCoroutine(DisplayNegativeEffect());#1#
                 break;
-        }
+        }*/
     }
     
     
@@ -149,8 +167,28 @@ public class FullScreenEffectsManager : MonoBehaviour
     private void StopEffect(bool isPositive)
     {
         // Stop both effects prematurely with respect to their lifetime, but make them fade out
-        StartCoroutine(FadeOutEffect(isPositive, negativeEffectRendererFeature, negativeEffectMaterial, negativeEffectFadeOutDuration));
-        StartCoroutine(FadeOutEffect(isPositive, positiveEffectRendererFeature, positiveEffectMaterial, positiveEffectFadeOutDuration));
+        if (isPositive)
+        {
+            StartCoroutine(FadeOutEffect(true, negativeEffectRendererFeature, negativeEffectMaterial, negativeEffectFadeOutDuration));
+        }
+        else
+        {
+          StartCoroutine(FadeOutEffect(false, positiveEffectRendererFeature, positiveEffectMaterial, positiveEffectFadeOutDuration));
+        }
+    }
+
+
+    public void StopEffects()
+    {
+        if (negativeEffectRendererFeature.isActive)
+        {
+            negativeEffectRendererFeature.SetActive(false);
+        }
+
+        if (positiveEffectRendererFeature.isActive)
+        {
+            positiveEffectRendererFeature.SetActive(false);
+        }
     }
     
     IEnumerator FadeOutEffect(bool isPositive, ScriptableRendererFeature scriptableRendererFeature, Material material, float duration)
