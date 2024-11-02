@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -100,8 +102,6 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
 
     
-    //TODO: Fix lifetime when switching between good and bad (maybe coroutine should be stopped?)
-    //TODO: Check if fullscreen effect for positive touch needs to be increased (?) when multiple touches happen
     private void UpdateV2()
     {
         // For testing purposes
@@ -253,17 +253,13 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Convert each part to an integer and store it in the message array
         for (int i = 1; i < parts.Length; i++)
         {
-            messageContentFloat[i-1] = float.Parse(parts[i]);
+            messageContentFloat[i-1] = float.Parse(parts[i], CultureInfo.InvariantCulture);
             this.messageContent[i-1] = Mathf.RoundToInt(messageContentFloat[i-1]);
             Debug.Log("DEATHTRAP MESSAGE CONTENT " + (i-1) + ": " + messageContent[i-1]);
         }
         
         
         
-        /*if(lastMessage[1] != messageContent[1])
-        {
-            PresenceDetected(messageContent[1]);
-        }*/
         PresenceDetected(messageContent[1]);
 
         timesGivingGoodTouch += 1;
