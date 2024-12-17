@@ -101,7 +101,6 @@ public class SauronFeedbackHandler : MonoBehaviour
         attractorOriginalPosition = attractor.transform.localPosition;
         
         
-        Debug.Log("Mannaggia alla madonnaccia");
         
         float fadeInDuration = 0.2f;
         float movementDuration = 0.4f;

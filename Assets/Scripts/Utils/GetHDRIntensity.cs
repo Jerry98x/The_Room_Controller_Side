@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Helper class to get the intensity of a HDR color
+/// </summary>
 public class GetHDRIntensity : MonoBehaviour
 {
     [ColorUsage(true, true, 0f, 8f, 0.125f, 3f)]
@@ -17,6 +20,13 @@ public class GetHDRIntensity : MonoBehaviour
     }
 
     private const byte k_MaxByteForOverexposedColor = 191;
+    
+    /// <summary>
+    /// Separate the HDR color into a base color and an exposure value
+    /// </summary>
+    /// <param name="linearColorHdr"> HDR color </param>
+    /// <param name="baseLinearColor"> Base color (non-HDR) </param>
+    /// <param name="exposure"> Exposure </param>
     public static void DecomposeHdrColor(Color linearColorHdr, out Color baseLinearColor, out float exposure)
     {
         baseLinearColor = linearColorHdr;
@@ -43,6 +53,11 @@ public class GetHDRIntensity : MonoBehaviour
     
     
     
+    /// <summary>
+    /// Change the intensity of a HDR color
+    /// </summary>
+    /// <param name="hdrColor"> Color to be changed </param>
+    /// <param name="newIntensity"> New intensity level </param>
     public static Color AdjustEmissiveIntensity(Color hdrColor, float newIntensity)
     {
         DecomposeHdrColor(hdrColor, out Color baseColor, out float exposure);

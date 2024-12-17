@@ -7,6 +7,9 @@ using UnityEngine.Serialization;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class representing the main sphere of the Deathrap.
+/// </summary>
 public class FeedbackSphere : MonoBehaviour
 {
     
@@ -48,7 +51,6 @@ public class FeedbackSphere : MonoBehaviour
         {
             inactiveSphere = transform.parent;
         }
-        Debug.Log("Inactive sphere: " + inactiveSphere);
     }
 
 
@@ -70,22 +72,19 @@ public class FeedbackSphere : MonoBehaviour
             // 4) Handle brightness of the LEDs
             HandleEmissiveIntensityBasedOnTrigger();
         }
-
-
-        Debug.Log("VALORI DEATHTRAP: liquidSprayingTest: " + liquidSprayingTest);
-        Debug.Log("VALORI DEATHTRAP: petalsOpeningTest: " + petalsOpeningTest);
-        Debug.Log("VALORI DEATHTRAP: badSmellEmittingTest: " + badSmellEmittingTest);
-        Debug.Log("VALORI DEATHTRAP: ledsBrightnessTest: " + ledsBrightnessTest);
+        
     }
 
 
+    /// <summary>
+    /// Method that is called when the sphere's collider is entered by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
         XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
         Pointer pointer = other.gameObject.GetComponent<Pointer>();
         ActionBasedController xrController = interactor?.GetComponentInParent<ActionBasedController>();
-
-        Debug.Log("Interactor: " + interactor);
         
         if(interactor != null && !interactors.Contains(interactor))
         {
@@ -98,11 +97,12 @@ public class FeedbackSphere : MonoBehaviour
             isSupposedToResetPetalsOpening = false;
         }
         
-        Debug.Log("INTERACTORS COUNT: " + interactors.Count);
-        
-        
     }
 
+    /// <summary>
+    /// Method that is called when the sphere's collider is exited by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerExit(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
@@ -110,15 +110,11 @@ public class FeedbackSphere : MonoBehaviour
         if (interactor != null && interactors.Contains(interactor))
         {
             int index = interactors.IndexOf(interactor);
-            Debug.Log("Removing interactor at index: " + index);
             
             // Remove this interactor and corresponding elements from the lists
             interactors.RemoveAt(index);
             pointers.RemoveAt(index);
             xrControllers.RemoveAt(index);
-            
-            Debug.Log("Remainig interactors: " + interactors.Count);
-            Debug.Log("Remaining interactors: " + interactors);
             
             // If no controllers remain in the list, disable control
             if (interactors.Count == 0)
@@ -131,7 +127,9 @@ public class FeedbackSphere : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Handles the spraying of the liquid action, including the corner cases.
+    /// </summary>
     private void HandleSprayingBasedOnButton()
     {
         // Only way I could find to distinguish between the left and right hand controllers, since there are no
@@ -214,11 +212,12 @@ public class FeedbackSphere : MonoBehaviour
         }
         
         
-        
-        
     }
     
     
+    /// <summary>
+    /// Handles the opening of the Deathtrap petals action, which corresponds to a scaling of the sphere.
+    /// </summary>
     private void HandlePetalsOpeningBasedOnTrigger()
     {
         
@@ -233,14 +232,10 @@ public class FeedbackSphere : MonoBehaviour
         
         if(triggerValue > 0)
         {
-            Debug.Log("TRIGGER PRESSED! Trigger value: " + triggerValue);
-            
             petalsOpeningTest = (int)RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
                 Constants.DEATHTRAP_PETALS_OPENING_MAX, Constants.DEATHTRAP_PETALS_OPENING_MIN);
-            Debug.Log("TRIGGER PRESSED! Petals opening: " + petalsOpeningTest);
             float newScale = RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
                 Constants.DEATHTRAP_CORE_MAX_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
-            Debug.Log("TRIGGER PRESSED! Final scale: " + newScale);
             
             // Increase the size of the father object. This object, which is its child, will be scaled accordingly
             inactiveSphere.transform.localScale = new Vector3(newScale, newScale, newScale);
@@ -251,96 +246,12 @@ public class FeedbackSphere : MonoBehaviour
             inactiveSphere.transform.localScale = new Vector3(Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE, Constants.DEATHTRAP_CORE_MIN_SIZE);
         }
 
-        /*
-        if (isSupposedToResetPetalsOpening)
-        {
-            if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
-            {
-                Debug.Log("TRIGGER PRESSED! Trigger value: " + triggerValue);
-                
-                petalsOpeningTest = (int)RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
-                    Constants.DEATHTRAP_PETALS_OPENING_MAX, Constants.DEATHTRAP_PETALS_OPENING_MIN);
-                float targetScale = RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
-                    maxTestingScale, minTestingScale);
-                
-                float lerpSpeed = 1.0f;
-                float newScale = Mathf.Lerp(transform.localScale.x, targetScale, Time.deltaTime * lerpSpeed);
-                transform.localScale = new Vector3(newScale, newScale, newScale);
-                
-            }
-            else
-            {
-                transform.localScale = new Vector3(minTestingScale, minTestingScale, minTestingScale);
-            }
-        }
-        else
-        {
-            if (triggerValue > Constants.XR_CONTROLLER_TRIGGER_VALUE_THRESHOLD)
-            {
-                Debug.Log("TRIGGER PRESSED! Trigger value: " + triggerValue);
-                
-                petalsOpeningTest = (int)RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
-                    Constants.DEATHTRAP_PETALS_OPENING_MAX, Constants.DEATHTRAP_PETALS_OPENING_MIN);
-                float newScale = RangeRemappingHelper.Remap(triggerValue, Constants.XR_CONTROLLER_MAX_TRIGGER_VALUE, Constants.XR_CONTROLLER_MIN_TRIGGER_VALUE, 
-                    maxTestingScale, minTestingScale);
-                transform.localScale = new Vector3(newScale, newScale, newScale);
-                
-            }
-            isSupposedToResetPetalsOpening = true;
-        }
-        */
-        
-
     }
-    
-    
-    
-    
-    /*private void HandleBadSmellEmittingBasedOnButton()
-    {
-        
-        // Only way I could find to distinguish between the left and right hand controllers, since there are no
-        // specific methods or fields in ActionBasedController to do so. I think it's acceptable in this specific
-        // case, since the controllers are just two: one for the left hand and one for the right hand.
-        string leftController = "LeftController";
-        string rightController = "RightController";
-
-        foreach (var xrController in xrControllers)
-        {
-            if((xrController.gameObject.CompareTag(leftController) && yButtonAction.action.ReadValue<float>() > 0) ||
-               (xrController.gameObject.CompareTag(rightController) && bButtonAction.action.ReadValue<float>() > 0))
-            {
-                badSmellEmittingTest = 1;
-                
-                if(badSmellSphereRenderer != null)
-                {
-                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, badSmellLightColor);
-                }
-    
-                if (badSmellParticleSystem != null)
-                {
-                    badSmellParticleSystem.Play();
-                }
-                
-                
-            }
-            else if(yButtonAction.action.ReadValue<float>() == 0 && bButtonAction.action.ReadValue<float>() == 0)
-            {
-                badSmellEmittingTest = 0;
-                
-                if(badSmellSphereRenderer != null)
-                {
-                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, inactiveSphereInitialColor);
-                }
-            }
-        }
-        
-        
-        
-    }*/
 
 
-
+    /// <summary>
+    /// Handles the main sphere light emission action.
+    /// </summary>
     private void HandleEmissiveIntensityBasedOnTrigger()
     {
 
@@ -361,14 +272,12 @@ public class FeedbackSphere : MonoBehaviour
             
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 ledsBrightnessTest = (int)RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.DEATHTRAP_BRIGHTNESS_MAX, Constants.DEATHTRAP_BRIGHTNESS_MIN);
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 if (sphereRenderer != null)
                 {
                     Color currentEmissionColor = sphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);
@@ -426,18 +335,14 @@ public class FeedbackSphere : MonoBehaviour
                 gripValue = Mathf.Max(gripValue, currentGripValue);
             }
             
-            Debug.Log("GRIP VALUE TEST: " + gripValue);
-            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 ledsBrightnessTest = (int)RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.DEATHTRAP_BRIGHTNESS_MAX, Constants.DEATHTRAP_BRIGHTNESS_MIN);
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 if (sphereRenderer != null)
                 {
                     Color currentEmissionColor = sphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);

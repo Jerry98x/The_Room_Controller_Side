@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
+// NOT USED
+
 /// <summary>
 /// Manager class that handles the audio in the game
 /// </summary>
@@ -128,7 +130,7 @@ public class AudioManager : MonoBehaviour
     
     #region Getters and setters
 
-        /// <summary>
+    /// <summary>
     /// Returns the volume of the "Master" group of the mixer
     /// </summary>
     public float GetMasterVolume()

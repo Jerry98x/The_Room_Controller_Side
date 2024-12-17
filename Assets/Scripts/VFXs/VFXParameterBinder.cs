@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
+// NOT USED
+
 public class VFXParameterBinder : MonoBehaviour
 {
     private VisualEffect visualEffect;

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 /// <summary>
 /// Represents a rope, which
 /// </summary>

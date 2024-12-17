@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+/// <summary>
+/// Class that handles the positive feedback effect when the player touches the Deathtrap.
+/// </summary>
 public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
 {
 
@@ -36,11 +39,12 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         goodParticlesMinLifetime = effect.GetFloat("Lifetime Min");
         goodParticlesMaxLifetime = effect.GetFloat("Lifetime Max");
         initialParticlesLifetime = goodParticlesMaxLifetime;
-        Debug.Log("Lifetime Min in Start: " + goodParticlesMinLifetime);
-        Debug.Log("Lifetime Max in Start: " + goodParticlesMaxLifetime);
     }
 
 
+    /// <summary>
+    /// Starts the positive feedback effect of the Deathtrap.
+    /// </summary>
     public void GoodParticlesEffectStarted()
     {
         if (attractor.position != attractorInitialPosition)
@@ -66,10 +70,11 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Stops the positive feedback effect of the Deathtrap.
+    /// </summary>
     public void StopEffect()
     {
-        /*effect.Stop();
-        effect.Reinit();*/
         float quickFadeOutDuration = 0.2f;
         
         StartCoroutine(FadeOutPositiveEffect(quickFadeOutDuration));
@@ -78,7 +83,10 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         ResetEffectObjectInitialPosition();
     }
     
-    
+    /// <summary>
+    /// Coroutine that fades out the positive effect of the Deathtrap.
+    /// </summary>
+    /// <param name="duration"> Fade-out duration </param>
     private IEnumerator FadeOutPositiveEffect(float duration)
     {
         float elapsed = 0;
@@ -98,30 +106,46 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
         effect.Reinit();
     }
     
-    
+    /// <summary>
+    /// Resets the initial position of the Attractor object.
+    /// </summary>
     public void ResetAttractorInitialPosition()
     {
         attractor.position = attractorInitialPosition;
         shouldMove = false;
     }
 
+    /// <summary>
+    /// Resets the initial position of the VFX object.
+    /// </summary>
     public void ResetEffectObjectInitialPosition()
     {
         transform.position = Vector3.zero;
     }
 
+    /// <summary>
+    /// Resets the initial lifetime of the particles (min and max).
+    /// </summary>
     public void ResetInitialLifetime()
     {
         goodParticlesMinLifetime = initialParticlesLifetime;
         goodParticlesMaxLifetime = initialParticlesLifetime;
     }
     
+    /// <summary>
+    /// Increases the min lifetime of the particles emitted by the VisualEffect object.
+    /// </summary>
+    /// <param name="value"> Value of the lifetime increase </param>
     public void IncreaseParticlesMinLifetime(float value)
     {
         goodParticlesMinLifetime += value;
         effect.SetFloat("Lifetime Min", goodParticlesMinLifetime);
     }
     
+    /// <summary>
+    /// Increases the max lifetime of the particles emitted by the VisualEffect object.
+    /// </summary>
+    /// <param name="value"> Value of the lifetime increase </param>
     public void IncreaseParticlesMaxLifetime(float value)
     {
         goodParticlesMaxLifetime += value;
@@ -141,7 +165,6 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     
     public float GetGoodParticlesMaxLifetime()
     {
-        //return effect.GetFloat("Lifetime Max");
         return goodParticlesMaxLifetime;
     }
     
@@ -156,6 +179,9 @@ public class DeathtrapTouchPositiveFeedbackHandler : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Checks if the positive effect is playing.
+    /// </summary>
     public bool IsPositiveEffectPlaying()
     {
         if (effect.aliveParticleCount > 0)

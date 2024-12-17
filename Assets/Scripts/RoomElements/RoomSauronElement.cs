@@ -24,7 +24,6 @@ public class RoomSauronElement : RoomBasicElement
         base.Start();
         
         initialPosition = transform.position;
-        Debug.Log("PORCODIO: " + receivingEndPointSO.EndPoint);
         
         
         lastMessage = new int[2];
@@ -35,7 +34,11 @@ public class RoomSauronElement : RoomBasicElement
     }
     
     
-    
+    /// <summary>
+    /// Split the message received from the Sauron's endpoint and execute the corresponding actions.
+    /// Save the current message content for later comparison.
+    /// </summary>
+    /// <param name="message"> Message received from the Sauron's endpoint </param>
     protected override void ExecuteMessageResponse(string message)
     {
         // Executed when the message is specifically related to the Sauron element
@@ -44,17 +47,6 @@ public class RoomSauronElement : RoomBasicElement
         
         // Split the message string by the colon separator
         string[] parts = message.Split(separator);
-        
-        
-        
-        
-        for(int i = 0; i < parts.Length; i++)
-        {
-            Debug.Log("SAURON MESSAGE PART " + i + ": " + parts[i]);
-        }
-        
-        
-        
         
 
         // Initialize the message array with the same length as parts, excluding the first two
@@ -65,7 +57,6 @@ public class RoomSauronElement : RoomBasicElement
         for (int i = 2; i < parts.Length; i++)
         {
             this.messageContent[i-2] = int.Parse(parts[i]);
-            Debug.Log("SAURON MESSAGE CONTENT " + (i-2) + ": " + messageContent[i-2]);
         }
 
         if (lastMessage[0] != messageContent[0])
@@ -80,24 +71,10 @@ public class RoomSauronElement : RoomBasicElement
                 
                 sauronFeedbackHandler.IncreaseParticlesLifetime(deltaTimeToAdd);
             }
-            else
-            {
-                Debug.Log("Esploda la madonna");
-            }
         }
         
         lastMessage[0] = messageContent[0];
         lastMessage[1] = messageContent[1];
-        
-        
-        /*if(lastMessage[0] == messageContent[0] && lastMessage[1] == messageContent[1])
-        {
-            return;
-        }
-        
-        
-        // Apply actions
-        TriggerVinesEffect(messageContent[0]);*/
         
     }
     
@@ -115,6 +92,10 @@ public class RoomSauronElement : RoomBasicElement
     
     
     
+    /// <summary>
+    /// Triggers the Sauron effects based on the intensity of the touch
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch </param>
     private void TriggerSauronEffects(int touchIntensity)
     {
 
@@ -122,7 +103,6 @@ public class RoomSauronElement : RoomBasicElement
 
         if (touchIntensity > 0)
         {
-            Debug.Log("DIOOOOOOOOOO TOUCHING");
             sauronFeedbackHandler.SetTouchCheck(true);
             // Someone touched the Sauron element
             if (!sauronFeedbackHandler.IsEffectPlaying() && !sauronFeedbackHandler.GetHumanSilhouette().activeSelf)
@@ -133,10 +113,8 @@ public class RoomSauronElement : RoomBasicElement
         }
         else
         {
-            Debug.Log("DIOOOOOOOOOO NOT TOUCHING");
             sauronFeedbackHandler.ResetParticlesLifetime();
             sauronFeedbackHandler.SetTouchCheck(false);
-            
         }
         
     }

@@ -193,7 +193,6 @@ public class NetoFeedbackHandler : MonoBehaviour
     
     private IEnumerator MoveSilhouette(float duration, bool isForward, System.Action onComplete = null)
     {
-        Debug.Log("MADONNA: Human silhouette position: " + humanSilhouette.transform.position);
         Vector3 initialPosition = humanSilhouette.transform.position;
         Vector3 movementDirection;
         float multiplier;
@@ -206,18 +205,7 @@ public class NetoFeedbackHandler : MonoBehaviour
             //multiplier = Vector3.Distance(netoEndPoint.position, initialPosition);
             multiplier = Mathf.Abs(audioEmissionPosition.position.z - initialPosition.z);
             finalPosition = audioEmissionPosition.position + movementDirection.normalized * multiplier;
-            //Debug.Log("MADONNA: Initial position: " + initialPosition);
-            Debug.Log("MADONNA: Z of Neto endpoint is " + audioEmissionPosition.position.z + " and Z of initial position is " +
-                      initialPosition.z + " and the difference is " + multiplier);
-            Debug.Log("MADONNA: Neto endpoint position: " + audioEmissionPosition.position);
-            Debug.Log("MADONNA: Distance between Neto endpoint and initial position: " + Vector3.Distance(audioEmissionPosition.position, initialPosition));
-            Debug.Log("MADONNA: Particle endpoint position: " + particleEndpointPosition.position);
-            Debug.Log("MADONNA: Movement direction: " + movementDirection);
-            Debug.Log("MADONNA: Final position: " + finalPosition);
             
-            /*movementDirection = netoEndPoint.position - initialPosition;
-            multiplier = Mathf.Abs(netoEndPoint.position.z - initialPosition.z);
-            finalPosition = initialPosition + movementDirection.normalized * multiplier;*/
         }
         else
         {

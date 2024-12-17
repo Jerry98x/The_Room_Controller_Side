@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Class containing all the useful constants of the application
+/// Class containing several useful constants of the application
 /// </summary>
 public class Constants {
     

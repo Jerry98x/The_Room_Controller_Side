@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: See if this class can be deleted because it is not used
+// NOT USED
+
 /// <summary>
 /// Class that defines the area where the Controller can move
 /// </summary>

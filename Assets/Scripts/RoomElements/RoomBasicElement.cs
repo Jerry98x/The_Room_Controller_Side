@@ -4,6 +4,12 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Abstract class that represents a basic element of a room: a Neto, a Sauron, or the Deathrap.
+/// </summary>
+/// /// <remarks>
+/// It handles input messages.
+/// </remarks>
 public abstract class RoomBasicElement : MonoBehaviour
 {
     
@@ -18,7 +24,6 @@ public abstract class RoomBasicElement : MonoBehaviour
     
     protected virtual void Start()
     {
-        Debug.Log("PORCODIO basic: " + receivingEndPointSO.EndPoint);;
         UDPManager.Instance.onMessageReceived.AddListener(OnMessageReceived);
     }
     

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represent the VFX object of the portal of the Sauron.
+/// </summary>
 public class SauronPortalVFX : MonoBehaviour
 {
     [SerializeField] private Transform center;

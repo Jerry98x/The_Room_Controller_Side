@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Helper class for handling the colliders for Neto and Sauron rays
+/// </summary>
 public class RayColliderSimpleHelper : MonoBehaviour
 {
     [SerializeField] private Transform rayOrigin;

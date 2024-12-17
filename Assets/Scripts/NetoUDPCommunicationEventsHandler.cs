@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Oasis.GameEvents;
 using UnityEngine;
 
+/// <summary>
+/// Class that handles the creation of the message to send to the Neto endpoint via UDP.
+/// </summary>
 public class NetoUDPCommunicationEventsHandler : MonoBehaviour
 {
     
@@ -71,8 +74,6 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
             rayRenderer = selectedSinewaveRay.GetComponent<Renderer>();
         }
         
-        Debug.Log("Renderer: " + rayRenderer);
-        
         endPointSO = roomElement.GetEndPointSO();
         
         lastMessage = new int[5];
@@ -84,6 +85,9 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Checks if the Controller is in control of the Neto and builds the message to send to the ESP32.
+    /// </summary>
     private void Update()
     {
         Debug.Log("About to send a message to the ESP32!");
@@ -92,9 +96,6 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         // It's easier to send messages to the ESP32 at every frame, since a relatively
         // big amount of messages can be handled on the other side. No need to just send them
         // when some characteristics change!
-        
-        
-        // TODO: If I am not controlling this Neto module, I don't need to send messages to the ESP32
 
         if (netoRayMovementHandler.IsInControl())
         {
@@ -121,13 +122,14 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         
     }
     
+    /// <summary>
+    /// Gets the values of the parameters to send to the ESP32.
+    /// </summary>
     private void HandleValuesToSend()
     {
         // Sound parameters
         soundTypeNeto = Constants.NETO_SOUND_TYPE_1;
         // Sound volume in Unity is from 0 to 1
-        /*soundVolumeNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(audioSource.volume, 1, 0,
-            Constants.NETO_SOUND_VOLUME_MAX, Constants.NETO_SOUND_VOLUME_MIN));*/
         float loudnessThreshold = loudnessDetector.GetLoudnessThreshold();
         float loudnessSensibility = loudnessDetector.GetLoudnessSensibility();
         float loudness = loudnessDetector.GetAudioLoudness() * loudnessSensibility;
@@ -150,12 +152,10 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         Vector3 coreToEndPointVector = rayEndPoint.position - roomCore.position;
         Vector3 directionFromCoreToEndPoint = coreToEndPointVector.normalized;
         float distanceAlongDirection = Vector3.Dot(directionFromCoreToEndPoint, coreToEndPointVector);
-        Debug.Log("DISTANCE ALONG DIRECTION: " + distanceAlongDirection);
         /*SphericalCoordinatesHandler.CartesianToSpherical(endPoint.transform.position, out float rad, out float inc, out float az);
         Debug.Log("ENDPOINT RADIUS: " + rad);*/
         servoAngleNeto = (int) Mathf.Round(RangeRemappingHelper.Remap(distanceAlongDirection, rayEndPointObject.GetMaxEndpointDistance(),
             rayEndPointObject.GetMinEndpointDistance(), Constants.NETO_SERVO_ANGLE_HIGH, Constants.NETO_SERVO_ANGLE_LOW));
-        Debug.Log("FINAL SERVO ANGLE: " + servoAngleNeto);
         
         
         // Light parameters
@@ -165,21 +165,19 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
         //float emissionIntensity = renderer.material.GetFloat(Constants.EMISSION_INTENSITY_ID);
         Color color = rayRenderer.material.GetColor(Constants.EMISSIVE_COLOR_ID);
         GetHDRIntensity.DecomposeHdrColor(color, out Color baseLinearColor, out float emissionIntensity);
-        Debug.Log("EMISSION INTENSITY: " + emissionIntensity);
         float clampedIntensity = Mathf.Clamp(emissionIntensity, Constants.CAPPED_MIN_EMISSION_INTENSITY,
             Constants.CAPPED_MAX_EMISSION_INTENSITY);
         float remappedIntensity = RangeRemappingHelper.Remap(clampedIntensity, Constants.CAPPED_MAX_EMISSION_INTENSITY,
             Constants.CAPPED_MIN_EMISSION_INTENSITY, Constants.NETO_BRIGHTNESS_MAX, Constants.NETO_BRIGHTNESS_MIN);
-        Debug.Log("REMAPPED INTENSITY: " + remappedIntensity);
         brightnessNeto = (int) Mathf.Round(remappedIntensity);
-        Debug.Log("FINAL BRIGHTNESS: " + brightnessNeto);
         
-
     }
     
     
 
-
+    /// <summary>
+    /// Builds the byte array message to send to the ESP32 by converting the parameters into bytes.
+    /// </summary>
     private void BuildByteArrayMessage()
     {
 
@@ -236,8 +234,9 @@ public class NetoUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
-    
-    
+    /// <summary>
+    /// Builds the final message to send to the ESP32 when the application is closed.
+    /// </summary>
     private void SendFinalMessage()
     {
         // Define initial values

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+/// <summary>
+/// Class that handles the negative feedback effect when the player touches the Deathtrap.
+/// </summary>
 public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
 {
 
@@ -34,14 +37,9 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
         effect = GetComponent<VisualEffect>();
         stripsLifetime = effect.GetFloat("StripsLifetime");
         initialStripsLifetime = stripsLifetime;
-        Debug.Log("StripsLifetime in Start: " + stripsLifetime);
         //spawnPosition = effect.GetVector3("SpawnPosition");
         spawnPosition = attractor.transform.position;
-
-
-
-        /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
-        attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
+        
 
     }
 
@@ -67,7 +65,9 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
 
 
 
-    // TODO: improve effect by considering the duration of touch
+    /// <summary>
+    /// Starts the negative feedback effect of the Deathtrap.
+    /// </summary>
     public void VinesEffectStarted()
     {
         if (attractor.position != spawnPosition)
@@ -92,15 +92,20 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Stops the negative feedback effect of the Deathtrap.
+    /// </summary>
     public void StopEffect()
     {
-        /*effect.Stop();
-        effect.Reinit();*/
         float quickFadeOutDuration = 0.2f;
         
         StartCoroutine(FadeOutNegativeEffect(quickFadeOutDuration));
     }
 
+    /// <summary>
+    /// Coroutine that fades out the negative effect of the Deathtrap.
+    /// </summary>
+    /// <param name="duration"> Fade-out duration </param>
     private IEnumerator FadeOutNegativeEffect(float duration)
     {
         float elapsed = 0.0f;
@@ -117,9 +122,7 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
         effect.SetFloat("StripsLifetime", 0f);
         effect.Stop();
         effect.Reinit();
-
-        // TODO: Need to reassign the original one? Not sure...
-        //effect.SetFloat("StripsLifetime", stripsLifetime);
+        
     }
 
 
@@ -149,6 +152,9 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Resets the initial position of the Attractor object.
+    /// </summary>
     public void ResetInitialPosition()
     {
         //effect.SetFloat("StripsLifetime", 0f);
@@ -157,6 +163,9 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Translates the Attractor object towards the particleEndPointPosition.
+    /// </summary>
     private void MoveAttractor()
     {
         if (shouldMove)
@@ -182,12 +191,19 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
     }
 
     
+    /// <summary>
+    /// Resets the initial lifetime of the particles emitted by the VisualEffect object.
+    /// </summary>
     public void ResetInitialLifetime()
     {
         
         stripsLifetime = initialStripsLifetime;
     }
 
+    /// <summary>
+    /// Increases the lifetime of the particles emitted by the VisualEffect object.
+    /// </summary>
+    /// <param name="value"> Value of the lifetime increase </param>
     public void IncreaseParticlesLifetime(float value)
     {
         stripsLifetime += value;
@@ -217,6 +233,9 @@ public class DeathtrapTouchNegativeFeedbackHandler : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Checks if the negative effect is playing.
+    /// </summary>
     public bool IsNegativeEffectPlaying()
     {
         if (effect.aliveParticleCount > 0)

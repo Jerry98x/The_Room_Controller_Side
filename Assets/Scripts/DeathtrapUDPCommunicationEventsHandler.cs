@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class that handles the creation of the message to send to the Deathtrap endpoint via UDP.
+/// </summary>
 public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
 {
     
@@ -64,8 +67,7 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     // 2b) Testing operation: change the color gradient of the sphere
 
 
-
-    // TODO: implement the actual operations to do at start time with the Deathtrap module
+    
     private void Start()
     {
         endPointSO = roomElement.GetEndPointSO();
@@ -77,7 +79,6 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         }
         
         
-        
         // Event subscription
         OnPetalsOpeningChanged?.Invoke(petalsOpening);
         OnBadSmellEmittingChanged?.Invoke(badSmellEmitting);
@@ -85,6 +86,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Checks if the Controller is in control of the main sphere of the Deathtrap and builds the message to send to the ESP32.
+    /// </summary>
     private void Update()
     {
         Debug.Log("About to send a message to the ESP32!");
@@ -115,8 +119,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     
     
     
-
-
+    /// <summary>
+    /// Gets the values of the parameters to send to the ESP32.
+    /// </summary>
     private void HandleValuesToSend()
     {
         
@@ -130,6 +135,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Builds the byte array message to send to the ESP32 by converting the parameters into bytes.
+    /// </summary>
     private void BuildByteArrayMessage()
     {
         if(lastMessage[0] == liquidSprayingTest && lastMessage[1] == petalsOpeningTest && lastMessage[2] == badSmellEmittingTest && lastMessage[3] == ledsBrightnessTest)
@@ -182,10 +190,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
-    
-    
-    
-    
+    /// <summary>
+    /// Builds the final message to send to the ESP32 when the application is closed.
+    /// </summary>
     private void SendFinalMessage()
     {
         // Define initial values
@@ -219,40 +226,9 @@ public class DeathtrapUDPCommunicationEventsHandler : MonoBehaviour
         SendFinalMessage();
     }
     
-    
-    
-    
-    
-    
-    /*
-    public int PetalsOpening
-    {
-        get => petalsOpening;
-        set
-        {
-            if (petalsOpening != value)
-            {
-                petalsOpening = value;
-                OnPetalsOpeningChanged?.Invoke(petalsOpening);
-            }
-        }
-    }
 
-    public int BadSmellEmitting
-    {
-        get => badSmellEmitting;
-        set
-        {
-            if (badSmellEmitting != value)
-            {
-                badSmellEmitting = value;
-                OnBadSmellEmittingChanged?.Invoke(badSmellEmitting);
-            }
-        }
-    }
-    */
     
-    
+    // For testing purposes in the Unity Editor
     private void OnValidate()
     {
         OnPetalsOpeningChanged?.Invoke(petalsOpening);

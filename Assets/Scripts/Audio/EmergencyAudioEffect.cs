@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// NOT USED
+
+/// <summary>
+/// Handles the audio specifically for the (unused) emergency effect
+/// </summary>
 public class EmergencyAudioEffect : MonoBehaviour
 {
 

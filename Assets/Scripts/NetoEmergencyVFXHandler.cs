@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
+// NOT USED
+
+/// <summary>
+/// Handles the VFX associated with the emergency status of the Neto Ray
+/// </summary>
 public class NetoEmergencyVFXHandler : MonoBehaviour
 {
     
@@ -30,9 +35,6 @@ public class NetoEmergencyVFXHandler : MonoBehaviour
         stripsLifetime = effect.GetFloat("StripsLifetime");
         spawnPosition = spawnPoint.transform.position;
         
-        /*gameObject.transform.rotation = Quaternion.LookRotation(particleEndpointPosition.position - transform.position);
-        attractor.rotation = Quaternion.LookRotation(particleEndpointPosition.position - attractor.position);*/
-        
         
         handleNetoRayMovement.OnEmergencyStatusChanged += UpdateEmergencyStatus;
         handleNetoRayMovement.OnEmergencyStatusChanged += GrowVines;
@@ -48,7 +50,6 @@ public class NetoEmergencyVFXHandler : MonoBehaviour
             MoveAttractor();
         }
     }
-    
     
     
     private void GrowVines(bool hasEmergency)

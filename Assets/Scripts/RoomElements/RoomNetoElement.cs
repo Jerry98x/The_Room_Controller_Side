@@ -27,7 +27,6 @@ public class RoomNetoElement : RoomBasicElement
         base.Start();
         
         initialPosition = transform.position;
-        Debug.Log("PORCODIO: " + receivingEndPointSO.EndPoint);
         
         
         lastMessage = new int[2];
@@ -38,7 +37,11 @@ public class RoomNetoElement : RoomBasicElement
     }
     
     
-    
+    /// <summary>
+    /// Split the message received from the Neto's endpoint and execute the corresponding actions.
+    /// Save the current message content for later comparison.
+    /// </summary>
+    /// <param name="message"> Message received from the Neto's endpoint </param>
     protected override void ExecuteMessageResponse(string message)
     {
         Debug.Log("Neto element received message: " + message);
@@ -46,16 +49,6 @@ public class RoomNetoElement : RoomBasicElement
         
         // Split the message string by the colon separator
         string[] parts = message.Split(separator);
-        
-        
-        
-        for(int i = 0; i < parts.Length; i++)
-        {
-            Debug.Log("NETO MESSAGE PART " + i + ": " + parts[i]);
-        }
-        
-        
-        
         
         
 
@@ -67,7 +60,6 @@ public class RoomNetoElement : RoomBasicElement
         for (int i = 2; i < parts.Length; i++)
         {
             this.messageContent[i-2] = int.Parse(parts[i]);
-            Debug.Log("NETO MESSAGE CONTENT " + (i-2) + ": " + messageContent[i-2]);
         }
         
         
@@ -75,10 +67,6 @@ public class RoomNetoElement : RoomBasicElement
         if(lastMessage[0] < Constants.NETO_MIC_VOLUME_THRESHOLD)
         {
             TriggerNetoEffects(messageContent[0]);
-            /*if (!voiceParticleSystem.isPlaying)
-            {
-                TriggerNetoEffects(messageContent[0]);
-            }*/
             
         }
         else
@@ -91,12 +79,6 @@ public class RoomNetoElement : RoomBasicElement
                netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]); 
             }
             
-            //TODO: vedere se ha senso sto controllo ulteriore per evitare il sovrapporsi
-            /*if(!voiceParticleSystem.isPlaying)
-            {
-                netoFeedbackHandler.IncreaseParticleEffectLifeTime(deltaTimeToAdd);
-                netoFeedbackHandler.IncreaseAudioEffectVolume(messageContent[0]);
-            }*/
         }
 
         if (lastMessage[1] != messageContent[1])
@@ -106,16 +88,6 @@ public class RoomNetoElement : RoomBasicElement
         
         lastMessage[0] = messageContent[0];
         lastMessage[1] = messageContent[1];
-        
-        /*if(lastMessage[0] == messageContent[0] && lastMessage[1] == messageContent[1])
-        {
-            return;
-        }
-        
-        
-        // Apply actions
-        ProduceAudioFeedback(messageContent[0]);
-        CheckEmergencyMode(messageContent[1]);*/
 
     }
     
@@ -132,6 +104,10 @@ public class RoomNetoElement : RoomBasicElement
     }
     
     
+    /// <summary>
+    /// Triggers the Neto effects based on the microphone intensity
+    /// </summary>
+    /// <param name="micIntensity"> Intensity value from the microphone </param>
     private void TriggerNetoEffects(int micIntensity)
     {
         if (micIntensity > Constants.NETO_MIC_VOLUME_THRESHOLD)

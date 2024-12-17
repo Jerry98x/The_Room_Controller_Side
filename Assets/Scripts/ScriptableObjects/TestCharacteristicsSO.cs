@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// ScriptableObject for testing purposes
+/// </summary>
 [CreateAssetMenu()]
 public class TestCharacteristicsSO : ScriptableObject
 {

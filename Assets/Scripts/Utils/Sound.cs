@@ -1,6 +1,7 @@
 using UnityEngine;
 
-//TODO: see if it can be deleted because it is not used
+// NOT USED
+
 /// <summary>
 /// Class representing a sound (reduced version of the Unity AudioSource)
 /// </summary>

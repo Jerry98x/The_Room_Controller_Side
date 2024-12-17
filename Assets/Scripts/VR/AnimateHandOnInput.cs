@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// TESTING
+
 /// <summary>
 /// Class that handles the actions and animation of the VR hand model
 /// </summary>

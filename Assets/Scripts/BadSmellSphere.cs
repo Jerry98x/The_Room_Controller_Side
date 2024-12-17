@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class representing the bad smell sphere of the Deathrap.
+/// </summary>
 public class BadSmellSphere : MonoBehaviour
 {
     
@@ -65,14 +68,15 @@ public class BadSmellSphere : MonoBehaviour
         
     }
     
-    
+    /// <summary>
+    /// Method that is called when the bad smell sphere's collider is entered by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
         XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
         Pointer pointer = other.gameObject.GetComponent<Pointer>();
         ActionBasedController xrController = interactor?.GetComponentInParent<ActionBasedController>();
-
-        Debug.Log("Interactor: " + interactor);
         
         if(interactor != null && !interactors.Contains(interactor))
         {
@@ -84,11 +88,12 @@ public class BadSmellSphere : MonoBehaviour
             isSupposedToResetEmissiveIntensity = false;
         }
         
-        Debug.Log("INTERACTORS COUNT: " + interactors.Count);
-        
-        
     }
 
+    /// <summary>
+    /// Method that is called when the bad smell sphere's collider is exited by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerExit(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
@@ -96,15 +101,11 @@ public class BadSmellSphere : MonoBehaviour
         if (interactor != null && interactors.Contains(interactor))
         {
             int index = interactors.IndexOf(interactor);
-            Debug.Log("Removing interactor at index: " + index);
             
             // Remove this interactor and corresponding elements from the lists
             interactors.RemoveAt(index);
             pointers.RemoveAt(index);
             xrControllers.RemoveAt(index);
-            
-            Debug.Log("Remainig interactors: " + interactors.Count);
-            Debug.Log("Remaining interactors: " + interactors);
             
             // If no controllers remain in the list, disable control
             if (interactors.Count == 0)
@@ -117,7 +118,9 @@ public class BadSmellSphere : MonoBehaviour
     }
     
     
-    
+    /// <summary>
+    /// Handles the bad smell emitting action.
+    /// </summary>
     private void HandleBadSmellEmittingBasedOnButton()
     {
         
@@ -134,11 +137,6 @@ public class BadSmellSphere : MonoBehaviour
             {
                 badSmellEmittingTest = 1;
                 
-                /*if(badSmellSphereRenderer != null)
-                {
-                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, initialBadSmellEmissionColor);
-                }*/
-    
                 if (badSmellParticleSystem != null)
                 {
                     badSmellParticleSystem.Play();
@@ -150,16 +148,14 @@ public class BadSmellSphere : MonoBehaviour
             {
                 badSmellEmittingTest = 0;
                 
-                /*if(badSmellSphereRenderer != null)
-                {
-                    badSmellSphereRenderer.material.SetColor(Constants.EMISSION_COLOR_ID, inactiveBadSmellSphereInitialColor);
-                }*/
             }
         }
         
     }
     
-    
+    /// <summary>
+    /// Handles the bad smell light emission action.
+    /// </summary>
     private void HandleEmissiveIntensityBasedOnTrigger()
     {
 
@@ -180,14 +176,12 @@ public class BadSmellSphere : MonoBehaviour
             
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 badSmellLedsBrightnessTest = (int)RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.DEATHTRAP_BRIGHTNESS_MAX, Constants.DEATHTRAP_BRIGHTNESS_MIN);
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY_BAD_SMELL, Constants.CAPPED_MIN_EMISSION_INTENSITY_BAD_SMELL);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 if (badSmellSphereRenderer != null)
                 {
                     Color currentEmissionColor = badSmellSphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);
@@ -245,18 +239,15 @@ public class BadSmellSphere : MonoBehaviour
                 gripValue = Mathf.Max(gripValue, currentGripValue);
             }
             
-            Debug.Log("GRIP VALUE TEST: " + gripValue);
-            
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
             
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 badSmellLedsBrightnessTest = (int)RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.DEATHTRAP_BRIGHTNESS_MAX, Constants.DEATHTRAP_BRIGHTNESS_MIN);
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY_BAD_SMELL, Constants.CAPPED_MIN_EMISSION_INTENSITY_BAD_SMELL);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 if (badSmellSphereRenderer != null)
                 {
                     Color currentEmissionColor = badSmellSphereRenderer.material.GetColor(Constants.EMISSION_COLOR_ID);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// NOT USED
+
 public class RopeRay : MonoBehaviour
 {
     [SerializeField] private Transform startPoint;

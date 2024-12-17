@@ -6,6 +6,8 @@ using UnityEngine.Events;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// NOT USED
+
 /*public class HandleRayMovementV2 : MonoBehaviour
 {
     

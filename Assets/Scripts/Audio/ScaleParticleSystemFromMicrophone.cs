@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Applies a scaling effect to a Particle System based on the loudness of the microphone input
+/// </summary>
 public class ScaleParticleSystemFromMicrophone : MonoBehaviour
 {
 
@@ -43,6 +46,9 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Scale the particles at each frame based on the loudness of the microphone input
+    /// </summary>
     private void Update()
     {
         float loudness = loudnessDetector.GetLoudnessFromMicrophone() * loudnessSensibility;
@@ -53,13 +59,11 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
         }
         
         // To account for when after the emergency mode is interrupted
-        //TODO: fix a bug here (maybe already solved, can't remember)
         if(partSystem != null && !partSystem.isPlaying && !emergencyActive && handleNetoRayMovement.IsInControl())
         {
             partSystem.Play();
         }
         
-        Debug.Log("IL PARTICLE SYSTEM STA SUONANDO? " + partSystem.isPlaying);
         if (partSystem != null && partSystem.isPlaying && handleNetoRayMovement.IsInControl())
         {
             // Change the particles' size based on the loudness
@@ -94,12 +98,19 @@ public class ScaleParticleSystemFromMicrophone : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Sets the direction of the Particle System based on the position of the endpoint
+    /// </summary>
     private void SetParticleSystemDirection()
     {
         particleDirection = particleEndpointPosition.position - transform.position;
         transform.rotation = Quaternion.LookRotation(particleDirection);
     }
     
+    /// <summary>
+    /// Scale the particle's size based on the loudness value
+    /// </summary>
+    /// <param name="loudness"> The loudness value that determines the scale </param>
     private void ChangeParticleSize(float loudness)
     {
         if(!emergencyActive)

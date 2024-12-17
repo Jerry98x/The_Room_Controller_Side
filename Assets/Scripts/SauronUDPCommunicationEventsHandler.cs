@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class that handles the creation of the message to send to the Sauron endpoint via UDP.
+/// </summary>
 public class SauronUDPCommunicationEventsHandler : MonoBehaviour
 {
     
@@ -12,18 +15,11 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     [SerializeField] private HandleSauronRayMovementV2 sauronRayMovementHandler;
     [SerializeField] private SauronFeedbackHandler sauronFeedbackHandler;
     
-    
-        
-    // TODO: Remove these as soon as I've figured out a mapping between the position of the Sauron ray endpoint and the two servo angles values
-    [SerializeField, Range(0, 180)] private int rotationServoAngleSauron;
-    [SerializeField, Range(0, 60)] private int inclinationServoAngleSauron;
 
     
     private int rotationAlphaAngleSauron;
     private int elevationBetaAngleSauron;
     
-    
-    //private RayEndPoint rayEndPointObject;
     private Renderer rayRenderer;
     
     
@@ -36,9 +32,6 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     // 1) A number representing the angle of the servo motor that controls the rotation of the Sauron module around the vertical axis
     // 2) A number representing the angle of the servo motor that controls the inclination of the Sauron module
     // 3) The termination character '\0'
-    
-    /*private int rotationServoAngleSauron;
-    private int inclinationServoAngleSauron;*/
     
     
     
@@ -62,8 +55,6 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         {
             SpiralwaveRay selectedSpiralwaveRay = deselectedSpiralwaveRay.transform.GetChild(0).GetComponent<SpiralwaveRay>();
             rayRenderer = selectedSpiralwaveRay.GetComponent<Renderer>();
-            
-            Debug.Log("Renderer: " + rayRenderer);
         
             endPointSO = roomElement.GetEndPointSO();
         }
@@ -78,7 +69,9 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
-    
+    /// <summary>
+    /// Checks if the Controller is in control of the Sauron and builds the message to send to the ESP32.
+    /// </summary>
     private void Update()
     {
         Debug.Log("About to send a message to the ESP32!");
@@ -90,40 +83,21 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
         
         if(sauronRayMovementHandler.IsInControl())
         {
-            //Debug.Log("In control of Sauron " + roomElement.GetEndPointSO().IP);
-            
-            HandleValuesToSend();
-                    
-            //BuildStringMessage();
-            //Debug.Log("Message to be sent: " + message);
-            //UDPManager.Instance.SendStringUdp(message, endPointSO.EndPoint);
-            
-            
+           
             BuildByteArrayMessage();
             Debug.Log("Byte message to be sent: " + messageBytes);
             UDPManager.Instance.SendByteArrayUdp(messageBytes, endPointSO.EndPoint);
             
             
-            //BuildIntMessage();
-            //Debug.Log("Int message to be sent: " + messageInt);
-            //UDPManager.Instance.SendIntUdp(messageInt, endPointSO.EndPoint);
-            
-            
             Debug.Log("Message sent!");
         }
         
-        
     }
     
     
-    
-    private void HandleValuesToSend()
-    {
-        // Position parameters
-        
-    }
-    
-    
+    /// <summary>
+    /// Retrieve the relevant values and builds the byte array message to send to the ESP32 by converting the parameters into bytes.
+    /// </summary>
     private void BuildByteArrayMessage()
     {
         
@@ -161,8 +135,9 @@ public class SauronUDPCommunicationEventsHandler : MonoBehaviour
     }
     
     
-    
-    
+    /// <summary>
+    /// Builds the final message to send to the ESP32 when the application is closed.
+    /// </summary>
     private void SendFinalMessage()
     {
         // Define initial values

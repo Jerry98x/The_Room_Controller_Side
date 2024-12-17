@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represent the VFX object of the portal of the Neto.
+/// </summary>
 public class NetoPortalVFX : MonoBehaviour
 {
 

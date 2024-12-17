@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
+// NOT USED
+
 /*public class RayColliderHelper : MonoBehaviour
 {
     

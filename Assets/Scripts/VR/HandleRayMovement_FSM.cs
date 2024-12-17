@@ -5,6 +5,8 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// NOT USED
+
 /// <summary>
 /// Class that handles the raycast interaction with the modules of the Room and updates the rays' characteristics;
 /// tries to use a finite state machine to manage the movement of the ray

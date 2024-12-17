@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 /// <summary>
 /// Manager class that handles the sound effects related to the Neto module in the game
 /// </summary>

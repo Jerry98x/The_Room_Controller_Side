@@ -4,6 +4,8 @@ using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// NOT USED
+
 /// <summary>
 /// Class that handles the raycast interaction with the modules of the Room and the movement constraints
 /// </summary>
@@ -13,8 +15,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 /// </remarks>
 public class HandControllerRaycast : MonoBehaviour
 {
-    
-    //TODO: Clean the code and remove unnecessary comments and debug logs
     
     private XRRayInteractor rayInteractor;
     private List<GameObject> activeChildren = new List<GameObject>(); // List of current active child objects

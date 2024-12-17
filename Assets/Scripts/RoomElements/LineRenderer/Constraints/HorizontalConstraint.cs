@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 /// <summary>
 /// Constraint class used to define the horizontal limits of the area where a Neto ray (endpoint) can move
 /// </summary>

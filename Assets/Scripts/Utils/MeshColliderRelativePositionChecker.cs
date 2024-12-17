@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Helper class to check if a point is inside a mesh collider.
+/// </summary>
 public class MeshColliderRelativePositionChecker : MonoBehaviour
 {
  
@@ -36,6 +39,12 @@ public class MeshColliderRelativePositionChecker : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// Check if the hit point is part of a concave hull.
+	/// </summary>
+	/// <param name="ray"> Casted ray </param>
+	/// <param name="hit"> Hit point </param>
+	/// <returns></returns>
 	bool ConcaveHull(Ray ray, RaycastHit hit){
 
 
@@ -68,7 +77,9 @@ public class MeshColliderRelativePositionChecker : MonoBehaviour
 
 	}
 
-	// Update is called once per frame
+	/// <summary>
+	/// Update the rays and check if the object is inside the mesh collider.
+	/// </summary>
 	void Update () {
 	
 		right.origin   = -right.direction   * distance + transform.position;

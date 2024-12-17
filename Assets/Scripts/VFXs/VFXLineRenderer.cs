@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+// NOT USED
+
 public class VFXLineRenderer : MonoBehaviour
 {
     [SerializeField] private VisualEffect vfx;

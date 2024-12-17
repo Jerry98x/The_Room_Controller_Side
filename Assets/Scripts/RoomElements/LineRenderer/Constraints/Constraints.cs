@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 /// <summary>
 /// General constraint class used to define the limits of the area where a ray (endpoint) can move
 /// </summary>

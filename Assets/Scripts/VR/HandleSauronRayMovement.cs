@@ -6,6 +6,8 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// NOT USED
+
 public class HandleSauronRayMovement : MonoBehaviour
 {
     

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
+/// <summary>
+/// Detects the loudness of the audio input
+/// </summary>
 public class AudioLoudnessDetection : MonoBehaviour
 {
 
@@ -16,7 +19,9 @@ public class AudioLoudnessDetection : MonoBehaviour
         MicrophoneToAudioClip();
     }
     
-    
+    /// <summary>
+    ///  Stores the audio from the microphone into an AudioClip
+    /// </summary>
     public void MicrophoneToAudioClip()
     {
         // Get first microphone
@@ -26,6 +31,12 @@ public class AudioLoudnessDetection : MonoBehaviour
     }
 
     
+    /// <summary>
+    /// Compute the loudness of the audio clip at a given position in the waveform 
+    /// </summary>
+    /// <param name="clipPosition"> Position within the audioclip </param>
+    /// <param name="audioClip"> Audioclip to get the loudness from </param>
+    /// <returns></returns>
     public float GetLoudnessFromAudioClip(int clipPosition, AudioClip audioClip)
     {
 

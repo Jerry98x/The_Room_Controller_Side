@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// ScriptableObject for testing purposes
+/// </summary>
 [CreateAssetMenu()]
 public class ObjectSO : ScriptableObject
 {

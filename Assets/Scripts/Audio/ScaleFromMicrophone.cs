@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Applies a scale to an object based on the loudness of the microphone input
+/// </summary>
 public class ScaleFromMicrophone : MonoBehaviour
 {
 

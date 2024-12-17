@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 /// <summary>
 /// Constraint class used to define the limits of the area where Sauron a ray (endpoint) can move
 /// </summary>

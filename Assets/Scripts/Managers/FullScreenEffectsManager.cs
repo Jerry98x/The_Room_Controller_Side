@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+/// <summary>
+/// Manager class that handles visual effects applied directly to the camera and so to the VR headset
+/// </summary>
 public class FullScreenEffectsManager : MonoBehaviour
 {
     
@@ -48,6 +51,11 @@ public class FullScreenEffectsManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Activates the correct effect based on the boolean parameter
+    /// </summary>
+    /// <param name="intensity"> Intensity of the effect </param>
+    /// <param name="isPositive"> To distinguish between positive and negative effect </param>
     public void DisplayFullScreenEffect(int intensity, bool isPositive)
     {
 
@@ -62,36 +70,11 @@ public class FullScreenEffectsManager : MonoBehaviour
             negativeEffectRendererFeature.SetActive(true);
         }
         
-        
-        
-        /*
-        switch (intensity)
-        {
-            case Constants.DEATHTRAP_NO_TOUCH_INTENSITY:
-                Debug.Log("Display Full Screen Effect: NO");
-                StopEffect(isPositive);
-                break;
-            case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
-            case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
-                Debug.Log("Display Full Screen Effect: SOFT/MEDIUM");
-                //StopEffect(false);
-                negativeEffectRendererFeature.SetActive(false);
-                positiveEffectRendererFeature.SetActive(true);
-                /*SetPositiveEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayPositiveEffect());#1#
-                break;
-            case Constants.DEATHTRAP_HARD_TOUCH_INTENSITY:
-                Debug.Log("Display Full Screen Effect: HARD");
-                //StopEffect(true);
-                positiveEffectRendererFeature.SetActive(false);
-                negativeEffectRendererFeature.SetActive(true);
-                /*SetNegativeEffectDisplayTime(baseDuration);
-                StartCoroutine(DisplayNegativeEffect());#1#
-                break;
-        }*/
     }
     
-    
+    /// <summary>
+    /// Coroutine for a fade-in effect of the negative effect
+    /// </summary>
     private IEnumerator DisplayNegativeEffect()
     {
         
@@ -128,6 +111,9 @@ public class FullScreenEffectsManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Coroutine for a fade-in effect of the positive effect
+    /// </summary>
     private IEnumerator DisplayPositiveEffect()
     {
         
@@ -144,26 +130,17 @@ public class FullScreenEffectsManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
-        /*elapsedTime = 0f;
-        while (elapsedTime < positiveEffectFadeOutDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            
-            float lerpedVoronoi = Mathf.Lerp(voronoiIntensityStartAmount, 0f, elapsedTime / negativeEffectFadeOutDuration);
-            float lerpedVignette = Mathf.Lerp(vignetteIntensityStartAmount, 0f, elapsedTime / negativeEffectFadeOutDuration);
-            
-            positiveEffectMaterial.SetFloat(voronoiIntensity, lerpedVoronoi);
-            positiveEffectMaterial.SetFloat(vignetteIntensity, lerpedVignette);
-            
-            yield return null;
-        }*/
+
 
         positiveEffectRendererFeature.SetActive(false);
         
     }
 
 
+    /// <summary>
+    /// Stops the correct effect based on the boolean parameter
+    /// </summary>
+    /// <param name="isPositive"> To distinguish between positive and negative effect </param>
     private void StopEffect(bool isPositive)
     {
         // Stop both effects prematurely with respect to their lifetime, but make them fade out
@@ -178,6 +155,9 @@ public class FullScreenEffectsManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Stops all the effects
+    /// </summary>
     public void StopEffects()
     {
         if (negativeEffectRendererFeature.isActive)
@@ -191,6 +171,9 @@ public class FullScreenEffectsManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Coroutine for a fade-out effect for both the visual effects, based on the boolean parameter
+    /// </summary>
     IEnumerator FadeOutEffect(bool isPositive, ScriptableRendererFeature scriptableRendererFeature, Material material, float duration)
     {
         float elapsedTime = 0f;
@@ -234,6 +217,11 @@ public class FullScreenEffectsManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Increases the duration of the full-screen effect
+    /// </summary>
+    /// <param name="value"> Increase amount </param>
+    /// <param name="isPositiveEffect"> To distinguish between positive and negative effect </param>
     public void IncreaseFullScreenEffectDuration(float value, bool isPositiveEffect)
     {
         if (isPositiveEffect)

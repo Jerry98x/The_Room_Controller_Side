@@ -49,8 +49,7 @@ public class CoreController : MonoBehaviour
 
 
     #region Relevant functions
-
-    //TODO: see if this custom function is really necessary and in case it is not, remove it
+    
     /// <summary>
     /// Handles the raycasting to detect the objects that the player is looking at
     /// </summary>

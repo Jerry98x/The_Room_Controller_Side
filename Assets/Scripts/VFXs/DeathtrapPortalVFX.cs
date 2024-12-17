@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represent the VFX object of the portal of the Deathtrap.
+/// </summary>
 public class DeathtrapPortalVFX : MonoBehaviour
 {
 

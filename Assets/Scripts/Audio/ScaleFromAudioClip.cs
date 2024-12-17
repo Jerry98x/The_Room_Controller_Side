@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Applies a scale to the object based on the loudness of an audio clip
+/// </summary>
 public class ScaleFromAudioClip : MonoBehaviour
 {
 

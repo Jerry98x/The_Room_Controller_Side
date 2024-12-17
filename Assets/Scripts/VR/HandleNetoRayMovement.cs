@@ -10,16 +10,14 @@ using UnityEngine.XR.Interaction.Toolkit;
 using CommonUsages = UnityEngine.XR.CommonUsages;
 using InputDevice = UnityEngine.XR.InputDevice;
 
+/// <summary>
+/// Class that handles the movement of the Neto ray, the emissive intensity of the ray and the control interruption.
+/// </summary>
 public class HandleNetoRayMovement : MonoBehaviour
 {
-
     
     public UnityEvent<SinewaveRay, SinewaveRay, float> onNetoRayDistanceChange;
     public event Action<bool> OnEmergencyStatusChanged;
-
-    
-
-    //private InputData inputData;
     
     
     [SerializeField] private Transform coreCenter;
@@ -109,6 +107,10 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Method that is called when the Neto ray's collider is entered by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
 
@@ -130,25 +132,18 @@ public class HandleNetoRayMovement : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Method that is called when the Neto ray's collider is exited by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerExit(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
         
         if (interactor != null && interactors.Contains(interactor))
         {
-            // Reset the active ray material to its initial color to avoid color artifacts in the
-            // specific case where the emergency mode was started with the hand already inside the collider
-            // and then ended while the hand was already outside the collider
-            /*Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
-            if (rayRenderer != null && hasEmergency)
-            {
-                SetMaterialColor(rayRenderer, initialActiveBaseColor, initialActiveEmissiveColor);
-            }*/
-            
-            
             
             int index = interactors.IndexOf(interactor);
-            Debug.Log("Removing interactor at index: " + index);
             
             // Remove this interactor and corresponding elements from the lists
             interactors.RemoveAt(index);
@@ -167,6 +162,10 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Method that is called when a hand controller stays inside the Neto ray's collider.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerStay(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
@@ -192,6 +191,10 @@ public class HandleNetoRayMovement : MonoBehaviour
 
 
 
+    /// <summary>
+    /// Method that handles the movement of the ray's endpoint based on the movement of the hand controller.
+    /// </summary>
+    /// <param name="finalNewDistance"> New distance of the ray endpoint (not used) </param>
     private void HandleRayEndpointMovement(out float finalNewDistance)
     {
         
@@ -217,9 +220,6 @@ public class HandleNetoRayMovement : MonoBehaviour
                 pointerMovement = currentPointerPosition - previousPointerPosition;
             }
         }
-        
-        
-        
         
 
         // Project the pointer's movement onto the direction vector
@@ -258,14 +258,14 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
 
     
-    
+    /// <summary>
+    /// Updates the amplitude and frequency of the sinewave rays based on the new distance of the ray endpoint.
+    /// </summary>
+    /// <param name="inactiveSinewaveRayToChange"> Inactive ray </param>
+    /// <param name="activeSinewaveRayToChange"> Active ray </param>
+    /// <param name="finalNewDistance"> New distance of the ray endpoint </param>
     private void UpdateLineRenderers(SinewaveRay inactiveSinewaveRayToChange, SinewaveRay activeSinewaveRayToChange, float finalNewDistance)
     {
-        
-        Debug.Log("UPDATING LINE RENDERERS");
-        Debug.Log("Inactive sinewave ray: " + inactiveSinewaveRayToChange);
-        Debug.Log("Active sinewave ray: " + activeSinewaveRayToChange);
-        Debug.Log("Final new distance: " + finalNewDistance);
         
         // Update the linerenderers' amplitude and frequency, so that when the ray is shorter
         // the sinewave has a higher frequency and amplitude (like it's more compressed),
@@ -283,7 +283,9 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
     
     
-    
+    /// <summary>
+    /// Changes the emissive intensity of the ray based on the grip value of the controller. Handles corner cases.
+    /// </summary>
     private void HandleEmissiveIntensityBasedOnTrigger()
     {
 
@@ -303,12 +305,10 @@ public class HandleNetoRayMovement : MonoBehaviour
             
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 Renderer activeRayRenderer = activeSinewaveRay.GetComponent<Renderer>();
                 if (activeRayRenderer != null)
                 {
@@ -375,12 +375,10 @@ public class HandleNetoRayMovement : MonoBehaviour
             
             if (gripValue > Constants.XR_CONTROLLER_GRIP_VALUE_THRESHOLD)
             {
-                Debug.Log("TRIGGER PRESSED! Grip value: " + gripValue);
-            
                 // Map the grip value to the capped emissive intensity range defined in the Constants class
                 float cappedEmissiveIntensity = RangeRemappingHelper.Remap(gripValue, Constants.XR_CONTROLLER_MAX_GRIP_VALUE, Constants.XR_CONTROLLER_MIN_GRIP_VALUE,
                     Constants.CAPPED_MAX_EMISSION_INTENSITY, Constants.CAPPED_MIN_EMISSION_INTENSITY);
-                Debug.Log("CAPPED EMISSIVE INTENSITY: " + cappedEmissiveIntensity);
+                
                 Renderer rayRenderer = activeSinewaveRay.GetComponent<Renderer>();
                 if (rayRenderer != null)
                 {
@@ -413,6 +411,9 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Handles the interruption of the control of the Neto ray, done by pressing the trigger of the controller when in control.
+    /// </summary>
     private void HandleControlInterruption()
     {
         float triggerValue = 0;
@@ -431,7 +432,12 @@ public class HandleNetoRayMovement : MonoBehaviour
     }
 
     
-    
+    /// <summary>
+    /// Starts the emergency mode, in which the ray's color changes to red and the emergency audio is played.
+    /// </summary>
+    /// <remarks>
+    /// NOT USED
+    /// </remarks>
     public void StartEmergencyMode()
     {
         hasEmergency = true;
@@ -459,6 +465,12 @@ public class HandleNetoRayMovement : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Stops the emergency mode, in which the ray's color changes back to its initial color.
+    /// </summary>
+    /// <remarks>
+    /// NOT USED
+    /// </remarks>
     public void StopEmergencyMode()
     {
         hasEmergency = false;

@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 /// <summary>
-/// Represents a virtual Deathtrap element in the room
+/// Represents a virtual Deathtrap element in the room.
 /// </summary>
 /// <remarks>
 /// Applied to the more general objects that represent a Deathtrap element in the room (the core).
@@ -71,9 +71,7 @@ public class RoomDeathtrapElement : RoomBasicElement
 
     protected override void Start()
     {
-        base.Start();   
-        
-        Debug.Log("PORCODIO: " + receivingEndPointSO.EndPoint);
+        base.Start();
         deathtrapMaterial = GetComponentInChildren<Renderer>().material;
         deathtrapColor = deathtrapMaterial.GetColor(Constants.EMISSION_COLOR_ID);
         silhouetteEffect = humanSilhouette.GetComponent<VisualEffect>();
@@ -120,7 +118,6 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Check if the key was pressed down this frame
         if (Input.GetKeyDown(KeyCode.K) && !deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying() && !avoidMultipleRestarts)
         {
-            Debug.Log("DENTRO GETKEYDOWN");
             avoidMultipleRestarts = true;
             isKKeyHeldDown = true;
             HandleTouchEffect(3);
@@ -131,7 +128,6 @@ public class RoomDeathtrapElement : RoomBasicElement
         // Check if the key is being held down
         if (isKKeyHeldDown && Input.GetKey(KeyCode.K) && avoidMultipleRestarts)
         {
-            Debug.Log("DENTRO GETKEY");
             initialStripsRemainingLifetime -= Time.deltaTime;
             deathtrapTouchNegativeFeedbackHandler.IncreaseParticlesLifetime(Time.deltaTime);
             fullScreenEffectsManager.IncreaseFullScreenEffectDuration(Time.deltaTime, false);
@@ -142,12 +138,10 @@ public class RoomDeathtrapElement : RoomBasicElement
         {
             if (initialStripsRemainingLifetime >= 0)
             {
-                Debug.Log("DENTRO GETKEYUP - IF: comando abortito prima della naturale fine");
                 StartCoroutine(WaitForBaseTimeAndStopEffects(initialStripsRemainingLifetime));
             }
             else
             {
-                Debug.Log("DENTRO GETKEYUP - ELSE: comando abortito dopo la naturale fine");
                 avoidMultipleRestarts = false;
                 HandleTouchEffect(0);
                 PlayAmbientTouchSound(0);
@@ -204,12 +198,14 @@ public class RoomDeathtrapElement : RoomBasicElement
         
     }
     
+    /// <summary>
+    /// Coroutie to wait for a base time and then stop the effects
+    /// </summary>
+    /// <param name="baseTime"> Time to wait </param>
     private IEnumerator WaitForBaseTimeAndStopEffects(float baseTime)
     {
-        Debug.Log("DENTRO COROUTINE PRIMA DEL WAIT");
         avoidMultipleRestarts = false;
         yield return new WaitForSeconds(baseTime);
-        Debug.Log("DENTRO COROUTINE DOPO IL WAIT");
         //avoidMultipleRestarts = false;
         HandleTouchEffect(0);
         PlayAmbientTouchSound(0);
@@ -218,31 +214,17 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
 
 
+    /// <summary>
+    /// Split the message received from the Deathtrap's endpoint and execute the corresponding actions.
+    /// Save the current message content for later comparison.
+    /// </summary>
+    /// <param name="message"> Message received from the Deathtrap's endpoint </param>
     protected override void ExecuteMessageResponse(string message)
     {
         Debug.Log("Deathtrap element received message: " + message);
         
         // Split the message string by the colon separator
         string[] parts = message.Split(separator);
-        
-        
-        
-        
-        
-        
-        
-        for(int i = 0; i < parts.Length; i++)
-        {
-            Debug.Log("DEATHTRAP MESSAGE PART " + i + ": " + parts[i]);
-        }
-        
-        
-        
-        
-        
-        
-        
-        
 
         // Initialize the message array with the same length as parts, excluding the first one
         // (the sender type, which is not needed)
@@ -255,9 +237,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         {
             messageContentFloat[i-1] = float.Parse(parts[i], CultureInfo.InvariantCulture);
             this.messageContent[i-1] = Mathf.RoundToInt(messageContentFloat[i-1]);
-            Debug.Log("DEATHTRAP MESSAGE CONTENT " + (i-1) + ": " + messageContent[i-1]);
         }
-        
         
         
         PresenceDetected(messageContent[1]);
@@ -292,38 +272,8 @@ public class RoomDeathtrapElement : RoomBasicElement
             HandleIncreaseLifetime(messageContent[0]);
         }
         
-        
-        
         lastMessage[0] = messageContent[0];
         lastMessage[1] = messageContent[1];
-        
-        
-        
-        /*if(lastMessage[0] == messageContent[0] && lastMessage[1] == messageContent[1])
-        {
-            return;
-        }
-        else
-        {
-            lastMessage[0] = messageContent[0];
-            lastMessage[1] = messageContent[1];
-            
-            
-            
-            // Apply actions
-            if(lastMessage[0] != messageContent[0])
-            {
-                ChangeDeathtrapEmissionColor(messageContent[0]);
-            }
-
-            if (lastMessage[1] != messageContent[1])
-            {
-                PresenceDetected(messageContent[1]);
-            }
-            
-            
-        }*/
-        
         
     }
     
@@ -341,7 +291,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     
     
     
-    
+    /// <summary>
+    /// Handles the touch effect based on the touch intensity received from the Deathtrap module.
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch, to discriminate between different intensity effects </param>
     private void HandleTouchEffect(int touchIntensity)
     {
         // In case the touch intensity is > 0, the touch feedback effect should be played
@@ -371,7 +324,6 @@ public class RoomDeathtrapElement : RoomBasicElement
             case Constants.DEATHTRAP_SOFT_TOUCH_INTENSITY:
             case Constants.DEATHTRAP_MEDIUM_TOUCH_INTENSITY:
                 timesGivingGoodTouch += 1;
-                Debug.Log("TIMES GIVING GOOD TOUCH HANDLE...: " + timesGivingGoodTouch);
                 if (timesGivingGoodTouch > timesGivingGoodTouchThreshold)
                 {
                     badEffectPlaying = false;
@@ -396,6 +348,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
+    /// <summary>
+    /// Handles the positive touch VFX.
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch, to discriminate between different intensity effects </param>
     private void GeneratePositiveParticlesEffect(int touchIntensity)
     {
         
@@ -420,6 +376,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
+    /// <summary>
+    /// Handles the negative touch VFX.
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch, to discriminate between different intensity effects </param>
     private void GrowVinesEffect(int touchIntensity)
     {
         
@@ -447,7 +407,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
 
 
-
+    /// <summary>
+    /// Handles the audio side of the touch feedback.
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch, to discriminate between different audio effects </param>
     private void PlayAmbientTouchSound(int touchIntensity)
     {
 
@@ -501,7 +464,10 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
-    
+    /// <summary>
+    /// Handles the fullscreen effect side of the touch feedback.
+    /// </summary>
+    /// <param name="touchIntensity"> Intensity of the touch, to discriminate between different fullscreen effects </param>
     private void HandleFullScreenEffect(int touchIntensity)
     {
 
@@ -526,36 +492,14 @@ public class RoomDeathtrapElement : RoomBasicElement
                 break;
         }
         
-        
-        
-        
-        
-        /*int duration;
-        if (isPositive)
-        {
-            if (goodEffectPlaying)
-            {
-                duration = (int)deathtrapTouchPositiveFeedbackHandler.GetGoodParticlesMaxLifetime();
-                fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, true); 
-            }
-            
-        }
-        else
-        {
-            if (humanSilhouette.activeSelf && deathtrapTouchNegativeFeedbackHandler.IsNegativeEffectPlaying())
-            {
-                duration = (int)deathtrapTouchNegativeFeedbackHandler.GetStripsLifetime();
-                fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, false);
-            }
-            
-        }*/
-        
-        //fullScreenEffectsManager.DisplayFullScreenEffect(touchIntensity, duration, isPositive);
     }
 
     
     
-    
+    /// <summary>
+    /// Handles the increase of the lifetime of the touch feedback effect.
+    /// </summary>
+    /// <param name="currentPressureMessage"> Value of the touch effect </param>
     private void HandleIncreaseLifetime(int currentPressureMessage)
     {
         float deltaTimeToAdd = 0.03f;
@@ -585,7 +529,7 @@ public class RoomDeathtrapElement : RoomBasicElement
         
             
         // No need to handle sound, because it loops automatically
-            
+        
         
         // Fullscreen effect
         switch (currentPressureMessage)
@@ -610,9 +554,12 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
+    /// <summary>
+    /// Check the presence of the visitor in the Deathtrap's proximity and handle the silhouette effect accordingly.
+    /// </summary>
+    /// <param name="detected"> Value indicating if the silhouette has been detected </param>
     private void PresenceDetected(int detected)
     {
-        Debug.Log("Changing silhouette at distance: " + detected);
         if (detected <= Constants.DEATHTRAP_SONAR_DISTANCE_MAX)
         {
             timesAboveMaxDistance = 0;
@@ -700,6 +647,11 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
     
     
+    /// <summary>
+    /// Coroutine to move the silhouette from a position to another.
+    /// </summary>
+    /// <param name="fromPosition"> Initial position of the movement </param>
+    /// <param name="toPosition"> Final position of the movement </param>
     private IEnumerator MoveSilhouette(Vector3 fromPosition, Vector3 toPosition)
     {
         float duration = 0.5f; // Duration of the movement
@@ -715,6 +667,11 @@ public class RoomDeathtrapElement : RoomBasicElement
         humanSilhouette.transform.position = toPosition;
     }
     
+    /// <summary>
+    /// Coroutine to move the silhouette and fade it out.
+    /// </summary>
+    /// <param name="fromPosition"> Initial position of the movement </param>
+    /// <param name="toPosition"> Final position of the movement </param>
     private IEnumerator MoveAndFadeSilhouette(Vector3 fromPosition, Vector3 toPosition)
     {
         StartCoroutine(MoveSilhouette(fromPosition, toPosition));
@@ -722,6 +679,11 @@ public class RoomDeathtrapElement : RoomBasicElement
         StartCoroutine(FadeOutSilhouette(0.3f));
     }
     
+    /// <summary>
+    /// Coroutine to fade in the silhouette.
+    /// </summary>
+    /// <param name="duration"> Fade-in duration </param>
+    /// <returns></returns>
     private IEnumerator FadeInSilhouette(float duration)
     {
         float elapsed = 0.0f;
@@ -734,24 +696,14 @@ public class RoomDeathtrapElement : RoomBasicElement
         }
 
         silhouetteEffect.SetFloat("Alpha", 1f);
-
-
-        /*Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
-        Color color = silhouetteRenderer.material.color;
-        float elapsed = 0.0f;
-
-        while (elapsed < duration)
-        {
-            color.a = Mathf.Lerp(0, 1, elapsed / duration);
-            silhouetteRenderer.material.color = color;
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        color.a = 1;
-        silhouetteRenderer.material.color = color;*/
+        
     }
     
+    /// <summary>
+    /// Coroutine to fade out the silhouette.
+    /// </summary>
+    /// <param name="duration"> Fade-out duration </param>
+    /// <returns></returns>
     private IEnumerator FadeOutSilhouette(float duration)
     {
         float elapsed = 0.0f;
@@ -762,27 +714,8 @@ public class RoomDeathtrapElement : RoomBasicElement
             elapsed += Time.deltaTime;
             yield return null;
         }
-        Debug.Log("FADEOUT COROUTINE INSIDE");
         
         silhouetteEffect.SetFloat("Alpha", 0f);
-        //humanSilhouette.SetActive(false);
-        
-        
-        /*Renderer silhouetteRenderer = humanSilhouette.GetComponent<Renderer>();
-        Color color = silhouetteRenderer.material.color;
-        float elapsed = 0.0f;
-
-        while (elapsed < duration)
-        {
-            color.a = Mathf.Lerp(1, 0, elapsed / duration);
-            silhouetteRenderer.material.color = color;
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        color.a = 0;
-        silhouetteRenderer.material.color = color;
-        humanSilhouette.SetActive(false);*/
     }
     
     
@@ -809,11 +742,12 @@ public class RoomDeathtrapElement : RoomBasicElement
     }
 
     
-    
+    /// <summary>
+    /// Coroutine to change the emission color of the Deathtrap element gradually.
+    /// </summary>
+    /// <param name="targetColor"> Color to be reached </param>
     private IEnumerator ChangeEmissionColorGradually(Color targetColor)
     {
-        
-        Debug.Log("Changing color coroutine with color: " + targetColor);
         currentColor = deathtrapColor;
         float duration = 1.0f; // Duration of the color change
         float elapsed = 0.0f;
@@ -827,7 +761,6 @@ public class RoomDeathtrapElement : RoomBasicElement
             yield return null;
         }
 
-        //deathtrapMaterial.SetColor(Constants.EMISSION_COLOR_ID, targetColor);
         
     }
     

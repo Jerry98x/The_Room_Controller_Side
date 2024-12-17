@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Abstract wrapper for the hover events that adds additional conditions to them.
+/// </summary>
 public abstract class ConditionalHoverEvents : MonoBehaviour
 {
 

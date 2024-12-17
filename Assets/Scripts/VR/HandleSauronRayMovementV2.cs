@@ -9,14 +9,16 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
+/// <summary>
+/// Class that handles the movement of the Sauron ray's endpoint, which is controlled by the user's hand controller,
+/// and the control interruption.
+/// </summary>
 public class HandleSauronRayMovementV2 : MonoBehaviour
 {
-    
     
     public UnityEvent<SpiralwaveRay, SpiralwaveRay, float> onSauronRayDistanceChange;
     
     
-
     [SerializeField] private Transform coreCenter;
     [SerializeField] private Transform rayEndPoint;
 
@@ -26,7 +28,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     [SerializeField] private GameObject portalConeBase;
     [SerializeField] private GameObject portalSimplified;
     [SerializeField] private Material[] coneSurfaceMaterials;
-    
     
     
     
@@ -108,12 +109,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             rayEndPointRb.interpolation = RigidbodyInterpolation.Interpolate; // Enable interpolation
         }
         
-        //portalMeshCollider = portal.GetComponent<MeshCollider>();
         
         portalBoxColliders = portal.GetComponents<BoxCollider>();
         portalSupportColliders = portal.GetComponents<MeshCollider>();
-        
-        //portalColliders = portalSimplified.GetComponentsInChildren<Collider>();
         
         
         sphereCollider = rayEndPoint.GetComponent<SphereCollider>();
@@ -134,24 +132,17 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// FixedUpdate instead of Update to handle physics-related operations.
+    /// </summary>
     private void FixedUpdate()
     {
         if (isInControl)
         {
             
             // Handle ray's movement
-            //HandleRayEndpointMovement();
             
             HandleRayEndpointMovement(out float finalNewDistance);
-            
-            
-            
-            /*// Lerp to the target position
-            rayEndPoint.position = Vector3.Lerp(rayEndPoint.position, targetPosition, lerpSpeed * Time.deltaTime);
-
-            // Calculate final new distance
-            float finalNewDistance = Vector3.Distance(coreCenter.position, rayEndPoint.position);*/
-
             
                     
             // Invoke the event that will notify the Sauron module of the distance change
@@ -175,6 +166,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
     
 
+    /// <summary>
+    /// Method that is called when the Sauron ray's collider is entered by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
         XRDirectInteractor interactor = other.gameObject.GetComponent<XRDirectInteractor>();
@@ -199,6 +194,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
 
     
+    /// <summary>
+    /// Method that is called when the Sauron ray's collider is exited by a hand controller.
+    /// </summary>
+    /// <param name="other"></param>
     void OnTriggerExit(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
@@ -207,7 +206,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
         {
 
             int index = interactors.IndexOf(interactor);
-            Debug.Log("Removing interactor at index: " + index);
             
             // Remove this interactor and corresponding elements from the lists
             interactors.RemoveAt(index);
@@ -226,6 +224,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Method that is called when a hand controller stays inside the Sauron ray's collider.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerStay(Collider other)
     {
         XRDirectInteractor interactor = other.GetComponent<XRDirectInteractor>();
@@ -248,121 +250,14 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             }
         }
     }
-   
     
     
     
-    public void HandleRayEndpointMovement()
-    {
-        
-        Vector3 pointerMovement = Vector3.zero;
-        float distance = 0;
-        // Loop through each pointer and calculate the movement for the one that is moving the most
-        foreach (Pointer pointer in pointers)
-        {
-            // Get the current pointer position and the previous frame pointer position
-            Vector3 currentPointerPosition = pointer.transform.position;
-            Vector3 previousPointerPosition = pointer.GetPreviousPosition();
-            
-            float newPointerDistance = Vector3.Distance(currentPointerPosition, previousPointerPosition);
-            if(newPointerDistance > distance)
-            {
-                distance = newPointerDistance;
-                
-                // Calculate the pointer's movement vector
-                pointerMovement = currentPointerPosition - previousPointerPosition;
-            }
-        }
-        Debug.Log($"DIO: Pointer Movement Vector: {pointerMovement}");
-
-        // Apply a multiplier to make the movement more significant
-        Vector3 scaledMovement = pointerMovement * sauronMaxMovementMultiplier;
-        Debug.Log($"DIO: Scaled Movement Vector: {scaledMovement}");
-        
-        // Smooth the movement vector
-        smoothedMovement = Vector3.Lerp(smoothedMovement, scaledMovement, smoothTime);
-        Debug.Log($"DIO: Smoothed Movement Vector: {smoothedMovement}");
-
-        // Calculate new potential position of the ray's endpoint
-        Vector3 newEndPointPosition = rayEndPoint.position + smoothedMovement;
-        Debug.Log($"DIO: Target Position: {newEndPointPosition}");
-        
-        
-        
-        
-        // Check for collision
-        if (!IsColliding(newEndPointPosition))
-        {
-            previousPosition = rayEndPoint.position;
-            rayEndPointRb.MovePosition(newEndPointPosition);
-            Debug.Log($"DIO: Sphere moved to: {newEndPointPosition}");
-        }
-        else
-        {
-            // Collision detected, revert to previous position
-            rayEndPointRb.MovePosition(previousPosition);
-            Debug.Log("DIO: Collision detected, movement blocked.");
-            
-        }
-
-        
-        
-
-
-        /*// Check if the new position is inside any of the portal support colliders
-        bool isInside = false;
-        foreach (MeshCollider coll in portalSupportColliders)
-        {
-            if (coll.bounds.Contains(newEndPointPosition))
-            {
-                isInside = true;
-                break;
-            }
-        }
-        
-        if (isInside)
-        {
-            targetPosition = newEndPointPosition;
-        }
-        else
-        {
-            // Find the nearest point inside the colliders and adjust for sphere radius and potential gap
-            Vector3 closestPoint = newEndPointPosition;
-            float minDistance = float.MaxValue;
-
-            foreach (MeshCollider boundary in portalSupportColliders)
-            {
-                Vector3 point = boundary.ClosestPoint(newEndPointPosition);
-                float distance = Vector3.Distance(newEndPointPosition, point);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closestPoint = point;
-                }
-            }
-
-            Vector3 directionToClosestPoint = (closestPoint - newEndPointPosition).normalized;
-            float penetrationDepth = sphereCollider.radius - minDistance;
-
-            // Ensure the sphere does not get stuck in the gap
-            if (penetrationDepth > 0)
-            {
-                targetPosition = newEndPointPosition + directionToClosestPoint * penetrationDepth;
-            }
-            else
-            {
-                // Move the sphere closer to the boundary to avoid the gap
-                targetPosition = closestPoint;
-            }
-        }*/
-        
-        
-        
-    }
-    
-    
-    
-    
+    /// <summary>
+    /// Method that handles the movement of the ray's endpoint based on the movement of the hand controller.
+    /// It employs collision detection to prevent the endpoint from moving outside a cage of colliders.
+    /// </summary>
+    /// <param name="finalNewDistance"> New distance of the ray endpoint (not used) </param>
     private void HandleRayEndpointMovement(out float finalNewDistance)
     {
         int index = 0;
@@ -438,7 +333,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             previousPosition = rayEndPoint.position;
             rayEndPointRb.MovePosition(newEndPointPosition);
-            Debug.Log($"DIO: Sphere moved to: {newEndPointPosition}");
         }
         else
         {
@@ -450,11 +344,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             }
             
             // Get the normal of the surface we're colliding with
-            //Debug.DrawRay(hit.point, hit.normal, Color.red, 2f);
             Vector3 collisionNormal = hit.normal;
             
             Vector3 safePosition = pointerMovement * Constants.XR_CONTROLLER_MOVEMENT_THRESHOLD;
-            //rayEndPointRb.MovePosition(rayEndPoint.position - safePosition);
             
             
             
@@ -494,8 +386,6 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
             
             
             
-            
-            
             // Send haptic feedback to the hand controller
             ProvideHapticFeedback(index, colliderHapticFeedbackAmplitude, colliderHapticFeedbackDuration);
         }
@@ -525,9 +415,11 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
     
-    
-    
-    
+    /// <summary>
+    /// Checks if the target position is colliding with any of the portal's colliders.
+    /// </summary>
+    /// <param name="targetPos"> Position that should be reached </param>
+    /// <returns></returns>
     bool IsColliding(Vector3 targetPos)
     {
         
@@ -543,6 +435,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
     
     
+    /// <summary>
+    /// Checks if the sphere is completely surrounded by colliders by casting raycasts in multiple directions.
+    /// </summary>
+    /// <param name="pos"> Position of the sphere </param>
     bool IsSphereCompletelySurrounded(Vector3 pos)
     {
         
@@ -581,26 +477,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
     
     
-    
-    /*bool IsPositionInsideColliders(Vector3 position)
-    {
-        foreach (var coll in portalSupportColliders)
-        {
-            if (coll.bounds.Contains(position))
-            {
-                return true;
-            }
-        }
-
-        if (portalBoxCollider.bounds.Contains(position))
-        {
-            return true;
-        }
-
-        return false;
-    }*/
-    
-    
+    /// <summary>
+    /// Remaps the distance moved by the hand controller to a movement multiplier that will be applied to the endpoint.
+    /// </summary>
+    /// <param name="distance"> Distance on which the multiplier definition is based </param>
     private float ComputeMovementMultiplier(float distance)
     {
         float movementMultiplier = 0f;
@@ -618,7 +498,12 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
 
-
+    /// <summary>
+    /// Updates the radius of the spiralwave rays based on the angle of the elevation.
+    /// </summary>
+    /// <param name="inactiveSpiralwaveRayToChange"> Inactive ray </param>
+    /// <param name="activeSpiralwaveRayToChange"> Active ray </param>
+    /// <param name="finalNewDistance"> New distance of the ray endpoint </param>
     private void UpdateLineRenderers(SpiralwaveRay inactiveSpiralwaveRayToChange, SpiralwaveRay activeSpiralwaveRayToChange, float finalNewDistance)
     {
         
@@ -636,7 +521,9 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     
     
     
-    
+    /// <summary>
+    /// Handles the interruption of the control of the Neto ray, done by pressing the trigger of the controller when in control.
+    /// </summary>
     private void HandleControlInterruption()
     {
         float triggerValue = 0;
@@ -654,6 +541,12 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
 
     }
     
+    /// <summary>
+    /// Emits haptic feedback to the controller that caused the collision.
+    /// </summary>
+    /// <param name="index"> Index of the controller </param>
+    /// <param name="amplitude"> Intensity of the haptic feedback </param>
+    /// <param name="duration"> Duration of the impulse of a single haptic feedback </param>
     public void ProvideHapticFeedback(int index, float amplitude, float duration)
     {
         
@@ -662,8 +555,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
 
 
-
-
+    /// <summary>
+    /// Updates the alpha and beta angles of the cone based on the new position of the ray's endpoint.
+    /// </summary>
+    /// <param name="newEndPointPosition"> New position of the ray endpoint </param>
     private void UpdateConeAngles(Vector3 newEndPointPosition)
     {
         
@@ -705,72 +600,10 @@ public class HandleSauronRayMovementV2 : MonoBehaviour
     }
     
     
-    
-    
-    /*private void UpdateConeAngles(Vector3 newEndPointPosition)
-    {
-        
-        Vector3 endPointVector = newEndPointPosition - coreCenter.position;
-        
-        // Calculate the horizontal and vertical axes of the cone
-        coneVerticalAxis = coneTip.position - coneBaseCenter.position;
-        coneHorizontalAxis = coneBaseExtremity.position - coneBaseCenter.position; // coneBaseExtremity is positioned in the editor so that the chosen axis is X
-        
-        
-        // Alpha rotation angle is computed by finding the angle between coneHorizontalAxis and the projection of
-        // endPointVector on the horizontal plane
-        Vector3 endPointVectorProjection = Vector3.ProjectOnPlane(endPointVector, coneVerticalAxis);
-        alphaRotationAngle = Vector3.Angle(coneHorizontalAxis, endPointVectorProjection);
-        
-        
-        // Beta elevation angle is computed by finding the angle between the projection of endPointVector on
-        // the horizontal plane and endPointVector itself, and then subtracting it from 90 degrees or 180 degrees.
-        // Since on the physical Sauron the angle has a range of [0, 60] with 30° being the central value
-        // (when the endPointVector is vertical), the previously computed Alpha rotation angle is used to check
-        // whether the endPointVector was on the left side or right side. If it was on the left side, the angle is
-        // subtracted from 90 degrees. If it was on the right side, the angle is subtracted from 180 degrees and an
-        // 60 degrees angle is subtracted, since the physical Sauron counts the angel starting from the lowest inclination
-        // on the left.
-        // Finally, the angle is capped between 0 and 60 degrees, if necessary.
-        float betaRotationInnerAngle;
-        float clampedAngle = Mathf.Clamp(Vector3.Angle(endPointVectorProjection, endPointVector), Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE, 90.0f); 
-        if(alphaRotationAngle > 90.0f)
-        {
-            betaRotationInnerAngle = 180.0f - clampedAngle - Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE;
-        }
-        else
-        {
-            betaRotationInnerAngle = clampedAngle - Constants.SAURON_OFFSET_INCLINATION_SERVO_ANGLE;
-        }
-
-        betaElevationAngle = betaRotationInnerAngle;
-        //betaElevationAngle = Mathf.Clamp(betaRotationInnerAngle, 0, 60);
-
-
-
-        // Beta elevation angle is computed by finding the angle between the projection of endPointVector on
-        // the horizontal plane and conVerticalAxis, capping the value between 0 and 60 degrees;
-        // It may be necessary to add an offset to the angle
-        /*Vector3 endPointVectorProjectionHorizontal = Vector3.ProjectOnPlane(endPointVector, coneHorizontalAxis);
-        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVectorProjectionHorizontal, coneHorizontalAxis);
-        betaElevationAngle = Mathf.Clamp(betaElevationAngle, 0, 60);#1#
-
-
-
-
-
-
-
-
-        // Calculate the angles
-        /*alphaRotationAngle = Vector3.SignedAngle(coneHorizontalAxis, endPointVector, coneVerticalAxis);
-        betaElevationAngle = Vector3.SignedAngle(coneVerticalAxis, endPointVector, coneHorizontalAxis);#1#
-
-    }*/
-    
-    
-    
-    
+    /// <summary>
+    /// Assigns a new material to the cone's surface renderer.
+    /// </summary>
+    /// <param name="numberOfMaterials"> New number of materials of the object </param>
     void AddMaterialToConeSurfaceRenderer(int numberOfMaterials)
     {
         // Create a new array with an additional slot for the new material

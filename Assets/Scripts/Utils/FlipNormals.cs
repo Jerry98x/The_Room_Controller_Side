@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// NOT USED
+
 public class FlipNormals : MonoBehaviour
 {
     public void FlipMeshNormals()

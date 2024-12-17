@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using System.Linq;
 
+// NOT USED
+
 /// <summary>
 /// Class that handles the raycast interaction with the modules of the Room and updates the rays' characteristics
 /// </summary>
