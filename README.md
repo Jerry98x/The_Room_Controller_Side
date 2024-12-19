@@ -1,4 +1,4 @@
-# Thesis project: virtual environment for non-anthropomorphic
+# Thesis project: The Room (controller side)
 
 This project was developed for my ([Andrea Gerosa](https://github.com/Jerry98x)) thesis within the MSc Computer Science and Engineering degree at Politecnico di Milano. The title of the thesis is [___Being the Room: Embodiment of Living Spaces as Non-Anthropomorphic Avatars in Virtual Reality___](https://www.politesi.polimi.it/handle/10589/230804) and consists of an application in VR developed in Unity.
 
