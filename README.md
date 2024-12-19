@@ -1,6 +1,6 @@
 # Thesis project: virtual environment for non-anthropomorphic
 
-This project was developed for my ([Andrea Gerosa](https://github.com/Jerry98x)) thesis within the MSc Computer Science and Engineering degree at Politecnico di Milano. The title of the thesis is ___Being the Room: Embodiment of Living Spaces as Non-Anthropomorphic Avatars in Virtual Reality___ and consists of an application developed in Unity.
+This project was developed for my ([Andrea Gerosa](https://github.com/Jerry98x)) thesis within the MSc Computer Science and Engineering degree at Politecnico di Milano. The title of the thesis is ___Being the Room: Embodiment of Living Spaces as Non-Anthropomorphic Avatars in Virtual Reality___ and consists of an application in VR developed in Unity.
 
 ## Description
 
