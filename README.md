@@ -4,7 +4,7 @@ This project was developed for my ([Andrea Gerosa](https://github.com/Jerry98x))
 
 ## Description
 
-The project builds upon a previous thesis project (by [Giuseppe Bonanno[(https://www.politesi.polimi.it/handle/10589/227395) and [Mohammadsobhan Esfandiar](https://www.politesi.polimi.it/handle/10589/227725)) that aimed at studying the interaction with a living social being created in the form of a mechatronic room provided with sensory organs to perceive the feedback from _Visitors_ who explore its environment.
+The project builds upon a previous thesis project (by [Giuseppe Bonanno](https://www.politesi.polimi.it/handle/10589/227395) and [Mohammadsobhan Esfandiar](https://www.politesi.polimi.it/handle/10589/227725)) that aimed at studying the interaction with a living social being created in the form of a mechatronic room provided with sensory organs to perceive the feedback from _Visitors_ who explore its environment.
 
 This project aims at making people embody in VR the virtual avatar of such an exremely non-anthropomorphic entity, very distant form human beings in terms of appearance, means of interaction and perception of the world. To do so, the application I developed makes people (_Controllers_) "wear" the specially designed non-anthropomorphic virtual avatar of the Room, making them perceive the world through its senses and interact with other external entities (_Visitors_) within the environment. Moreover, it aims at making Controllers understand the presence of some other intelligent, possibly human, entity on the other side and establish a communication with it.
 
